@@ -15,6 +15,10 @@ class CreateHostingPlansTable extends Migration
     {
         Schema::create('hosting_plans', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('title');
+            $table->text('description');
+            $table->integer('contract_duration_in_months');
+            $table->decimal('total_price');
             $table->timestamps();
         });
     }

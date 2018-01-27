@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHostingPlansContracted extends Migration
+class CreateDomainProvidersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,12 @@ class CreateHostingPlansContracted extends Migration
      */
     public function up()
     {
-        //
+        Schema::create('domain_providers', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('company_name');
+            $table->string('description');
+            $table->timestamps();
+        });
     }
 
     /**
@@ -23,6 +28,6 @@ class CreateHostingPlansContracted extends Migration
      */
     public function down()
     {
-        //
+        Schema::dropIfExists('domain_providers');
     }
 }
