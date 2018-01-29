@@ -100,7 +100,12 @@
         </div>
       </div>
       <ul class="app-menu">
-        <li><a class="app-menu__item" href="index.html"><i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Dashboard</span></a></li>
+        <li>
+          <a class="app-menu__item" href="{{ url('/dashboard/admin') }}">
+            <i class="app-menu__icon fa fa-dashboard"></i>
+            <span class="app-menu__label">Dashboard</span>
+          </a>
+        </li>
         <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">UI Elements</span><i class="treeview-indicator fa fa-angle-right"></i></a>
           <ul class="treeview-menu">
             <li><a class="treeview-item" href="bootstrap-components.html"><i class="icon fa fa-circle-o"></i> Bootstrap Elements</a></li>
@@ -109,30 +114,25 @@
             <li><a class="treeview-item" href="widgets.html"><i class="icon fa fa-circle-o"></i> Widgets</a></li>
           </ul>
         </li>
+        <li>
+          <a class="app-menu__item" href="{{ url('/dashboard/clientes') }}">
+            <i class="app-menu__icon fa fa-user"></i>
+            <span class="app-menu__label">Clientes</span>
+          </a>
         </li>
       </ul>
     </aside>
-    <main class="app-content">
-      @yield('content')
-    </main>
-    <!-- Essential javascripts for application to work-->
-    <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
-    <script src="{{ asset('js/popper.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
-    <!-- The javascript plugin to display page loading on top-->
-    <script src="{{ asset('js/plugins/pace.min.js') }}"></script>
-    <!-- Page specific javascripts-->
-    <!-- Google analytics script-->
-    <script type="text/javascript">
-      if(document.location.hostname == 'pratikborsadiya.in') {
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-        m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-        ga('create', 'UA-72504830-1', 'auto');
-        ga('send', 'pageview');
-      }
-    </script>
-  </body>
+<!-- <main class="app-content">  -->
+    @yield('content')
+<!-- </main> -->
+  <!-- Essential javascripts for application to work-->
+  <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
+  <script src="{{ asset('js/popper.min.js') }}"></script>
+  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
+  <script src="{{ asset('js/main.js') }}"></script>
+  <!-- The javascript plugin to display page loading on top-->
+  <script src="{{ asset('js/plugins/pace.min.js') }}"></script>
+  <!-- Page specific javascripts-->
+  @stack('script')
+</body>
 </html>

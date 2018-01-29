@@ -38,8 +38,12 @@ Auth::routes();
 
 */
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::group(['prefix' => 'dashboard', 'namespace' => 'Admin'], function () {
 
-Auth::routes();
+  Route::get('admin', function() {
+    return view('dashboard.admin');
+  });
 
-Route::get('/dashboard/admin', 'AdminController@index')->name('home');
+  Route::get('clientes', 'CustomerController@index');
+
+});
