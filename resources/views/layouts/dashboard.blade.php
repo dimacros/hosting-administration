@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="{{ app()->getLocale() }}">
   <head>
     <meta name="description" content="Vali is a responsive and free admin theme built with Bootstrap 4, SASS and PUG.js. It's fully customizable and modular.">
     <!-- Twitter meta-->
@@ -106,19 +106,67 @@
             <span class="app-menu__label">Dashboard</span>
           </a>
         </li>
-        <li class="treeview"><a class="app-menu__item" href="#" data-toggle="treeview"><i class="app-menu__icon fa fa-laptop"></i><span class="app-menu__label">UI Elements</span><i class="treeview-indicator fa fa-angle-right"></i></a>
-          <ul class="treeview-menu">
-            <li><a class="treeview-item" href="bootstrap-components.html"><i class="icon fa fa-circle-o"></i> Bootstrap Elements</a></li>
-            <li><a class="treeview-item" href="http://fontawesome.io/icons/" target="_blank"><i class="icon fa fa-circle-o"></i> Font Icons</a></li>
-            <li><a class="treeview-item" href="ui-cards.html"><i class="icon fa fa-circle-o"></i> Cards</a></li>
-            <li><a class="treeview-item" href="widgets.html"><i class="icon fa fa-circle-o"></i> Widgets</a></li>
-          </ul>
-        </li>
         <li>
-          <a class="app-menu__item" href="{{ url('/dashboard/clientes') }}">
+          <a class="app-menu__item" href="{{ url('dashboard/clientes') }}">
             <i class="app-menu__icon fa fa-user"></i>
             <span class="app-menu__label">Clientes</span>
           </a>
+        </li>
+        <li class="treeview">
+          <a class="app-menu__item" href="#" data-toggle="treeview">
+            <i class="app-menu__icon fa fa-laptop"></i>
+            <span class="app-menu__label">Planes Hosting</span>
+            <i class="treeview-indicator fa fa-angle-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a class="treeview-item" href="bootstrap-components.html">
+                <i class="icon fa fa-circle-o"></i> Agregar un Plan Hosting
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="http://fontawesome.io/icons/" target="_blank"><i class="icon fa fa-circle-o"></i> Ver todos los Planes Hosting
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="ui-cards.html">
+                <i class="icon fa fa-circle-o"></i> Agregar un Cliente Hosting
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="widgets.html">
+                <i class="icon fa fa-circle-o"></i> Ver todos los Clientes Hosting
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="treeview">
+          <a class="app-menu__item" href="#" data-toggle="treeview">
+            <i class="app-menu__icon fa fa-laptop"></i>
+            <span class="app-menu__label">Proveedores de dominio</span>
+            <i class="treeview-indicator fa fa-angle-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a class="treeview-item" href="bootstrap-components.html">
+                <i class="icon fa fa-circle-o"></i> Agregar Proveedor de Dominio
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="http://fontawesome.io/icons/" target="_blank"><i class="icon fa fa-circle-o"></i> Ver todos los Proveedores de Dominio
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="ui-cards.html">
+                <i class="icon fa fa-circle-o"></i> Comprar un dominio
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="widgets.html">
+                <i class="icon fa fa-circle-o"></i> Ver todos los dominios comprados
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
     </aside>

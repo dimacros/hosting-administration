@@ -17,33 +17,49 @@ Route::get('/', function () {
 
 Auth::routes();
 
-/*
-* Routes default of auth --> Auth::routes();
-****************************************************
+Route::group(
+[
+	'namespace' => 'Admin', 
+	'middleware' => 'auth',
+	'prefix' => 'dashboard',
+], 
 
-  // Authentication Routes...
-  Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-  Route::post('login', 'Auth\LoginController@login');
-  Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+function () {
 
-  // Registration Routes...
-  Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-  Route::post('register', 'Auth\RegisterController@register');
-
-  // Password Reset Routes...
-  Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-  Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-  Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-  Route::post('password/reset', 'Auth\ResetPasswordController@reset');
-
-*/
-
-Route::group(['prefix' => 'dashboard', 'namespace' => 'Admin'], function () {
-
-  Route::get('admin', function() {
-    return view('dashboard.admin');
-  });
-
+  Route::view('admin', 'dashboard.admin');
   Route::get('clientes', 'CustomerController@index');
+	Route::get('clientes/crear', 'CustomerController@create');
+	Route::post('clientes/crear', 'CustomerController@store');
+	Route::put('clientes/{id}', 'CustomerController@update');
+	Route::delete('clientes/{id}', 'CustomerController@destroy');
+
+  Route::get('proveedores-de-dominios', 
+  	'DomainProviderController@index');
+	Route::get('proveedores-de-dominios/crear', 
+		'DomainProviderController@create');
+	Route::post('proveedores-de-dominios/crear', 
+		'DomainProviderController@store');
+	Route::put('proveedores-de-dominios/{id}', 
+		'DomainProviderController@update');
+	Route::delete('proveedores-de-dominios/{id}', 
+		'DomainProviderController@destroy');
+
+  Route::get('contratos-hosting', 'HostingContractController@index');
+	Route::get('contratos-hosting/crear', 'HostingContractController@create');
+	Route::post('contratos-hosting/crear', 'HostingContractController@store');
+	Route::put('contratos-hosting/{id}', 'HostingContractController@update');
+	Route::delete('contratos-hosting/{id}', 'HostingContractController@destroy');
+
+  Route::get('planes-hosting', 'HostingPlanController@index');
+	Route::get('planes-hosting/crear', 'HostingPlanController@create');
+	Route::post('planes-hosting/crear', 'HostingPlanController@store');
+	Route::put('planes-hosting/{id}', 'HostingPlanController@update');
+	Route::delete('planes-hosting/{id}', 'HostingPlanController@destroy');
+
+  Route::get('dominios-comprados', 'PurchasedDomainController@index');
+	Route::get('dominios-comprados/crear', 'PurchasedDomainController@create');
+	Route::post('dominios-comprados/crear', 'PurchasedDomainController@store');
+	Route::put('dominios-comprados/{id}', 'PurchasedDomainController@update');
+	Route::delete('dominios-comprados/{id}','PurchasedDomainController@destroy');
 
 });

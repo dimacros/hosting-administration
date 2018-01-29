@@ -1,6 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('content')
+ <main class="app-content">
       <div class="app-title">
         <div>
           <h1><i class="fa fa-dashboard"></i> Blank Page</h1>
@@ -18,4 +19,5 @@
           </div>
         </div>
       </div>
+</main>
 @endsection

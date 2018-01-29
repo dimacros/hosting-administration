@@ -2,7 +2,7 @@
 @section('content')  
     <main class="app-content">
       <div class="app-title">
-        <div>
+        <div class="tile-body">
           <h1><i class="fa fa-th-list"></i> Data Table</h1>
           <p>Table to display analytical data effectively</p>
         </div>
@@ -16,7 +16,7 @@
         <div class="col-md-12">
           <div class="tile">
             <div class="tile-body">
-              <a href="" class="btn btn-primary">Agregar cliente</a>
+              <a href="{{ url('dashboard/clientes/crear') }}" class="btn btn-primary">Agregar cliente</a>
             </div>
           </div>
         </div>
