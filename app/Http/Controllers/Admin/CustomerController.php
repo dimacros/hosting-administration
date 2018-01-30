@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Customer;
 
 class CustomerController extends Controller
 {
@@ -14,7 +15,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return view('dashboard.clientes');
+        $customers = App\Customer::all();
+        return view('dashboard.customers', ['customers' => $customers]);
     }
 
     /**
@@ -24,7 +26,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('dashboard.clientes_crear');
+        return view('dashboard.customers-create');
     }
 
     /**
@@ -35,7 +37,22 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'phone' => 'required|string|unique:customers',
+        'email' => 'required|string|email|unique:customers'
+      ]);  
+      
+      $customer = new Customer();
+      $customer->first_name = $request->first_name;
+      $customer->last_name = $request->last_name;
+      $customer->phone = $request->phone;
+      $customer->email = $request->email;
+
+      if ($customer->save()) {
+        return back()->with('status', 'El cliente fue registrado correctamente.');
+      }
     }
 
     /**
@@ -50,17 +67,6 @@ class CustomerController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -69,7 +75,26 @@ class CustomerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $request->validate([
+        'first_name' => 'required|string',
+        'last_name' => 'required|string',
+        'phone' => 'required|string|unique:customers',
+        'email' => 'required|string|email|unique:customers'
+      ]);  
+
+      if (is_null(Customer::find($id))) {
+        return redirect('dashboard/clientes');
+      }
+
+      $customer = Customer::find($id);
+      $customer->first_name = $request->first_name;
+      $customer->last_name = $request->last_name;
+      $customer->phone = $request->phone;
+      $customer->email = $request->email;
+
+      if ($customer->save()) {
+        return back()->with('status', 'Los datos del cliente fueron actualizados correctamente.');
+      }
     }
 
     /**
@@ -79,7 +104,14 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        
+        if(Customer::find($id)->delete())
+        {
+            return back()->with('status', 'El cliente se elimino correctamente.');          
+        }
+        else {
+            return back()->with('status', 'Ocurrió un problema al tratar de eliminar el cliente. Vuelva a intentarlo nuevamente.');     
+        }
     }
 }

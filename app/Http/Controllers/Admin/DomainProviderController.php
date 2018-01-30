@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\DomainProvider;
 
 class DomainProviderController extends Controller
 {
@@ -14,7 +15,8 @@ class DomainProviderController extends Controller
      */
     public function index()
     {
-        //
+        $domainProviders = App\DomainProvider::all();
+        return view('dashboard.domain-providers', ['domainProviders' => $domainProviders]);
     }
 
     /**
@@ -24,7 +26,7 @@ class DomainProviderController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.domain-providers-create');
     }
 
     /**
@@ -35,7 +37,22 @@ class DomainProviderController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+        'company_name' => 'required|string',
+        'description' => 'required|string',
+        'phone' => 'required|string|unique:domain_providers',
+        'email' => 'required|string|email|unique:domain_providers'
+      ]);  
+      
+      $domainProvider = new DomainProvider();
+      $domainProvider->company_name = $request->company_name;
+      $domainProvider->description = $request->description;
+      $domainProvider->phone = $request->phone;
+      $domainProvider->email = $request->email;
+
+      if ($domainProvider->save()) {
+        return back()->with('status', 'El cliente fue registrado correctamente.');
+      }
     }
 
     /**
@@ -50,17 +67,6 @@ class DomainProviderController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -69,7 +75,26 @@ class DomainProviderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $request->validate([
+        'company_name' => 'required|string',
+        'description' => 'required|string',
+        'phone' => 'required|string|unique:domain_providers',
+        'email' => 'required|string|email|unique:domain_providers'
+      ]);  
+
+      if (is_null(DomainProvider::find($id))) {
+        return redirect('dashboard/domain-providers');
+      }
+
+      $domainProvider = DomainProvider::find($id);
+      $domainProvider->company_name = $request->company_name;
+      $domainProvider->description = $request->description;
+      $domainProvider->phone = $request->phone;
+      $domainProvider->email = $request->email;
+
+      if ($domainProvider->save()) {
+        return back()->with('status', 'Los datos del cliente fueron actualizados correctamente.');
+      }
     }
 
     /**
@@ -79,7 +104,14 @@ class DomainProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {
-        //
+    {   
+        
+        if(DomainProvider::find($id)->delete())
+        {
+            return back()->with('status', 'El cliente se elimino correctamente.');          
+        }
+        else {
+            return back()->with('status', 'Ocurrió un problema al tratar de eliminar el cliente. Vuelva a intentarlo nuevamente.');     
+        }
     }
 }
