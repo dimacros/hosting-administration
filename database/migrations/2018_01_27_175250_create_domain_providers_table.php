@@ -17,6 +17,7 @@ class CreateDomainProvidersTable extends Migration
             $table->increments('id');
             $table->string('company_name');
             $table->string('description');
+            $table->string('email')->unique();
             $table->timestamps();
         });
     }

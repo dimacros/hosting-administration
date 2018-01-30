@@ -19,6 +19,7 @@ class CreateHostingPlansTable extends Migration
             $table->text('description');
             $table->integer('contract_duration_in_months');
             $table->decimal('total_price');
+            $table->enum('type', ['hosting', 'support', 'web_application']);
             $table->timestamps();
         });
     }

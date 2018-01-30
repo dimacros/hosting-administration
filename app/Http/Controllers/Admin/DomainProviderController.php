@@ -40,30 +40,17 @@ class DomainProviderController extends Controller
       $request->validate([
         'company_name' => 'required|string',
         'description' => 'required|string',
-        'phone' => 'required|string|unique:domain_providers',
         'email' => 'required|string|email|unique:domain_providers'
       ]);  
       
       $domainProvider = new DomainProvider();
       $domainProvider->company_name = $request->company_name;
       $domainProvider->description = $request->description;
-      $domainProvider->phone = $request->phone;
       $domainProvider->email = $request->email;
 
       if ($domainProvider->save()) {
-        return back()->with('status', 'El cliente fue registrado correctamente.');
+        return back()->with('status', 'El proveedor de dominio fue registrado correctamente.');
       }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -78,7 +65,6 @@ class DomainProviderController extends Controller
       $request->validate([
         'company_name' => 'required|string',
         'description' => 'required|string',
-        'phone' => 'required|string|unique:domain_providers',
         'email' => 'required|string|email|unique:domain_providers'
       ]);  
 
@@ -89,11 +75,10 @@ class DomainProviderController extends Controller
       $domainProvider = DomainProvider::find($id);
       $domainProvider->company_name = $request->company_name;
       $domainProvider->description = $request->description;
-      $domainProvider->phone = $request->phone;
       $domainProvider->email = $request->email;
 
       if ($domainProvider->save()) {
-        return back()->with('status', 'Los datos del cliente fueron actualizados correctamente.');
+        return back()->with('status', 'Los datos del proveedor de dominio fueron actualizados correctamente.');
       }
     }
 
@@ -104,14 +89,13 @@ class DomainProviderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {   
-        
+    {        
         if(DomainProvider::find($id)->delete())
         {
             return back()->with('status', 'El cliente se elimino correctamente.');          
         }
         else {
-            return back()->with('status', 'Ocurrió un problema al tratar de eliminar el cliente. Vuelva a intentarlo nuevamente.');     
+            return back()->with('status', 'Ocurrió un problema al tratar de eliminar al proveedor de dominio. Vuelva a intentarlo nuevamente.');     
         }
     }
 }

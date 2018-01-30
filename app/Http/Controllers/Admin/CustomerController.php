@@ -35,6 +35,7 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    
     public function store(Request $request)
     {
       $request->validate([
@@ -53,17 +54,6 @@ class CustomerController extends Controller
       if ($customer->save()) {
         return back()->with('status', 'El cliente fue registrado correctamente.');
       }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**

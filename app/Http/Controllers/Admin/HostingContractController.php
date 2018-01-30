@@ -14,7 +14,8 @@ class HostingContractController extends Controller
      */
     public function index()
     {
-        //
+        $hostingContracts = App\HostingContract::paginate(6);
+        return view('dashboard.hosting-contracts.all', ['hostingContracts' => $hostingContracts]);
     }
 
     /**
@@ -24,7 +25,7 @@ class HostingContractController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.hosting-contracts.create');
     }
 
     /**
@@ -35,7 +36,32 @@ class HostingContractController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+        'customer_id' => '',
+        'hosting_plan_contracted_id' => '',
+        'start_date' => '',
+        'due_date' => '',
+        'public_ip' => '',
+        'cpanel_user' => '',
+        'cpanel_password' => '',
+        'domain_name' => '',
+        'user_id' => ''
+      ]);  
+      
+      $hostingContract = new HostingContract();
+      $hostingContract->customer_id = $request->customer_id;
+      $hostingContract->hosting_plan_contracted_id = $request->hosting_plan_contracted_id;
+      $hostingContract->start_date = $request->start_date;
+      $hostingContract->due_date = $request->due_date;
+      $hostingContract->public_ip = $request->public_ip;
+      $hostingContract->cpanel_user = $request->cpanel_user;
+      $hostingContract->cpanel_password = $request->cpanel_password;
+      $hostingContract->domain_name = $request->domain_name;
+      $hostingContract->user_id = $request->user_id;
+
+      if ($hostingContract->save()) {
+        return back()->with('status', 'El contrato de hosting fue registrado con éxito.');
+      }
     }
 
     /**
@@ -69,7 +95,30 @@ class HostingContractController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $request->validate([
+        'company_name' => 'required|string',
+        'description' => 'required|string',
+        'email' => 'required|string|email|unique:domain_providers'
+      ]);  
+
+      if (is_null(HostingContract::find($id))) {
+        return redirect('dashboard/domain-providers');
+      }
+
+      $hostingContract = HostingContract::find($id);
+      //$hostingContract->customer_id = $request->customer_id;
+      $hostingContract->hosting_plan_contracted_id = $request->hosting_plan_contracted_id;
+      //$hostingContract->start_date = $request->start_date;
+      $hostingContract->due_date = $request->due_date;
+      $hostingContract->public_ip = $request->public_ip;
+      $hostingContract->cpanel_user = $request->cpanel_user;
+      $hostingContract->cpanel_password = $request->cpanel_password;
+      $hostingContract->domain_name = $request->domain_name;
+      $hostingContract->user_id = $request->user_id;
+
+      if ($hostingContract->save()) {
+        return back()->with('status', 'Los datos del proveedor de dominio fueron actualizados correctamente.');
+      }
     }
 
     /**
@@ -80,6 +129,12 @@ class HostingContractController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(HostingContract::find($id)->delete())
+        {
+            return back()->with('status', 'El cliente se elimino correctamente.');          
+        }
+        else {
+            return back()->with('status', 'Ocurrió un problema al tratar de eliminar el cliente. Vuelva a intentarlo nuevamente.');     
+        }
     }
 }
