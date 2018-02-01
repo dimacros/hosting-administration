@@ -23,6 +23,7 @@ class CreateHostingContractsTable extends Migration
             $table->string('cpanel_user')->unique();
             $table->string('cpanel_password');
             $table->string('domain_name')->unique();
+            $table->enum('status', ['activo', 'vencido', 'cancelado']);
             $table->integer('user_id')->unsigned();
             $table->timestamps();
             $table->foreign('customer_id')

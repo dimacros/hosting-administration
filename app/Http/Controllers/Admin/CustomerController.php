@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Customer;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Customer;
 
 class CustomerController extends Controller
 {
@@ -15,8 +15,8 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = App\Customer::all();
-        return view('dashboard.customers', ['customers' => $customers]);
+        $customers = Customer::all();
+        return view('admin.customers', ['customers' => $customers]);
     }
 
     /**
@@ -26,7 +26,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('dashboard.customers-create');
+        return view('admin.customers-create');
     }
 
     /**
@@ -52,7 +52,7 @@ class CustomerController extends Controller
       $customer->email = $request->email;
 
       if ($customer->save()) {
-        return back()->with('status', 'El cliente fue registrado correctamente.');
+        return back()->with('status', 'El cliente fue registrado con éxito.');
       }
     }
 
@@ -68,13 +68,9 @@ class CustomerController extends Controller
       $request->validate([
         'first_name' => 'required|string',
         'last_name' => 'required|string',
-        'phone' => 'required|string|unique:customers',
-        'email' => 'required|string|email|unique:customers'
+        'phone' => 'required|string',
+        'email' => 'required|string|email'
       ]);  
-
-      if (is_null(Customer::find($id))) {
-        return redirect('dashboard/clientes');
-      }
 
       $customer = Customer::find($id);
       $customer->first_name = $request->first_name;
@@ -83,7 +79,7 @@ class CustomerController extends Controller
       $customer->email = $request->email;
 
       if ($customer->save()) {
-        return back()->with('status', 'Los datos del cliente fueron actualizados correctamente.');
+        return back()->with('status', 'Los datos del cliente '.$customer->getFullname().' fueron actualizados correctamente.');
       }
     }
 
@@ -94,14 +90,10 @@ class CustomerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
-    {   
-        
+    {      
         if(Customer::find($id)->delete())
         {
-            return back()->with('status', 'El cliente se elimino correctamente.');          
-        }
-        else {
-            return back()->with('status', 'Ocurrió un problema al tratar de eliminar el cliente. Vuelva a intentarlo nuevamente.');     
+          return back()->with('status', 'El cliente fue eliminado exitosamente.');
         }
     }
 }

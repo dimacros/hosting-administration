@@ -15,8 +15,8 @@ class DomainProviderController extends Controller
      */
     public function index()
     {
-        $domainProviders = App\DomainProvider::all();
-        return view('dashboard.domain-providers', ['domainProviders' => $domainProviders]);
+        $domainProviders = DomainProvider::all();
+        return view('admin.domain-providers', ['domainProviders' => $domainProviders]);
     }
 
     /**
@@ -26,7 +26,7 @@ class DomainProviderController extends Controller
      */
     public function create()
     {
-        return view('dashboard.domain-providers-create');
+        return view('admin.domain-providers-create');
     }
 
     /**

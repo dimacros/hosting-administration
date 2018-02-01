@@ -14,8 +14,8 @@ class HostingContractController extends Controller
      */
     public function index()
     {
-        $hostingContracts = App\HostingContract::paginate(6);
-        return view('dashboard.hosting-contracts.all', ['hostingContracts' => $hostingContracts]);
+        $hostingContracts = HostingContract::paginate(6);
+        return view('admin.hosting-contracts.all', ['hostingContracts' => $hostingContracts]);
     }
 
     /**
@@ -25,7 +25,7 @@ class HostingContractController extends Controller
      */
     public function create()
     {
-        return view('dashboard.hosting-contracts.create');
+        return view('admin.hosting-contracts.create');
     }
 
     /**
@@ -37,15 +37,15 @@ class HostingContractController extends Controller
     public function store(Request $request)
     {
       $request->validate([
-        'customer_id' => '',
-        'hosting_plan_contracted_id' => '',
-        'start_date' => '',
+        'customer_id' => 'required|integer',
+        'hosting_plan_contracted_id' => 'required|integer',
+        'start_date' => 'required',
         'due_date' => '',
-        'public_ip' => '',
-        'cpanel_user' => '',
+        'public_ip' => 'required|ipv4',
+        'cpanel_user' => 'required|unique:hosting_contracts',
         'cpanel_password' => '',
-        'domain_name' => '',
-        'user_id' => ''
+        'domain_name' => 'required|unique:hosting_contracts',
+        'user_id' => 'required|integer'
       ]);  
       
       $hostingContract = new HostingContract();

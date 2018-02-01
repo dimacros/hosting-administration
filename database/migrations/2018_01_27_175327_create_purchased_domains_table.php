@@ -22,6 +22,7 @@ class CreatePurchasedDomainsTable extends Migration
             $table->decimal('total_price_in_dollars');
             $table->date('start_date');
             $table->date('due_date');
+            $table->enum('status', ['activo', 'vencido', 'cancelado']);
             $table->integer('user_id')->unsigned();
             $table->timestamps();
             $table->foreign('domain_provider_id')
