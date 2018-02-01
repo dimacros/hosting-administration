@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DomainProvider;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\DomainProvider;
 
 class DomainProviderController extends Controller
 {
@@ -39,8 +39,8 @@ class DomainProviderController extends Controller
     {
       $request->validate([
         'company_name' => 'required|string',
-        'description' => 'required|string',
-        'email' => 'required|string|email|unique:domain_providers'
+        'description' => 'string|nullable',
+        'email' => 'email|nullable'
       ]);  
       
       $domainProvider = new DomainProvider();
@@ -49,7 +49,7 @@ class DomainProviderController extends Controller
       $domainProvider->email = $request->email;
 
       if ($domainProvider->save()) {
-        return back()->with('status', 'El proveedor de dominio fue registrado correctamente.');
+        return back()->with('status', 'El proveedor de dominio fue registrado con éxito.');
       }
     }
 
@@ -64,13 +64,9 @@ class DomainProviderController extends Controller
     {
       $request->validate([
         'company_name' => 'required|string',
-        'description' => 'required|string',
-        'email' => 'required|string|email|unique:domain_providers'
+        'description' => 'string|nullable',
+        'email' => 'email|nullable'
       ]);  
-
-      if (is_null(DomainProvider::find($id))) {
-        return redirect('dashboard/domain-providers');
-      }
 
       $domainProvider = DomainProvider::find($id);
       $domainProvider->company_name = $request->company_name;
@@ -78,7 +74,7 @@ class DomainProviderController extends Controller
       $domainProvider->email = $request->email;
 
       if ($domainProvider->save()) {
-        return back()->with('status', 'Los datos del proveedor de dominio fueron actualizados correctamente.');
+        return back()->with('status', 'Los datos del proveedor de dominio se actualizaron con éxito.');
       }
     }
 
@@ -90,12 +86,9 @@ class DomainProviderController extends Controller
      */
     public function destroy($id)
     {        
-        if(DomainProvider::find($id)->delete())
-        {
-            return back()->with('status', 'El cliente se elimino correctamente.');          
-        }
-        else {
-            return back()->with('status', 'Ocurrió un problema al tratar de eliminar al proveedor de dominio. Vuelva a intentarlo nuevamente.');     
-        }
+      if(DomainProvider::find($id)->delete())
+      {
+        return back()->with('status', 'El proveedor de dominio fue eliminado exitosamente.');
+      }
     }
 }

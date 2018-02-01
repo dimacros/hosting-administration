@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\PurchasedDomain;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +15,8 @@ class PurchasedDomainController extends Controller
      */
     public function index()
     {
-        //
+      $purchasedDomains = PurchasedDomain::all();
+      return view('admin.purchased-domains.index', ['purchasedDomains' => $purchasedDomains]);
     }
 
     /**

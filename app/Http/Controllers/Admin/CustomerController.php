@@ -41,18 +41,18 @@ class CustomerController extends Controller
       $request->validate([
         'first_name' => 'required|string',
         'last_name' => 'required|string',
-        'phone' => 'required|string|unique:customers',
-        'email' => 'required|string|email|unique:customers'
+        'phone' => 'max:15',
+        'email' => 'required|email|unique:customers'
       ]);  
       
       $customer = new Customer();
       $customer->first_name = $request->first_name;
       $customer->last_name = $request->last_name;
-      $customer->phone = $request->phone;
+      $customer->phone = $request->phone??'Sin número';
       $customer->email = $request->email;
 
       if ($customer->save()) {
-        return back()->with('status', 'El cliente fue registrado con éxito.');
+        return back()->with('status', 'El cliente "'.$customer->getFullname().'" fue registrado exitosamente.');
       }
     }
 
@@ -68,8 +68,8 @@ class CustomerController extends Controller
       $request->validate([
         'first_name' => 'required|string',
         'last_name' => 'required|string',
-        'phone' => 'required|string',
-        'email' => 'required|string|email'
+        'phone' => 'required|max:15',
+        'email' => 'required|email'
       ]);  
 
       $customer = Customer::find($id);
@@ -79,7 +79,7 @@ class CustomerController extends Controller
       $customer->email = $request->email;
 
       if ($customer->save()) {
-        return back()->with('status', 'Los datos del cliente '.$customer->getFullname().' fueron actualizados correctamente.');
+        return back()->with('status', 'Los datos del cliente "'.$customer->getFullname().'" se actualizaron con éxito.');
       }
     }
 

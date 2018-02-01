@@ -40,28 +40,28 @@ Route::group([
 	Route::post('proveedores-de-dominios/crear', 
 		'DomainProviderController@store');
 	Route::put('proveedores-de-dominios/{id}', 
-		'DomainProviderController@update')->name('admin.proveedores-de-dominios.actualizar');;
+		'DomainProviderController@update')->name('admin.proveedores-de-dominios.actualizar');
 	Route::delete('proveedores-de-dominios/{id}', 
-		'DomainProviderController@destroy')->name('admin.proveedores-de-dominios.eliminar');;
+		'DomainProviderController@destroy')->name('admin.proveedores-de-dominios.eliminar');
 
   Route::get('planes-hosting', 'HostingPlanController@index');
 	Route::get('planes-hosting/crear', 'HostingPlanController@create');
 	Route::post('planes-hosting/crear', 'HostingPlanController@store');
-	Route::put('planes-hosting/{id}', 'HostingPlanController@update');
+	Route::put('planes-hosting/{id}', 'HostingPlanController@update')
 	->name('admin.planes-hosting.actualizar');
-	Route::delete('planes-hosting/{id}', 'HostingPlanController@destroy');
+	Route::delete('planes-hosting/{id}', 'HostingPlanController@destroy')
 	->name('admin.planes-hosting.eliminar');
 
   Route::get('contratos-hosting', 'HostingContractController@index');
 	Route::get('contratos-hosting/crear', 'HostingContractController@create');
 	Route::post('contratos-hosting/crear', 'HostingContractController@store');
-	Route::put('contratos-hosting/{id}', 'HostingContractController@update');
+	Route::put('contratos-hosting/{id}', 'HostingContractController@update')
 	->name('admin.contratos-hosting.actualizar');
 
   Route::get('dominios-comprados', 'PurchasedDomainController@index');
 	Route::get('dominios-comprados/crear', 'PurchasedDomainController@create');
 	Route::post('dominios-comprados/crear', 'PurchasedDomainController@store');
-	Route::put('dominios-comprados/{id}', 'PurchasedDomainController@update');
+	Route::put('dominios-comprados/{id}', 'PurchasedDomainController@update')
 	->name('admin.dominios-comprados.actualizar');
 
 });

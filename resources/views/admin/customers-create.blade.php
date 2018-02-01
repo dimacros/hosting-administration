@@ -3,8 +3,8 @@
   <main class="app-content">
     <div class="app-title">
       <div class="tile-body">
-        <h1><i class="fa fa-edit"></i> Formulario Cliente</h1>
-        <p>Registro de clientes</p>
+        <h1><i class="fa fa-edit"></i> Formulario para Cliente</h1>
+        <p>Registrar Cliente</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
@@ -34,6 +34,15 @@
               <strong>{{ session('status') }}</strong>
             </div>
           @endif
+          @if ($errors->any())
+            <div class="alert alert-danger">
+              <ul>
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+           @endif
           <form method="POST">
             {{ csrf_field() }}
             <div class="tile-body">
@@ -51,7 +60,7 @@
               </div>
               <div class="form-group">
                 <label class="control-label" for="phone">Teléfono o Celular:</label>
-                <input class="form-control" type="phone" id="phone" name="phone" value="{{ old('phone') }}" required pattern="[0-9-]{5,15}">
+                <input class="form-control" type="phone" id="phone" name="phone" value="{{ old('phone') }}" pattern="[0-9-]{5,15}">
               </div>
             </div><!-- /.tile-body -->
             <div class="tile-footer">

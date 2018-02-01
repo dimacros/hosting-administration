@@ -51,71 +51,71 @@
                   </tr>
                 </thead>
                 <tbody>
-              @foreach($customers as $customer)
+              @foreach($purchasedDomains as $purchasedDomain)
                   <tr>
-                    <td>{{ $customer->getFullname() }}</td>
-                    <td>{{ $customer->phone }}</td>
-                    <td>{{ $customer->email }}</td>
+                    <td>{{ $purchasedDomain->getFullname() }}</td>
+                    <td>{{ $purchasedDomain->phone }}</td>
+                    <td>{{ $purchasedDomain->email }}</td>
                     <td>
-                      <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modalEdit-{{$customer->id}}">
+                      <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modalEdit-{{$purchasedDomain->id}}">
                         Actualizar
                       </button>
                     </td>
                     <td>
-                      <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#modalDelete-{{$customer->id}}">
+                      <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#modalDelete-{{$purchasedDomain->id}}">
                         Eliminar
                       </button>
                     </td>
                   </tr>
                   <!-- Modal Edit -->
                     @component('components.modal', [ 
-                      'modalId' => 'modalEdit-'. $customer->id, 
+                      'modalId' => 'modalEdit-'. $purchasedDomain->id, 
                       'modalTitle' => 'Editar datos del Cliente',
                       'btnCloseClass' => 'btn btn-secondary', 
                       'btnCloseTitle' => 'Cerrar', 
                       'btnSaveClass' => 'btn btn-primary', 
                       'btnSaveTitle' => 'Guardar cambios',
-                      'FormId' => 'formEdit-'. $customer->id,
+                      'FormId' => 'formEdit-'. $purchasedDomain->id,
                     ])
 
-                    <form class="d-none" method="POST" id="formEdit-{{$customer->id}}" action="{{ route('admin.clientes.actualizar', $customer->id) }}" >
+                    <form class="d-none" method="POST" id="formEdit-{{$purchasedDomain->id}}" action="{{ route('admin.clientes.actualizar', $purchasedDomain->id) }}" >
                       {{ method_field('PUT') }}
                       {{ csrf_field() }}
                       <div class="form-group">
                         <label>Nombre(s):</label>
-                        <input type="text" name="first_name" class="form-control" value="{{$customer->first_name}}" required>
+                        <input type="text" name="first_name" class="form-control" value="{{$purchasedDomain->first_name}}" required>
                       </div>
 
                       <div class="form-group">
                         <label>Apellidos:</label>
-                        <input type="text" name="last_name" class="form-control" value="{{$customer->last_name}}" required>
+                        <input type="text" name="last_name" class="form-control" value="{{$purchasedDomain->last_name}}" required>
                       </div>
 
                       <div class="form-group">
                         <label>Teléfono:</label>
-                        <input type="text" name="phone" class="form-control" value="{{$customer->phone}}" required>
+                        <input type="text" name="phone" class="form-control" value="{{$purchasedDomain->phone}}" required>
                       </div>
 
                       <div class="form-group">
                         <label for="last_name">Correo electrónico:</label>
-                        <input type="text" name="email" class="form-control" value="{{$customer->email}}" required>
+                        <input type="text" name="email" class="form-control" value="{{$purchasedDomain->email}}" required>
                       </div>
 
                     </form>
                     @endcomponent
                   <!-- Modal Delete -->
                     @component('components.modal', [ 
-                      'modalId' => 'modalDelete-'.$customer->id, 
+                      'modalId' => 'modalDelete-'.$purchasedDomain->id, 
                       'modalTitle' => 'Eliminar',
                       'btnCloseClass' => 'btn btn-danger w-25', 
                       'btnCloseTitle' => 'No', 
                       'btnSaveClass' => 'btn btn-success w-25', 
                       'btnSaveTitle' => 'Sí',
-                      'FormId' => 'formDelete-'.$customer->id,
+                      'FormId' => 'formDelete-'.$purchasedDomain->id,
                     ])
 
-                    <h5>¿Seguro que quiere eliminar a "{{$customer->getFullname()}}"?</h5>
-                    <form class="d-none" method="POST" id="formDelete-{{$customer->id}}" action="{{ route('admin.clientes.actualizar', $customer->id) }}">
+                    <h5>¿Seguro que quiere eliminar a "{{$purchasedDomain->getFullname()}}"?</h5>
+                    <form class="d-none" method="POST" id="formDelete-{{$purchasedDomain->id}}" action="{{ route('admin.clientes.actualizar', $purchasedDomain->id) }}">
                       {{ method_field('DELETE') }}
                       {{ csrf_field() }}       
                     </form>

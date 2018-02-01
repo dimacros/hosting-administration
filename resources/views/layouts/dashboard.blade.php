@@ -113,34 +113,17 @@
             <span class="app-menu__label">Clientes</span>
           </a>
         </li>
-        <li class="treeview">
-          <a class="app-menu__item" href="#" data-toggle="treeview">
-            <i class="app-menu__icon fa fa-laptop"></i>
+        <li>
+          <a class="app-menu__item" href="{{ url('dashboard/proveedores-de-dominios') }}">
+            <i class="app-menu__icon fa fa-user"></i>
             <span class="app-menu__label">Proveedores de dominio</span>
-            <i class="treeview-indicator fa fa-angle-right"></i>
           </a>
-          <ul class="treeview-menu">
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/proveedores-de-dominios/crear') }}">
-                <i class="icon fa fa-circle-o"></i> Agregar Proveedor de Dominio
-              </a>
-            </li>
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/proveedores-de-dominios') }}">
-                <i class="icon fa fa-circle-o"></i> Ver todos los Proveedores de Dominio
-              </a>
-            </li>
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/dominios-comprados/crear') }}">
-                <i class="icon fa fa-circle-o"></i> Comprar un dominio
-              </a>
-            </li>
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/dominios-comprados') }}">
-                <i class="icon fa fa-circle-o"></i> Ver todos los dominios comprados
-              </a>
-            </li>
-          </ul>
+        </li>
+        <li>
+          <a class="app-menu__item" href="{{ url('dashboard/dominios-comprados') }}">
+            <i class="app-menu__icon fa fa-user"></i>
+            <span class="app-menu__label">Dominios comprados</span>
+          </a>
         </li>
         <li class="treeview">
           <a class="app-menu__item" href="#" data-toggle="treeview">

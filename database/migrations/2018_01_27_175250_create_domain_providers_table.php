@@ -16,8 +16,8 @@ class CreateDomainProvidersTable extends Migration
         Schema::create('domain_providers', function (Blueprint $table) {
             $table->increments('id');
             $table->string('company_name');
-            $table->string('description');
-            $table->string('email')->unique();
+            $table->string('description')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }
