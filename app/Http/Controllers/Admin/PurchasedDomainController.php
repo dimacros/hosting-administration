@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\PurchasedDomain;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -15,8 +16,9 @@ class PurchasedDomainController extends Controller
      */
     public function index()
     {
-      $purchasedDomains = PurchasedDomain::all();
-      return view('admin.purchased-domains.index', ['purchasedDomains' => $purchasedDomains]);
+      return view(
+        'admin.purchased-domains.index', ['purchasedDomains' => PurchasedDomain::all()]
+      );
     }
 
     /**
@@ -26,7 +28,10 @@ class PurchasedDomainController extends Controller
      */
     public function create()
     {
-        //
+      $domainProviders = DB::table('domain_providers')->select('company_name as value', 'id as data')->get(); 
+      return view(
+        'admin.purchased-domains.create', ['domainProviders' => $domainProviders]
+      );
     }
 
     /**
@@ -37,7 +42,33 @@ class PurchasedDomainController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+        'domain_provider_id' => 'required|exists:domain_providers,id',
+        'domain_name' => 'required|url|unique:purchased_domains,domain_name',
+        'start_date' => 'required|date',
+        'due_date' => 'required|date',
+        'total_price_in_dollars' => 'required|numeric',
+        'description' => ''
+      ]);  
+      
+      $purchasedDomain = new PurchasedDomain();
+      
+      if (!$purchasedDomain->validateDates($request->start_date, $request->due_date)) {
+        return back()->with('status', 'Error al registrar. La fecha de vencimiento no puede ser menor a la fecha de compra.');
+      }
+
+      $purchasedDomain->domain_provider_id = $request->domain_provider_id;
+      $purchasedDomain->domain_name = $request->domain_name;
+      $purchasedDomain->start_date = $request->start_date;
+      $purchasedDomain->due_date = $request->due_date;
+      $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
+      $purchasedDomain->description = $purchasedDomain->description;
+      $purchasedDomain->status = 'activo';
+      $purchasedDomain->user_id = $request->user_id;
+
+      if ($purchasedDomain->save()) {
+        return back()->with('status', 'La compra de dominio fue registrado con éxito');
+      }
     }
 
     /**

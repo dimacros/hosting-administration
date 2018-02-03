@@ -17,11 +17,10 @@ class CreatePurchasedDomainsTable extends Migration
             $table->increments('id');
             $table->integer('domain_provider_id')->unsigned();
             $table->string('domain_name')->unique();
-            $table->text('description');
-            $table->integer('contract_duration_in_months');
-            $table->decimal('total_price_in_dollars');
             $table->date('start_date');
             $table->date('due_date');
+            $table->decimal('total_price_in_dollars');
+            $table->text('description')->nullable();
             $table->enum('status', ['activo', 'vencido', 'cancelado']);
             $table->integer('user_id')->unsigned();
             $table->timestamps();

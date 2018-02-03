@@ -73,3 +73,4 @@
       </div><!-- /.col-md-8 offset-md-2 -->
     </div><!-- /.row -->
   </main>
+@endsection

@@ -15,8 +15,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        $customers = Customer::all();
-        return view('admin.customers', ['customers' => $customers]);
+        return view('admin.customers', ['customers' => Customer::all()]);
     }
 
     /**
@@ -42,7 +41,7 @@ class CustomerController extends Controller
         'first_name' => 'required|string',
         'last_name' => 'required|string',
         'phone' => 'max:15',
-        'email' => 'required|email|unique:customers'
+        'email' => 'required|email|unique:customers,email'
       ]);  
       
       $customer = new Customer();
