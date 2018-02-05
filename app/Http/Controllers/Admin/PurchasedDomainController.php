@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\PurchasedDomain;
-use Illuminate\Support\Facades\DB;
+use App\{PurchasedDomain, DomainProvider};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -16,8 +15,9 @@ class PurchasedDomainController extends Controller
      */
     public function index()
     {
+      $purchasedDomains = PurchasedDomain::with('domainProvider:id,company_name')->get();
       return view(
-        'admin.purchased-domains.index', ['purchasedDomains' => PurchasedDomain::all()]
+        'admin.purchased-domains.index', ['purchasedDomains' => $purchasedDomains]
       );
     }
 
@@ -28,7 +28,8 @@ class PurchasedDomainController extends Controller
      */
     public function create()
     {
-      $domainProviders = DB::table('domain_providers')->select('company_name as value', 'id as data')->get(); 
+      //domainProviders for Autocomplete 
+      $domainProviders = DomainProvider::all('company_name as value', 'id as data');
       return view(
         'admin.purchased-domains.create', ['domainProviders' => $domainProviders]
       );

@@ -56,7 +56,7 @@
                 @foreach($purchasedDomains as $purchasedDomain)
                   <tr>
                     <td></td>
-                    <td>{{ $purchasedDomain->domain_provider_id }}</td>
+                    <td>{{ $purchasedDomain->domainProvider->company_name }}</td>
                     <td>{{ $purchasedDomain->domain_name }}</td>
                     <td>{{ $purchasedDomain->due_date }}</td>
                     <td>$ {{ $purchasedDomain->total_price_in_dollars }}</td>

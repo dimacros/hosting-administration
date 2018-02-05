@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class PurchasedDomain extends Model
 {
+
+  public function domainProvider()
+  {
+		return $this->belongsTo('App\DomainProvider');
+  }	
+
 	public function validateDates($start_date, $due_date) {
 		$work_star_date = new Carbon($start_date);
 		$difference = $work_star_date->diffInDays(new Carbon($due_date), false);
@@ -15,4 +21,5 @@ class PurchasedDomain extends Model
 		}
 		return false;
 	}
+
 }

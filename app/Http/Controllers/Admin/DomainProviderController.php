@@ -67,7 +67,7 @@ class DomainProviderController extends Controller
         'email' => 'email|nullable'
       ]);  
 
-      $domainProvider = DomainProvider::find($id);
+      $domainProvider = DomainProvider::findOrFail($id);
       $domainProvider->company_name = $request->company_name;
       $domainProvider->description = $request->description;
       $domainProvider->email = $request->email;

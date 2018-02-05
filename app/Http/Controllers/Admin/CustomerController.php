@@ -15,7 +15,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-        return view('admin.customers', ['customers' => Customer::all()]);
+      return view('admin.customers', ['customers' => Customer::all()]);
     }
 
     /**
@@ -25,7 +25,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('admin.customers-create');
+      return view('admin.customers-create');
     }
 
     /**

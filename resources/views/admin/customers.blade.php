@@ -53,7 +53,7 @@
                 <tbody>
               @foreach($customers as $customer)
                   <tr>
-                    <td>{{ $customer->getFullname() }}</td>
+                    <td>{{ $customer->full_name }}</td>
                     <td>{{ $customer->phone }}</td>
                     <td>{{ $customer->email }}</td>
                     <td>
@@ -114,7 +114,7 @@
                       'FormId' => 'formDelete-'.$customer->id,
                     ])
 
-                    <h5>¿Seguro que quiere eliminar a "{{$customer->getFullname()}}"?</h5>
+                    <h5>¿Seguro que quiere eliminar a "{{$customer->full_name}}"?</h5>
                     <form class="d-none" method="POST" id="formDelete-{{$customer->id}}" action="{{ route('admin.clientes.actualizar', $customer->id) }}">
                       {{ method_field('DELETE') }}
                       {{ csrf_field() }}       
