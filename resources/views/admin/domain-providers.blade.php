@@ -92,7 +92,7 @@
                       </div>
 
                       <div class="form-group">
-                        <label for="last_name">Correo electrónico:</label>
+                        <label>Correo electrónico:</label>
                         <input type="text" name="email" class="form-control" value="{{$domainProvider->email}}">
                       </div>
 

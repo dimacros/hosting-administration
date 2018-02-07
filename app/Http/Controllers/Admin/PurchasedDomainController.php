@@ -43,6 +43,8 @@ class PurchasedDomainController extends Controller
      */
     public function store(Request $request)
     {
+      $domainProvider = DomainProvider::firstOrCreate(['company_name' => $request->autocomplete]);
+
       $request->validate([
         'domain_provider_id' => 'required|exists:domain_providers,id',
         'domain_name' => 'required|url|unique:purchased_domains,domain_name',
