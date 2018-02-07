@@ -54,8 +54,8 @@ class PurchasedDomainController extends Controller
       
       $purchasedDomain = new PurchasedDomain();
       
-      if (!$purchasedDomain->validateDates($request->start_date, $request->due_date)) {
-        return back()->with('status', 'Error al registrar. La fecha de vencimiento no puede ser menor a la fecha de compra.');
+      if (!$purchasedDomain->congruentDates($request->start_date, $request->due_date)) {
+        return back()->with('status', 'Error al registrar. La fecha de compra no puede ser mayor a la fecha de vencimiento.');
       }
 
       $purchasedDomain->domain_provider_id = $request->domain_provider_id;
@@ -64,7 +64,7 @@ class PurchasedDomainController extends Controller
       $purchasedDomain->due_date = $request->due_date;
       $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
       $purchasedDomain->description = $purchasedDomain->description;
-      $purchasedDomain->status = 'activo';
+      $purchasedDomain->status = 'active';
       $purchasedDomain->user_id = $request->user_id;
 
       if ($purchasedDomain->save()) {

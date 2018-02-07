@@ -51,7 +51,7 @@ class CustomerController extends Controller
       $customer->email = $request->email;
 
       if ($customer->save()) {
-        return back()->with('status', 'El cliente "'.$customer->getFullname().'" fue registrado exitosamente.');
+        return back()->with('status', 'El cliente "'.$customer->full_name.'" fue registrado exitosamente.');
       }
     }
 
@@ -68,7 +68,7 @@ class CustomerController extends Controller
         'first_name' => 'required|string',
         'last_name' => 'required|string',
         'phone' => 'required|max:15',
-        'email' => 'required|email'
+        'email' => 'required|email|unique:customers,email,'.$id
       ]);  
 
       $customer = Customer::find($id);
@@ -78,7 +78,7 @@ class CustomerController extends Controller
       $customer->email = $request->email;
 
       if ($customer->save()) {
-        return back()->with('status', 'Los datos del cliente "'.$customer->getFullname().'" se actualizaron con éxito.');
+        return back()->with('status', 'Se actualizó con éxito los nuevos datos de "'.$customer->full_name.'".');
       }
     }
 

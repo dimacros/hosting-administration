@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\HostingPlan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +15,7 @@ class HostingPlanController extends Controller
      */
     public function index()
     {
-      return view('admin.hosting-plans.index', ['hostingPlans' => HostingPlans::All()]);       
+      return view('admin.hosting-plans', ['hostingPlans' => HostingPlan::All()]);       
     }
 
     /**
@@ -24,26 +25,24 @@ class HostingPlanController extends Controller
      */
     public function create()
     {
-      return view('admin.hosting-plans.create'); 
+      return view('admin.hosting-plans-create'); 
     }
    
     public function store(Request $request)
     {
       $request->validate([
-        'title' => 'required|string',
-        'description' => 'nullable|string',
-        'phone' => 'max:15',
-        'email' => 'required|email|unique:customers,email'
+        'title' => 'required|unique:hosting_plans,title',
+        'description' => 'required|string',
+        'total_price' => 'required|numeric',
       ]);  
       
       $hostingPlan = new HostingPlan();
       $hostingPlan->title = $request->title;
       $hostingPlan->description = $request->description;
-      $hostingPlan->phone = $request->phone??'Sin número';
-      $hostingPlan->email = $request->email;
+      $hostingPlan->total_price = $request->total_price;
 
       if ($hostingPlan->save()) {
-        return back()->with('status', 'El cliente "'.$hostingPlan->getFullname().'" fue registrado exitosamente.');
+        return back()->with('status', 'El Plan Hosting "'.$hostingPlan->title.'" fue registrado exitosamente.');
       }
     }
 
@@ -57,20 +56,18 @@ class HostingPlanController extends Controller
     public function update(Request $request, $id)
     {
       $request->validate([
-        'title' => 'required|string',
-        'description' => 'nullable|string',
-        'phone' => 'required|max:15',
-        'email' => 'required|email'
+        'title' => 'required|unique:hosting_plans,title,'.$id,
+        'description' => 'required|string',
+        'total_price' => 'required|numeric',
       ]);  
 
-      $hostingPlan = HostingPlan::find($id);
+      $hostingPlan = HostingPlan::findOrFail($id);
       $hostingPlan->title = $request->title;
       $hostingPlan->description = $request->description;
-      $hostingPlan->phone = $request->phone;
-      $hostingPlan->email = $request->email;
+      $hostingPlan->total_price = $request->total_price;
 
       if ($hostingPlan->save()) {
-        return back()->with('status', 'Los datos del cliente "'.$hostingPlan->getFullname().'" se actualizaron con éxito.');
+        return back()->with('status', 'Se actualizó correctamente los nuevos datos de "'.$hostingPlan->title.'"');
       }
     }
 
@@ -84,7 +81,7 @@ class HostingPlanController extends Controller
     {      
         if(HostingPlan::find($id)->delete())
         {
-          return back()->with('status', 'El cliente fue eliminado exitosamente.');
+          return back()->with('status', 'El plan hosting fue eliminado exitosamente.');
         }
     }
 }

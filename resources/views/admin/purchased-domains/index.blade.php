@@ -47,7 +47,7 @@
                     <th scope="col">#</th>
                     <th scope="col">Proveedor de Dominio</th>
                     <th scope="col">Nombre de Dominio</th>
-                    <th scope="col">Fecha de Vencimiento</th>
+                    <th scope="col">Días para Caducar</th>
                     <th scope="col">Precio de Compra</th>
                     <th></th>
                   </tr>
@@ -57,8 +57,13 @@
                   <tr>
                     <td></td>
                     <td>{{ $purchasedDomain->domainProvider->company_name }}</td>
-                    <td>{{ $purchasedDomain->domain_name }}</td>
-                    <td>{{ $purchasedDomain->due_date }}</td>
+                    <td>
+                      {{ $purchasedDomain->domain_name }}
+                      <span class="ml-1 badge badge-pill badge-success">Activo</span>
+                    </td>
+                    <td>
+                      <span style="color: #076c1e; font-weight: 600;">{{ $purchasedDomain->expiration_date_for_humans }} Días</span>
+                    </td>
                     <td>$ {{ $purchasedDomain->total_price_in_dollars }}</td>
                     <td>
                       <a href="#" class="btn btn-success w-100">VER</a>
@@ -73,6 +78,16 @@
       </div><!-- /.col-md-12 -->
     </div><!-- /.row -->
   </main>
+
+    <div class="bs-component">
+      <span class="badge badge-pill badge-primary">Primary</span>
+      <span class="badge badge-pill badge-secondary">Secondary</span>
+      <span class="badge badge-pill badge-danger">Danger</span>
+      <span class="badge badge-pill badge-warning">Warning</span>
+      <span class="badge badge-pill badge-info">Info</span>
+      <span class="badge badge-pill badge-light">Light</span>
+      <span class="badge badge-pill badge-dark">Dark</span></div>
+    
 @endsection
 @push('script')
 

@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 @push('head')
 <style>
-  .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow: auto; }
+  .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow-y: auto; overflow-x: hidden; }
   .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
   .autocomplete-selected { background: #F0F0F0; }
   .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
@@ -85,7 +85,7 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">$</span>
                     </div>
-                    <input type="text" class="form-control" id="total_price_in_dollars" name="total_price_in_dollars" value="{{ old('total_price_in_dollars') }}" required >
+                    <input type="text" class="form-control" id="total_price_in_dollars" name="total_price_in_dollars" value="{{ old('total_price_in_dollars') }}" required pattern="\d*">
                     <div class="input-group-append">
                       <span class="input-group-text">.00</span>
                     </div>

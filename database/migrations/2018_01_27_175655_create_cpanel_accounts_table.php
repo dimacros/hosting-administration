@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateHostingPlansTable extends Migration
+class CreateCpanelAccountsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class CreateHostingPlansTable extends Migration
      */
     public function up()
     {
-        Schema::create('hosting_plans', function (Blueprint $table) {
+        Schema::create('cpanel_accounts', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('title');
-            $table->text('description');
-            $table->decimal('total_price');
+            $table->string('domain_name')->unique();
+            $table->string('user')->unique();
+            $table->string('password')->nullable();
+            $table->char('public_ip', 16)->nullable();
             $table->timestamps();
         });
     }
@@ -29,6 +30,6 @@ class CreateHostingPlansTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('hosting_plans');
+        Schema::dropIfExists('cpanel_accounts');
     }
 }

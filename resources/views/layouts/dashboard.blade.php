@@ -99,7 +99,7 @@
       <div class="app-sidebar__user">
         <img class="app-sidebar__user-avatar" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg" alt="User Image">
         <div>
-          <p class="app-sidebar__user-name">John Doe</p>
+          <p class="app-sidebar__user-name">{{Auth::user()->full_name}}</p>
           <p class="app-sidebar__user-designation">Frontend Developer</p>
         </div>
       </div>

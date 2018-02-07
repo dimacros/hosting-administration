@@ -73,7 +73,7 @@ class DomainProviderController extends Controller
       $domainProvider->email = $request->email;
 
       if ($domainProvider->save()) {
-        return back()->with('status', 'Los datos del proveedor de dominio se actualizaron con éxito.');
+        return back()->with('status', 'Se actualizó con éxito los nuevos datos del proveedor.');
       }
     }
 

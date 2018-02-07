@@ -3,8 +3,8 @@
     <main class="app-content">
       <div class="app-title">
         <div class="tile-body">
-          <h1><i class="fa fa-th-list"></i> Clientes</h1>
-          <p>Lista de todos los clientes</p>
+          <h1><i class="fa fa-th-list"></i> Planes Hosting </h1>
+          <p>Lista de todos los planes hosting</p>
         </div>
         <ul class="app-breadcrumb breadcrumb side">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
@@ -16,7 +16,7 @@
         <div class="col-md-12">
           <div class="tile">
             <div class="tile-body">
-              <a href="{{ url('dashboard/clientes/crear') }}" class="btn btn-primary">Agregar cliente</a>
+              <a href="{{ url('dashboard/planes-hosting/crear') }}" class="btn btn-primary">Agregar Plan Hosting</a>
             </div>
           </div>
         </div>
@@ -44,78 +44,78 @@
                 <thead>
                   <tr>
                     <th>Nombre Completo</th>
-                    <th>Teléfono</th>
-                    <th>Correo electrónico</th>
+                    <th>Precio Anual </th>
                     <th></th>
                     <th></th>
                   </tr>
                 </thead>
                 <tbody>
-              @foreach($customers as $customer)
+              @foreach($hostingPlans as $hostingPlan)
                   <tr>
-                    <td>{{ $customer->full_name }}</td>
-                    <td>{{ $customer->phone }}</td>
-                    <td>{{ $customer->email }}</td>
+                    <td>{{ $hostingPlan->title }}</td>
+                    <td>{{ $hostingPlan->total_price }} Nuevos Soles</td>
                     <td>
-                      <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modalEdit-{{$customer->id}}">
+                      <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modalEdit-{{$hostingPlan->id}}">
                         Actualizar
                       </button>
                     </td>
                     <td>
-                      <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#modalDelete-{{$customer->id}}">
+                      <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#modalDelete-{{$hostingPlan->id}}">
                         Eliminar
                       </button>
                     </td>
                   </tr>
                   <!-- Modal Edit -->
                     @component('components.modal', [ 
-                      'modalId' => 'modalEdit-'. $customer->id, 
+                      'modalId' => 'modalEdit-'. $hostingPlan->id, 
                       'modalTitle' => 'Editar datos del Cliente',
                       'btnCloseClass' => 'btn btn-secondary', 
                       'btnCloseTitle' => 'Cerrar', 
                       'btnSaveClass' => 'btn btn-primary', 
                       'btnSaveTitle' => 'Guardar cambios',
-                      'FormId' => 'formEdit-'. $customer->id,
+                      'FormId' => 'formEdit-'. $hostingPlan->id,
                     ])
 
-                    <form class="d-none" method="POST" id="formEdit-{{$customer->id}}" action="{{ route('admin.clientes.actualizar', $customer->id) }}" >
+                    <form class="d-none" method="POST" id="formEdit-{{$hostingPlan->id}}" action="{{ route('admin.planes-hosting.actualizar', $hostingPlan->id) }}" >
                       {{ method_field('PUT') }}
                       {{ csrf_field() }}
                       <div class="form-group">
-                        <label>Nombre(s):</label>
-                        <input type="text" name="first_name" class="form-control" value="{{$customer->first_name}}" required>
+                        <label class="control-label" for="title">Título:</label>
+                        <input class="form-control" type="text" id="title" name="title" value="{{ $hostingPlan->title }}" required>
                       </div>
-
                       <div class="form-group">
-                        <label>Apellidos:</label>
-                        <input type="text" name="last_name" class="form-control" value="{{$customer->last_name}}" required>
+                        <label for="description">
+                          Agregar una descripción (cantidad de correos, base de datos, etc):
+                        </label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ $hostingPlan->description }}</textarea>
                       </div>
-
                       <div class="form-group">
-                        <label>Teléfono:</label>
-                        <input type="text" name="phone" class="form-control" value="{{$customer->phone}}" required>
+                        <label for="total_price">Precio total:</label>
+                        <div class="input-group">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">S/</span>
+                          </div>
+                          <input type="number" class="form-control" id="total_price" name="total_price" value="{{ $hostingPlan->total_price }}" required>
+                          <div class="input-group-append">
+                            <span class="input-group-text">nuevos soles</span>
+                          </div>
+                        </div>
                       </div>
-
-                      <div class="form-group">
-                        <label for="last_name">Correo electrónico:</label>
-                        <input type="text" name="email" class="form-control" value="{{$customer->email}}" required>
-                      </div>
-
                     </form>
                     @endcomponent
                   <!-- Modal Delete -->
                     @component('components.modal', [ 
-                      'modalId' => 'modalDelete-'.$customer->id, 
+                      'modalId' => 'modalDelete-'.$hostingPlan->id, 
                       'modalTitle' => 'Eliminar',
                       'btnCloseClass' => 'btn btn-danger w-25', 
                       'btnCloseTitle' => 'No', 
                       'btnSaveClass' => 'btn btn-success w-25', 
                       'btnSaveTitle' => 'Sí',
-                      'FormId' => 'formDelete-'.$customer->id,
+                      'FormId' => 'formDelete-'.$hostingPlan->id,
                     ])
 
-                    <h5>¿Seguro que quiere eliminar a "{{$customer->full_name}}"?</h5>
-                    <form class="d-none" method="POST" id="formDelete-{{$customer->id}}" action="{{ route('admin.clientes.eliminar', $customer->id) }}">
+                    <h5>¿Seguro que quiere eliminar a "{{$hostingPlan->title}}"?</h5>
+                    <form class="d-none" method="POST" id="formDelete-{{$hostingPlan->id}}" action="{{ route('admin.planes-hosting.eliminar', $hostingPlan->id) }}">
                       {{ method_field('DELETE') }}
                       {{ csrf_field() }}       
                     </form>
