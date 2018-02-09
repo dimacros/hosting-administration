@@ -1,7 +1,14 @@
 @extends('layouts.dashboard')
 @push('head')
 <style>
-  .autocomplete-suggestions { border: 1px solid #999; background: #FFF; overflow-y: auto; overflow-x: hidden; }
+  div.autocomplete-suggestions { 
+    border: 1px solid #999; 
+    background-color: #FFF; 
+    overflow-y: auto; 
+    overflow-x: hidden; 
+    margin-top: -0.6rem;
+  }
+
   .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
   .autocomplete-selected { background: #F0F0F0; }
   .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
@@ -64,7 +71,7 @@
                   <label for="autocomplete">
                     Nombre del Proveedor de Dominio:
                   </label>
-                  <input type="text" class="form-control" id="autocomplete" name="autocomplete" value="{{ old('autocomplete') }}" autocomplete="off" required autofocus>
+                  <input type="text" class="form-control" id="autocomplete" name="autocomplete" autocomplete="off" value="{{ old('autocomplete') }}" required autofocus>
                 </div> 
                 <input type="hidden" id="domain_provider_id" name="domain_provider_id" value="{{ old('domain_provider_id') }}">
               @endif

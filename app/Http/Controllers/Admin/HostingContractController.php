@@ -1,7 +1,7 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
+use App\{HostingContract, Customer};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -25,7 +25,8 @@ class HostingContractController extends Controller
      */
     public function create()
     {
-        return view('admin.hosting-contracts.create');
+      $customers = Customer::all('id', 'first_name', 'last_name');
+      return view('admin.hosting-contracts.create', ['customers' => $customers]);
     }
 
     /**
