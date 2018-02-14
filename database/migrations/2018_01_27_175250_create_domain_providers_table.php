@@ -19,6 +19,7 @@ class CreateDomainProvidersTable extends Migration
             $table->string('description')->nullable();
             $table->string('email')->nullable();
             $table->timestamps();
+
         });
     }
 

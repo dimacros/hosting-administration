@@ -27,7 +27,7 @@
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <div class="tile">
-          <h3 class="tile-title">Registrar Plan Hosting</h3>
+          <h3 class="tile-title">Registrar Plan Hosting Anual</h3>
           <hr>
           @if (session('status'))
             <div class="alert alert-success" role="alert">
@@ -47,7 +47,7 @@
             {{ csrf_field() }}
             <div class="tile-body">
               <div class="form-group">
-                <label class="control-label" for="title">Título:</label>
+                <label class="control-label" for="title">Título para el Plan Hosting:</label>
                 <input class="form-control" type="text" id="title" name="title" value="{{ old('title') }}" required autofocus>
               </div>
               <div class="form-group">

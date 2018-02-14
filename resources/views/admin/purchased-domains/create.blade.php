@@ -6,7 +6,7 @@
     background-color: #FFF; 
     overflow-y: auto; 
     overflow-x: hidden; 
-    margin-top: -0.6rem;
+    margin-top: -0.25rem;
   }
 
   .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }

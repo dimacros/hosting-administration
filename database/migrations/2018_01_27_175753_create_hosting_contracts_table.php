@@ -18,7 +18,7 @@ class CreateHostingContractsTable extends Migration
         $table->integer('customer_id')->unsigned();
         $table->integer('hosting_plan_contracted_id')->unsigned();
         $table->date('start_date');
-        $table->date('due_date');
+        $table->date('finish_date');
         $table->integer('cpanel_account_id')->unsigned()->nullable();
         $table->enum('status', ['active', 'pending', 'canceled', 'finished', 'suspended']);
         $table->integer('user_id')->unsigned();

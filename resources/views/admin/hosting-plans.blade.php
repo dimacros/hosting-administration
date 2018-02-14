@@ -53,7 +53,7 @@
               @foreach($hostingPlans as $hostingPlan)
                   <tr>
                     <td>{{ $hostingPlan->title }}</td>
-                    <td>{{ $hostingPlan->total_price }} Nuevos Soles</td>
+                    <td>{{ $hostingPlan->total_price_per_year }} Nuevos Soles</td>
                     <td>
                       <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modalEdit-{{$hostingPlan->id}}">
                         Actualizar
@@ -95,7 +95,7 @@
                           <div class="input-group-prepend">
                             <span class="input-group-text">S/</span>
                           </div>
-                          <input type="number" class="form-control" id="total_price" name="total_price" value="{{ $hostingPlan->total_price }}" required>
+                          <input type="number" class="form-control" id="total_price" name="total_price" value="{{ $hostingPlan->total_price_per_year }}" required>
                           <div class="input-group-append">
                             <span class="input-group-text">nuevos soles</span>
                           </div>

@@ -1,4 +1,19 @@
 @extends('layouts.dashboard')
+@push('head')
+<style>
+  .fw-600 {
+    font-weight: 600;
+  }
+
+  .text-success {
+    color: #076c1e!important;
+  }
+
+  .text-warning {
+    color: #c09001!important;
+  }
+</style>
+@endpush
 @section('content')  
   <main class="app-content">
     <div class="app-title">
@@ -54,19 +69,35 @@
                 </thead>
                 <tbody>
                 @foreach($purchasedDomains as $purchasedDomain)
+                <?php  
+                  if ($purchasedDomain->expiration_date_for_humans > 14) {
+                    $color = 'success';
+                    $badge_text = 'Activo';
+                  }
+                  elseif ($purchasedDomain->expiration_date_for_humans >= 0 ) {
+                    $color = 'warning';
+                    $badge_text = 'Próximo a vencer';
+                  }
+                  else {
+                    $color = 'danger';
+                    $badge_text = 'Expirado';                    
+                  }
+                ?>
                   <tr>
                     <td></td>
                     <td>{{ $purchasedDomain->domainProvider->company_name }}</td>
                     <td>
                       {{ $purchasedDomain->domain_name }}
-                      <span class="ml-1 badge badge-pill badge-success">Activo</span>
+                      <span class="ml-1 badge badge-pill badge-{{$color}}">
+                        {{ $badge_text }}
+                      </span>
                     </td>
                     <td>
-                      <span style="color: #076c1e; font-weight: 600;">{{ $purchasedDomain->expiration_date_for_humans }} Días</span>
+                      <span class="fw-600 text-{{$color}}">{{ $purchasedDomain->expiration_date_for_humans }} Días</span>
                     </td>
                     <td>$ {{ $purchasedDomain->total_price_in_dollars }}</td>
                     <td>
-                      <a href="#" class="btn btn-success w-100">VER</a>
+                      <button type="button" class="btn btn-success w-100">VER</button>
                     </td>
                   </tr>
                 @endforeach
@@ -86,7 +117,8 @@
       <span class="badge badge-pill badge-warning">Warning</span>
       <span class="badge badge-pill badge-info">Info</span>
       <span class="badge badge-pill badge-light">Light</span>
-      <span class="badge badge-pill badge-dark">Dark</span></div>
+      <span class="badge badge-pill badge-dark">Dark</span>
+    </div>
     
 @endsection
 @push('script')

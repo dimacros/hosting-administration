@@ -17,8 +17,9 @@ class CreateHostingPlansTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('description');
-            $table->decimal('total_price');
+            $table->decimal('total_price_per_year');
             $table->timestamps();
+            
         });
     }
 

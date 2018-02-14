@@ -18,7 +18,7 @@ class CreatePurchasedDomainsTable extends Migration
             $table->integer('domain_provider_id')->unsigned();
             $table->string('domain_name')->unique();
             $table->date('start_date');
-            $table->date('due_date');
+            $table->date('finish_date');
             $table->decimal('total_price_in_dollars');
             $table->text('description')->nullable();
             $table->enum('status', ['active', 'expired']);

@@ -39,7 +39,7 @@ class HostingPlanController extends Controller
       $hostingPlan = new HostingPlan();
       $hostingPlan->title = $request->title;
       $hostingPlan->description = $request->description;
-      $hostingPlan->total_price = $request->total_price;
+      $hostingPlan->total_price_per_year = $request->total_price;
 
       if ($hostingPlan->save()) {
         return back()->with('status', 'El Plan Hosting "'.$hostingPlan->title.'" fue registrado exitosamente.');
@@ -64,7 +64,7 @@ class HostingPlanController extends Controller
       $hostingPlan = HostingPlan::findOrFail($id);
       $hostingPlan->title = $request->title;
       $hostingPlan->description = $request->description;
-      $hostingPlan->total_price = $request->total_price;
+      $hostingPlan->total_price_per_year = $request->total_price;
 
       if ($hostingPlan->save()) {
         return back()->with('status', 'Se actualizó correctamente los nuevos datos de "'.$hostingPlan->title.'"');

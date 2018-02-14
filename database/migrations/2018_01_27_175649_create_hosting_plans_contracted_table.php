@@ -18,7 +18,8 @@ class CreateHostingPlansContractedTable extends Migration
             $table->integer('hosting_plan_id')->unsigned();
             $table->string('title');
             $table->text('description');
-            $table->decimal('total_price');
+            $table->decimal('total_price_per_year');
+            $table->integer('contract_duration_in_years');
             $table->timestamps();
             
             $table->foreign('hosting_plan_id')
