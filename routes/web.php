@@ -63,6 +63,12 @@ Route::group([
 	Route::post('contratos-hosting/crear', 'HostingContractController@store');
 	Route::put('contratos-hosting/{id}', 'HostingContractController@update')
 	->name('admin.contratos-hosting.actualizar');
+	Route::post('contratos-hosting/renovar', 'HostingContractController@renovate')
+	->name('admin.contratos-hosting.renovar');
+	Route::put('cuentas-cpanel/{id}', 'HostingContractController@cpanelAccountUpdate')
+	->name('admin.cuentas-cpanel.actualizar');	
+
+
 
   Route::get('dominios-comprados', 'PurchasedDomainController@index');
 	Route::get('dominios-comprados/crear', 'PurchasedDomainController@create');
@@ -71,28 +77,5 @@ Route::group([
 	->name('admin.dominios-comprados.actualizar');
 	Route::post('dominios-comprados/renovar', 'PurchasedDomainController@renovate')
 	->name('admin.dominios-comprados.renovar');
-
-	Route::put('cuentas-cpanel/{id}', function(Request $request, $id) { 
-	
-  	$request->validate([
-    	'domain_name' => 'required|url|unique:cpanel_accounts,domain_name,'.$id,
-    	'user' => 'required|unique:cpanel_accounts,user,'.$id,
-    	'password' => 'nullable',
-    	'public_ip' => 'nullable|ip'
-   	]);  
-
-  	$cpanelAccount = App\CpanelAccount::findOrFail($id);
-  	$cpanelAccount->domain_name = $request->domain_name;
-  	$cpanelAccount->user = $request->user;
-  	$cpanelAccount->password = $request->password;
-  	$cpanelAccount->public_ip = $request->public_ip;
-
-  	if ( $cpanelAccount->save() ) {
-    	return back()->with('status', 
-    		'Los datos de la cuenta cPanel fueron actualizados con éxito.'
-    	);
-  	}
-
-	})->name('admin.cuentas-cpanel.actualizar');	
 	
 });

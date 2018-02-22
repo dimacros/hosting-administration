@@ -14,11 +14,14 @@ class HostingContractController extends Controller
      */
     public function index()
     {
-        $hostingContracts = HostingContract::where('status', 'active')
-        ->with('Customer:id,first_name,last_name,company_name')
-        ->with('HostingPlanContracted:id,title')
-        ->with('CpanelAccount')->take(10)->get();
-        return view('admin.hosting-contracts.index', ['hostingContracts' => $hostingContracts]);
+        $hostingContracts = HostingContract::where('status', 'active')->with([
+          'Customer:id,first_name,last_name,company_name',
+          'HostingPlanContracted:id,title', 'CpanelAccount'
+        ])->get();
+        $hostingPlans = HostingPlan::all('id', 'title');
+        return 
+          view('admin.hosting-contracts.index')
+          ->with('hostingContracts', $hostingContracts)->with('hostingPlans', $hostingPlans);
     }
 
     /**
@@ -73,7 +76,6 @@ class HostingContractController extends Controller
       $hostingContract->total_price = (
         $request->contract_period * $hostingPlan->total_price_per_year
       );
-      $hostingContract->cpanel_account_id = $cpanelAccount->id;
       $hostingContract->status = 'active'; 
       $hostingContract->user_id = $request->user_id;
       $hostingContractIsSaved = $hostingContract->save();
@@ -89,6 +91,68 @@ class HostingContractController extends Controller
 
       if ( $hostingContractIsSaved ) {
         return back()->with('status', 'El contrato hosting fue registrado con éxito.');
+      }
+    }
+
+    public function renovate(Request $request) 
+    {
+      $request->validate([
+        'customer_id' => 'required|exists:customers,id',
+        'cpanel_account_id' => 'required|exists:cpanel_accounts,id',
+        'hosting_plan_id' => 'required|exists:hosting_plans,id',
+        'start_date' => 'required|date',
+        'contract_period' => 'required|in:1,2,3',
+        'user_id' => 'required|exists:users,id'
+      ]);  
+       
+      $hostingPlan = HostingPlan::findOrFail($request->hosting_plan_id);
+      
+      $hostingContract = new HostingContract();
+      $hostingContract->customer_id = $request->customer_id;
+      $hostingContract->cpanel_account_id = $request->cpanel_account_id;
+      $hostingContract->start_date = $request->start_date;
+      $hostingContract->finish_date = 
+      $hostingContract->calculateFinishDate($request->contract_period);
+      $hostingContract->total_price = (
+        $request->contract_period * $hostingPlan->total_price_per_year
+      );
+      $hostingContract->status = 'active'; 
+      $hostingContract->user_id = $request->user_id;
+      $hostingContractIsSaved = $hostingContract->save();
+
+      $hostingPlanContracted = new HostingPlanContracted();
+      $hostingPlanContracted->hosting_plan_id = $hostingPlan->id;
+      $hostingPlanContracted->hosting_contract_id = $hostingContract->id;
+      $hostingPlanContracted->title = $hostingPlan->title;
+      $hostingPlanContracted->description = $hostingPlan->description;
+      $hostingPlanContracted->total_price_per_year = $hostingPlan->total_price_per_year;
+      $hostingPlanContracted->contract_duration_in_years = $request->contract_period;
+      $hostingPlanContracted->save();
+
+      if ( $hostingContractIsSaved ) {
+        return back()->with('status', 'El contrato hosting fue renovado con éxito.');
+      }
+    }
+
+    public function cpanelAccountUpdate(Request $request, $id) 
+    {
+      $request->validate([
+        'domain_name' => 'required|url|unique:cpanel_accounts,domain_name,'.$id,
+        'user' => 'required|unique:cpanel_accounts,user,'.$id,
+        'password' => 'nullable',
+        'public_ip' => 'nullable|ip'
+      ]);  
+
+      $cpanelAccount = CpanelAccount::findOrFail($id);
+      $cpanelAccount->domain_name = $request->domain_name;
+      $cpanelAccount->user = $request->user;
+      $cpanelAccount->password = $request->password;
+      $cpanelAccount->public_ip = $request->public_ip;
+
+      if ( $cpanelAccount->save() ) {
+        return back()->with('status', 
+          'Los datos de la cuenta cPanel fueron actualizados con éxito.'
+        );
       }
     }
 

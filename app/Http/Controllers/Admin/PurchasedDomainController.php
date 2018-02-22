@@ -97,7 +97,7 @@ class PurchasedDomainController extends Controller
       $purchasedDomain->user_id = $request->user_id;
       
       if ( $purchasedDomain->save() ) {
-        return back()->with('status', 'La compra para renovar el dominio fue registrada con éxito');
+        return back()->with('status', 'La compra de dominio fue renovada con éxito');
       }
     }
     /**

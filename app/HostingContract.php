@@ -41,6 +41,10 @@ class HostingContract extends Model
 	public function getExpirationDateForHumansAttribute() {
 		return $this->now->diffInDays($this->finish_date, false);
 	}
+
+	public function getStartDateToRenovateAttribute() {
+		return $this->finish_date->addDay()->toDateString();
+	}
 	
 	public function isDayToSendRenewalEmail() {
 		$numberOfMissingDays = [3, 7, 15, 30];

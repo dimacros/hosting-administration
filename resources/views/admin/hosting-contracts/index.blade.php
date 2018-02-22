@@ -120,10 +120,10 @@
                       <button type="button" class="btn btn-cpanel w-100"  data-toggle="modal" data-target="#cpanel-{{ $hostingContract->id }}">cPanel</button>
                     </td>
                     <td>
-                      <button type="button" class="btn btn-success w-100"  data-toggle="modal" data-target="#modal-{{ $hostingContract->id }}">VER</button>
+                      <button type="button" class="btn btn-success w-100"  data-toggle="modal" data-target="#renovateHosting-{{ $hostingContract->id }}">RENOVAR</button>
                     </td>
                   </tr> 
-                  <!-- Modal -->
+                  <!-- Modal cPanel-->
                   <div class="modal fade" id="cpanel-{{ $hostingContract->id }}" tabindex="-1" role="dialog" aria-labelledby="cpanelLabel-{{ $hostingContract->id }}" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
@@ -165,7 +165,64 @@
                         </div>
                       </div>
                     </div>
-                  </div>  
+                  </div><!-- /.modal -->
+                  <!-- Modal renovateHosting -->
+                  <div class="modal fade" id="renovateHosting-{{ $hostingContract->id }}" tabindex="-1" role="dialog" aria-labelledby="renovateHostingLabel-{{ $hostingContract->id }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h4 class="modal-title" id="renovateHostinglLabel-{{ $hostingContract->id }}">
+                            Renovar o Cambiar Plan Hosting
+                          </h4>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                        <form method="POST" id="renovateHostingForm-{{$hostingContract->id}}" action="{{ route('admin.contratos-hosting.renovar') }}">
+                          {{ csrf_field() }}
+                          <input type="hidden" name="customer_id" value="{{ $hostingContract->customer->id }}">
+                          <input type="hidden" name="cpanel_account_id" value="{{ $hostingContract->cpanelAccount->id }}">
+                          <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                          <div class="form-group">
+                            <label for="hosting_plan_id">Plan Hosting:</label>
+                            <select class="custom-select" id="hosting_plan_id" name="hosting_plan_id" required>
+                              <option value="" selected disabled>
+                                Seleccione un plan hosting..
+                              </option>
+                            @foreach($hostingPlans as $hostingPlan)
+                              <option value="{{$hostingPlan->id}}">
+                                {{$hostingPlan->title}}
+                              </option>  
+                            @endforeach
+                            </select>
+                          </div>
+                          <div class="form-row">
+                            <div class="form-group col-md-5">
+                              <label>Fecha de inicio:</label>
+                              <input type="date" class="form-control" name="start_date" value="{{ $hostingContract->start_date_to_renovate }}" readonly>
+                            </div>    
+                            <div class="form-group col-md-7">
+                              <label for="contract_period">Duración del contrato:</label>
+                              <select class="custom-select" id="contract_period" name="contract_period" required>
+                                <option value="" selected disabled>Seleccione una opción..</option>
+                                <option value="1">1 año</option>
+                                <option value="2">2 años</option>
+                                <option value="3">3 años</option>
+                              </select>
+                            </div>                  
+                          </div>
+                        </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button form="renovateHostingForm-{{$hostingContract->id}}" type="submit" class="btn btn-primary" >
+                            Guardar cambios
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div><!-- /.modal -->
                 @endforeach
                 </tbody>
               </table>

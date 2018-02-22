@@ -36,7 +36,7 @@ class PurchasedDomain extends Model
 		return $this->now->diffInDays($this->finish_date, false);
 	}
 
-	public function getStartDateToRenewDomainAttribute() {
+	public function getStartDateToRenovateAttribute() {
 		return $this->finish_date->addDay()->toDateString();
 	}
 

@@ -127,7 +127,7 @@
                             <div class="form-row">
                               <div class="form-group col-md-5">
                                 <label>Fecha de inicio:</label>
-                                <input type="date" class="form-control" name="start_date" value="{{ $purchasedDomain->start_date_to_renew_domain }}" readonly>
+                                <input type="date" class="form-control" name="start_date" value="{{ $purchasedDomain->start_date_to_renovate }}" readonly>
                               </div>    
                               <div class="form-group col-md-7">
                                 <label>Fecha de vencimiento:</label>

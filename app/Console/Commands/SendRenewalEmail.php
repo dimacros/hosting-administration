@@ -38,8 +38,14 @@ class SendRenewalEmail extends Command
      */
     public function handle()
     {
-      $purchasedDomains = PurchasedDomain::with('domainProvider:id,company_name')->get();
-      $hostingContracts = HostingContract::with('customer:id,first_name,last_name,company_name')->get();
+      $purchasedDomains = 
+      PurchasedDomain::with([
+        'acquiredDomain:id,domain_name', 'domainProvider:id,company_name',
+        'customer:id,first_name,last_name,company_name'
+      ])->get();        
+      $hostingContracts = 
+      HostingContract::with('customer:id,first_name,last_name,company_name')->get();
+
       foreach ($purchasedDomains as $purchasedDomain)
       { 
         if ( $purchasedDomain->isDayToSendRenewalEmail() ) {
@@ -48,10 +54,11 @@ class SendRenewalEmail extends Command
         }
         elseif ( $purchasedDomain->isExpired() ) {
           $this->info('Dominio hosting expirado.');
-          $purchasedDomain->status = 'expired';
-          $purchasedDomain->save();
+          $purchasedDomain->acquiredDomain->status = 'expired';
+          $purchasedDomain->acquiredDomain->save();
         }
       }
+      
       foreach ($hostingContracts as $hostingContract)
       { 
         if ( $hostingContract->isDayToSendRenewalEmail() ) {
