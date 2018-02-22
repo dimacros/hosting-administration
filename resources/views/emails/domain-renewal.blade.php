@@ -44,7 +44,7 @@
          
                     <h1>Recordatorio para renovar dominio</h1>
                     <p class="lead">Estimado Julio Flores Vicuña (Grupo JYP S.A.C).</p>
-                    <p>Se le recuerda que el dominio "<span style="font-weight: 600;">{{$purchasedDomain->domain_name}}</span>" vence el día <span style="font-weight: 600; color: red;">{{$purchasedDomain->finish_date->format('d-m-Y')}}</span>, favor de renovar el dominio antes de la fecha indicada para evitar futuros inconvenientes.</p>
+                    <p>Se le recuerda que el dominio "<span style="font-weight: 600;">{{$purchasedDomain->acquiredDomain->domain_name}}</span>" perteneciente al cliente <span style="font-weight: 600;">"{{ $purchasedDomain->customer->full_name }}"</span> vence el día <span style="font-weight: 600; color: red;">{{$purchasedDomain->finish_date->format('d-m-Y')}}</span>, favor de renovar el dominio antes de la fecha indicada.</p>
                     <table class="callout">
                       <tr><th class="callout-inner primary">
                       <p>Nota: Pasado los 40 días de la fecha de expiración, los servicios asociados al dominio dejarán de funcionar, hasta que el dominio sea renovado nuevamente.</p>
