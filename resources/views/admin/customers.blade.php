@@ -93,7 +93,7 @@
 
                       <div class="form-group">
                         <label>Nombre de Empresa (opcional):</label>
-                        <input type="text" name="company_name" class="form-control" value="{{$customer->company_name}}" required>
+                        <input type="text" name="company_name" class="form-control" value="{{$customer->company_name}}">
                       </div>
 
                       <div class="form-group">

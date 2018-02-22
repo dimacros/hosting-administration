@@ -29,8 +29,10 @@ class HostingContractController extends Controller
     public function create()
     {
       $customers = Customer::all('id', 'first_name', 'last_name', 'company_name');
-      $hosting_plans = HostingPlan::all('id', 'title');
-      return view('admin.hosting-contracts.create', ['customers' => $customers, 'hosting_plans' => $hosting_plans]);
+      $hostingPlans = HostingPlan::all('id', 'title');
+      return 
+        view('admin.hosting-contracts.create')
+        ->with('customers', $customers)->with('hostingPlans', $hostingPlans);
     }
 
     /**
@@ -52,9 +54,7 @@ class HostingContractController extends Controller
         'cpanel.public_ip' => 'nullable|ip',
         'user_id' => 'required|exists:users,id'
       ]);  
- 
-      $hostingPlan = HostingPlan::findOrFail($request->hosting_plan_id);
-      
+       
       $cpanelAccount = new CpanelAccount();
       $cpanelAccount->domain_name = $request->cpanel['domain_name'];
       $cpanelAccount->user = $request->cpanel['user'];
@@ -62,17 +62,21 @@ class HostingContractController extends Controller
       $cpanelAccount->public_ip = $request->cpanel['public_ip'];
       $cpanelAccount->save();
 
+      $hostingPlan = HostingPlan::findOrFail($request->hosting_plan_id);
+      
       $hostingContract = new HostingContract();
       $hostingContract->customer_id = $request->customer_id;
+      $hostingContract->cpanel_account_id = $cpanelAccount->id;
       $hostingContract->start_date = $request->start_date;
-      $hostingContract->finish_date = $hostingContract->calculateFinishDate($request->contract_period);
+      $hostingContract->finish_date = 
+      $hostingContract->calculateFinishDate($request->contract_period);
       $hostingContract->total_price = (
         $request->contract_period * $hostingPlan->total_price_per_year
       );
       $hostingContract->cpanel_account_id = $cpanelAccount->id;
       $hostingContract->status = 'active'; 
       $hostingContract->user_id = $request->user_id;
-      $hostingContract->save();
+      $hostingContractIsSaved = $hostingContract->save();
 
       $hostingPlanContracted = new HostingPlanContracted();
       $hostingPlanContracted->hosting_plan_id = $hostingPlan->id;
@@ -81,8 +85,9 @@ class HostingContractController extends Controller
       $hostingPlanContracted->description = $hostingPlan->description;
       $hostingPlanContracted->total_price_per_year = $hostingPlan->total_price_per_year;
       $hostingPlanContracted->contract_duration_in_years = $request->contract_period;
+      $hostingPlanContracted->save();
 
-      if ($hostingPlanContracted->save()) {
+      if ( $hostingContractIsSaved ) {
         return back()->with('status', 'El contrato hosting fue registrado con éxito.');
       }
     }

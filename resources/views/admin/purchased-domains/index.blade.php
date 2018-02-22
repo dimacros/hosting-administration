@@ -60,7 +60,7 @@
                 <thead class="thead-dark">
                   <tr>
                     <th scope="col">#</th>
-                    <th scope="col">Proveedor de Dominio</th>
+                    <th scope="col">Nombre del Cliente o Empresa</th>
                     <th scope="col">Nombre de Dominio</th>
                     <th scope="col">Días para Caducar</th>
                     <th scope="col">Precio de Compra</th>
@@ -85,9 +85,9 @@
                 ?>
                   <tr>
                     <td>N° {{ str_pad($purchasedDomain->id, 5, "0", STR_PAD_LEFT) }}</td>
-                    <td>{{ $purchasedDomain->domainProvider->company_name }}</td>
+                    <td>{{ $purchasedDomain->customer->full_name }}</td>
                     <td>
-                      {{ $purchasedDomain->domain_name }}
+                      {{ $purchasedDomain->acquiredDomain->domain_name }}
                       <span class="ml-1 badge badge-pill badge-{{$color}}">
                         {{ $badge_text }}
                       </span>
@@ -113,9 +113,11 @@
                           </button>
                         </div>
                         <div class="modal-body my-3">
-                          <form method="POST" id="domain-{{ $purchasedDomain->id }}" action="{{ route('admin.renovar-dominio') }}">
+                          <form method="POST" id="purchasedDomain-{{ $purchasedDomain->id }}" action="{{ route('admin.dominios-comprados.renovar') }}">
                             {{ csrf_field() }}
-                            <input type="hidden" name="purchased_domain_id" value="{{ $purchasedDomain->id }}">
+                            <input type="hidden" name="acquired_domain_id" value="{{ $purchasedDomain->acquired_domain_id }}">
+                            <input type="hidden" name="domain_provider_id" value="{{ $purchasedDomain->domain_provider_id }}">
+                            <input type="hidden" name="customer_id" value="{{ $purchasedDomain->customer_id }}">
                             <input type="hidden" name="user_id" value="{{ Auth::id() }}">
 
                             <div class="form-group">
@@ -152,7 +154,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button form="domain-{{ $purchasedDomain->id }}" type="submit" class="btn btn-primary">Guardar cambios</button>
+                          <button form="purchasedDomain-{{ $purchasedDomain->id }}" type="submit" class="btn btn-primary">Guardar cambios</button>
                         </div>
                       </div>
                     </div>
@@ -166,19 +168,5 @@
         </div><!-- /.tile -->
       </div><!-- /.col-md-12 -->
     </div><!-- /.row -->
-  </main>
-
-    <div class="bs-component">
-      <span class="badge badge-pill badge-primary">Primary</span>
-      <span class="badge badge-pill badge-secondary">Secondary</span>
-      <span class="badge badge-pill badge-danger">Danger</span>
-      <span class="badge badge-pill badge-warning">Warning</span>
-      <span class="badge badge-pill badge-info">Info</span>
-      <span class="badge badge-pill badge-light">Light</span>
-      <span class="badge badge-pill badge-dark">Dark</span>
-    </div>
-    
+  </main>   
 @endsection
-@push('script')
-
-@endpush

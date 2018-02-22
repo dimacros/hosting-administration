@@ -69,6 +69,8 @@ Route::group([
 	Route::post('dominios-comprados/crear', 'PurchasedDomainController@store');
 	Route::put('dominios-comprados/{id}', 'PurchasedDomainController@update')
 	->name('admin.dominios-comprados.actualizar');
+	Route::post('dominios-comprados/renovar', 'PurchasedDomainController@renovate')
+	->name('admin.dominios-comprados.renovar');
 
 	Route::put('cuentas-cpanel/{id}', function(Request $request, $id) { 
 	
@@ -92,33 +94,5 @@ Route::group([
   	}
 
 	})->name('admin.cuentas-cpanel.actualizar');	
-
-	Route::post('renovar-dominio', function(Request $request) {
-
-		$request->validate([
-			'purchased_domain_id' => 'required|exists:purchased_domains,id',
-			'start_date' => 'required|date', 
-			'finish_date' => 'required|date|after:start_date',
-			'total_price_in_dollars' => 'required|numeric'
-		]);
-
-		$renewedDomain = new App\RenewedDomain();
-		$renewedDomain->purchased_domain_id = $request->purchased_domain_id;
-		$renewedDomain->start_date = $request->start_date;
-		$renewedDomain->finish_date = $request->finish_date;
-		$renewedDomain->total_price_in_dollars = $request->total_price_in_dollars;
-		$renewedDomain->user_id = $request->user_id;
-
-		$purchasedDomain = App\PurchasedDomain::findOrFail($request->purchased_domain_id);
-		if ($purchasedDomain->status === 'expired') {
-			$purchasedDomain->status = 'active';
-			$purchasedDomain->save();
-		}
-
-		if ( $renewedDomain->save() ) {
-			return back()->with('status', 'La renovación del dominio fue registrada con éxito.');
-		} 
-
-	})->name('admin.renovar-dominio');	
 	
 });

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\{PurchasedDomain, DomainProvider};
+use App\{AcquiredDomain, Customer, DomainProvider, PurchasedDomain};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -15,12 +15,12 @@ class PurchasedDomainController extends Controller
      */
     public function index()
     {
-      $purchasedDomains = PurchasedDomain::where('status', 'active')
-                          ->with('domainProvider:id,company_name')
-                          ->take(10)->get();
-      return view(
-        'admin.purchased-domains.index', ['purchasedDomains' => $purchasedDomains]
-      );
+      $purchasedDomains = 
+      PurchasedDomain::with([
+      'acquiredDomain:id,domain_name', 'domainProvider:id,company_name',
+      'customer:id,first_name,last_name,company_name'])->get();             
+      return 
+        view('admin.purchased-domains.index')->with('purchasedDomains', $purchasedDomains);
     }
 
     /**
@@ -30,11 +30,11 @@ class PurchasedDomainController extends Controller
      */
     public function create()
     {
-      //domainProviders for Autocomplete 
-      $domainProviders = DomainProvider::all('company_name as value', 'id as data');
-      return view(
-        'admin.purchased-domains.create', ['domainProviders' => $domainProviders]
-      );
+      $domainProviders = DomainProvider::all('id', 'company_name');
+      $customers = Customer::all('id', 'first_name', 'last_name', 'company_name');
+      return 
+        view('admin.purchased-domains.create')
+        ->with('domainProviders', $domainProviders)->with('customers', $customers); 
     }
 
     /**
@@ -45,33 +45,61 @@ class PurchasedDomainController extends Controller
      */
     public function store(Request $request)
     {
-      $domainProvider = DomainProvider::firstOrCreate(['company_name' => $request->autocomplete]);
-
       $request->validate([
         'domain_provider_id' => 'required|exists:domain_providers,id',
-        'domain_name' => 'required|url|unique:purchased_domains,domain_name',
+        'customer_id' => 'required|exists:customers,id',
         'start_date' => 'required|date',
         'finish_date' => 'required|date|after:start_date',
         'total_price_in_dollars' => 'required|numeric',
-        'description' => '',
+        'acquiredDomain.domain_name' => 'required|unique:acquired_domains,domain_name',
+        'acquiredDomain.description' => 'nullable',
+        'user_id' => 'required|exists:users,id'
+      ]);  
+      
+      $acquiredDomain = new AcquiredDomain();
+      $acquiredDomain->domain_name = $request->acquiredDomain['domain_name'];
+      $acquiredDomain->description = $request->acquiredDomain['description'];
+      $acquiredDomain->status = 'active';
+      $acquiredDomain->save();
+      $purchasedDomain = new PurchasedDomain();
+      $purchasedDomain->acquired_domain_id = $acquiredDomain->id;
+      $purchasedDomain->domain_provider_id = $request->domain_provider_id;
+      $purchasedDomain->customer_id = $request->customer_id;
+      $purchasedDomain->start_date = $request->start_date;
+      $purchasedDomain->finish_date = $request->finish_date;
+      $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
+      $purchasedDomain->user_id = $request->user_id;
+      
+      if ( $purchasedDomain->save() ) {
+        return back()->with('status', 'La compra de dominio fue registrada con éxito');
+      }
+    }
+
+    public function renovate(Request $request) 
+    {
+      $request->validate([
+        'acquired_domain_id' => 'required|exists:acquired_domains,id',
+        'domain_provider_id' => 'required|exists:domain_providers,id',
+        'customer_id' => 'required|exists:customers,id',
+        'start_date' => 'required|date',
+        'finish_date' => 'required|date|after:start_date',
+        'total_price_in_dollars' => 'required|numeric',
         'user_id' => 'required|exists:users,id'
       ]);  
       
       $purchasedDomain = new PurchasedDomain();
+      $purchasedDomain->acquired_domain_id = $request->acquired_domain_id;
       $purchasedDomain->domain_provider_id = $request->domain_provider_id;
-      $purchasedDomain->domain_name = $request->domain_name;
+      $purchasedDomain->customer_id = $request->customer_id;
       $purchasedDomain->start_date = $request->start_date;
       $purchasedDomain->finish_date = $request->finish_date;
       $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
-      $purchasedDomain->description = $request->description;
-      $purchasedDomain->status = 'active';
       $purchasedDomain->user_id = $request->user_id;
-
-      if ($purchasedDomain->save()) {
-        return back()->with('status', 'La compra de dominio fue registrado con éxito');
+      
+      if ( $purchasedDomain->save() ) {
+        return back()->with('status', 'La compra para renovar el dominio fue registrada con éxito');
       }
     }
-
     /**
      * Display the specified resource.
      *

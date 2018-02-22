@@ -16,6 +16,7 @@ class CreateHostingContractsTable extends Migration
       Schema::create('hosting_contracts', function (Blueprint $table) {
         $table->increments('id');
         $table->integer('customer_id')->unsigned();
+        $table->integer('cpanel_account_id')->unsigned();
         $table->date('start_date');
         $table->date('finish_date');
         $table->decimal('total_price');
@@ -25,6 +26,10 @@ class CreateHostingContractsTable extends Migration
 
         $table->foreign('customer_id')
               ->references('id')->on('customers')
+              ->onDelete('cascade')->onUpdate('cascade');
+
+        $table->foreign('cpanel_account_id')
+              ->references('id')->on('cpanel_accounts')
               ->onDelete('cascade')->onUpdate('cascade');
 
         $table->foreign('user_id')

@@ -1,20 +1,6 @@
 @extends('layouts.dashboard')
 @push('head')
-<style>
-  div.autocomplete-suggestions { 
-    border: 1px solid #999; 
-    background-color: #FFF; 
-    overflow-y: auto; 
-    overflow-x: hidden; 
-    margin-top: -0.25rem;
-  }
-
-  .autocomplete-suggestion { padding: 2px 5px; white-space: nowrap; overflow: hidden; }
-  .autocomplete-selected { background: #F0F0F0; }
-  .autocomplete-suggestions strong { font-weight: normal; color: #3399FF; }
-  .autocomplete-group { padding: 2px 5px; }
-  .autocomplete-group strong { display: block; border-bottom: 1px solid #000; }
-</style>
+<link rel="stylesheet" href="{{ asset('css/selectize.bootstrap3.css') }}">
 @endpush
 @section('content')  
   <main class="app-content">
@@ -66,24 +52,48 @@
             {{ csrf_field() }}
             <input type="hidden" name="user_id" value="{{ Auth::id() }}">
             <div class="tile-body">
-              @if($domainProviders->isNotEmpty())
-                <div class="form-group">
-                  <label for="autocomplete">
-                    Nombre del Proveedor de Dominio:
-                  </label>
-                  <input type="text" class="form-control" id="autocomplete" name="autocomplete" autocomplete="off" value="{{ old('autocomplete') }}" required autofocus>
-                </div> 
-                <input type="hidden" id="domain_provider_id" name="domain_provider_id" value="{{ old('domain_provider_id') }}">
-              @endif
+              <div class="form-group">
+                <label for="domain_provider_id">
+                   Nombre del Proveedor de Dominio:
+                </label>
+                <select class="form-control" id="domain_provider_id" name="domain_provider_id" required>
+                  <option value="">Seleccione un proveedor de dominio..</option>
+                  @foreach($domainProviders as $domainProvider)
+                    <option value="{{ $domainProvider->id }}">
+                      {{ $domainProvider->company_name }}
+                    </option>  
+                  @endforeach
+                </select>
+              </div> 
+              <div class="form-group">
+                <label for="customer_id">
+                  Nombre del Cliente o la Empresa:
+                </label>
+                <select class="form-control" id="customer_id" name="customer_id" required>
+                  <option value="">Seleccione un cliente o empresa..</option>
+                  @foreach($customers as $customer)
+                    <option value="{{ $customer->id }}">{{ $customer->full_name }}</option>  
+                  @endforeach
+                </select>
+              </div> 
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="url_domain_name">Nombre de dominio:</label>
+                  <label for="start_date">Fecha de compra:</label>
+                  <input type="date" class="form-control" id="start_date" name="start_date" value="{{ old('start_date') }}">
+                </div>
+                <div class="form-group col-md-6">
+                  <label for="finish_date">Fecha de vencimiento:</label>
+                  <input type="date" class="form-control" id="finish_date" name="finish_date" value="{{ old('finish_date') }}">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="domain_name">Nombre de dominio:</label>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">http://</span>
                     </div>
-                    <input type="text" class="form-control" id="url_domain_name" name="url_domain_name" value="{{ old('url_domain_name') }}" autocomplete="off" required>
-                    <input type="hidden" id="domain_name" name="domain_name" value="{{ old('domain_name') }}">
+                    <input type="text" class="form-control" id="domain_name" name="acquiredDomain[domain_name]" value="{{ old('acquiredDomain.domain_name') }}" required>
                   </div>
                 </div>
                 <div class="form-group col-md-6">
@@ -99,23 +109,12 @@
                   </div>
                 </div>
               </div>
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label for="datepicker_start">Fecha de compra:</label>
-                  <input type="text" class="form-control" id="datepicker_start" name="datepicker_start" value="{{ old('datepicker_start') }}" required>
-                  <input type="hidden" id="start_date" name="start_date" value="{{ old('start_date') }}">
-                </div>
-                <div class="form-group col-md-6">
-                  <label for="datepicker_end">Fecha de vencimiento:</label>
-                  <input type="text" class="form-control" id="datepicker_end" name="datepicker_end" value="{{ old('datepicker_end') }}" required>
-                  <input type="hidden" id="finish_date" name="finish_date" value="{{ old('finish_date') }}">
-                </div>
-              </div>
               <div class="form-group">
                 <label for="description">
                   Agregar una descripción sobre el dominio (DNS, soporte, etc):
                 </label>
-                <textarea class="form-control" id="description" name="description" value="{{ old('description') }}" rows="3"></textarea>
+                <textarea class="form-control" id="description" name="acquiredDomain[description]" rows="3">{{ old('acquiredDomain.description') }}
+                </textarea>
               </div>
             </div><!-- /.tile-body -->
             <div class="tile-footer">
@@ -130,57 +129,13 @@
   </main>
 @endsection
 @push('script')
-<!-- Autocomplete plugin-->
-  <script src="{{ asset('js/plugins/jquery.autocomplete.min.js') }}"></script>
-  <script src="{{ asset('js/plugins/bootstrap-datepicker.min.js') }}"></script>
-  <script src="{{ asset('js/plugins/bootstrap-datepicker.es.min.js') }}"></script>
+<!-- Selectize plugin-->
+  <script src="{{ asset('js/plugins/selectize.min.js') }}"></script>
   <script type="text/javascript">
   $(document).ready(function() {
-    /*
-      CUSTOM AUTOCOMPLETE
-    *****************************
-    */
-      var domainProviders = @json($domainProviders);
-      $('#autocomplete').autocomplete({
-        lookup: domainProviders,
-        onSelect: function (suggestion) {
-          $('#domain_provider_id').attr("value", suggestion.data);
-        }
-      });
-
-    /*
-      CUSTOM URL
-    *****************************
-    */
-      $('#url_domain_name').keyup(function() {
-        $('#domain_name').attr("value", "http://"+$(this).val());
-      });
-
-    /*
-      CUSTOM DATEPICKER
-    *****************************
-    */
-      $('#datepicker_start').datepicker({
-        autoclose: true,
-        format: "dd/mm/yyyy",
-        language: "es",
-        todayHighlight: true
-      }).on('hide', function(e) {
-        startDate = $(this).val().split("/");
-        parseStartDate = startDate[2]+"-"+startDate[1]+"-"+startDate[0];
-        $('#start_date').attr("value", parseStartDate);
-      });
-
-      $('#datepicker_end').datepicker({
-        autoclose: true,
-        format: "dd/mm/yyyy",
-        language: "es",
-        todayHighlight: true
-      }).on('hide', function(e) {
-        finishDate = $(this).val().split("/");
-        parseFinishDate = finishDate[2]+"-"+finishDate[1]+"-"+finishDate[0];
-        $('#finish_date').attr("value", parseFinishDate);
-      });
+    //Activate Plugin selectize
+      $('#domain_provider_id').selectize();
+      $('#customer_id').selectize();
 
   });
   </script>

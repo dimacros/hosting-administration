@@ -76,8 +76,8 @@
                   <label for="hosting_plan_id">Plan Hosting:</label>
                   <select class="custom-select" id="hosting_plan_id" name="hosting_plan_id" required>
                     <option value="" selected disabled>Seleccione un plan hosting..</option>
-                  @foreach($hosting_plans as $hosting_plan)
-                    <option value="{{$hosting_plan->id}}">{{$hosting_plan->title}}</option>  
+                  @foreach($hostingPlans as $hostingPlan)
+                    <option value="{{$hostingPlan->id}}">{{$hostingPlan->title}}</option>  
                   @endforeach
                   </select>
                 </div>
