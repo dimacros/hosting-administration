@@ -55,6 +55,10 @@
                 <input class="form-control" type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required>
               </div>
               <div class="form-group">
+                <label class="control-label" for="company_name">Empresa (opcional):</label>
+                <input class="form-control" type="text" id="company_name" name="company_name" value="{{ old('company_name') }}">
+              </div>
+              <div class="form-group">
                 <label class="control-label" for="email">Correo electrónico:</label>
                 <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}" required>
               </div>

@@ -8,7 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class RenovationDomain extends Mailable
+class DomainRenewal extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -29,7 +29,9 @@ class RenovationDomain extends Mailable
      * @return $this
      */
     public function build()
-    {
-        return $this->view('emails.renew-contract-hosting');
+    {  
+        return $this->from('ventas@jypsac.com', 'Grupo JYP S.A.C')
+                    ->subject('Recordatorio para renovar el dominio')
+                    ->view('emails.domain-renewal');
     }
 }

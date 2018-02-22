@@ -15,7 +15,9 @@ class PurchasedDomainController extends Controller
      */
     public function index()
     {
-      $purchasedDomains = PurchasedDomain::with('domainProvider:id,company_name')->get();
+      $purchasedDomains = PurchasedDomain::where('status', 'active')
+                          ->with('domainProvider:id,company_name')
+                          ->take(10)->get();
       return view(
         'admin.purchased-domains.index', ['purchasedDomains' => $purchasedDomains]
       );
@@ -49,18 +51,19 @@ class PurchasedDomainController extends Controller
         'domain_provider_id' => 'required|exists:domain_providers,id',
         'domain_name' => 'required|url|unique:purchased_domains,domain_name',
         'start_date' => 'required|date',
-        'due_date' => 'required|date|after:start_date',
+        'finish_date' => 'required|date|after:start_date',
         'total_price_in_dollars' => 'required|numeric',
-        'description' => ''
+        'description' => '',
+        'user_id' => 'required|exists:users,id'
       ]);  
       
       $purchasedDomain = new PurchasedDomain();
       $purchasedDomain->domain_provider_id = $request->domain_provider_id;
       $purchasedDomain->domain_name = $request->domain_name;
       $purchasedDomain->start_date = $request->start_date;
-      $purchasedDomain->finish_date = $request->due_date;
+      $purchasedDomain->finish_date = $request->finish_date;
       $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
-      $purchasedDomain->description = $purchasedDomain->description;
+      $purchasedDomain->description = $request->description;
       $purchasedDomain->status = 'active';
       $purchasedDomain->user_id = $request->user_id;
 

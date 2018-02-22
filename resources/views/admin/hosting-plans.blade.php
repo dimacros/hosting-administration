@@ -76,7 +76,7 @@
                       'FormId' => 'formEdit-'. $hostingPlan->id,
                     ])
 
-                    <form class="d-none" method="POST" id="formEdit-{{$hostingPlan->id}}" action="{{ route('admin.planes-hosting.actualizar', $hostingPlan->id) }}" >
+                    <form method="POST" id="formEdit-{{$hostingPlan->id}}" action="{{ route('admin.planes-hosting.actualizar', $hostingPlan->id) }}" >
                       {{ method_field('PUT') }}
                       {{ csrf_field() }}
                       <div class="form-group">

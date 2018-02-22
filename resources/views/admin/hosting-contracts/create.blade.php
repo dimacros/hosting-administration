@@ -2,12 +2,6 @@
 @push('head')
 <link rel="stylesheet" href="{{ asset('css/selectize.bootstrap3.css') }}">
 <style>
-  .btn-cpanel {
-    color: #fff;
-    background-color: #ff7600;
-    border-color: #000;
-  }
-
   .text-cpanel {
     color: #ff7600;
     font-size: 1.5rem;

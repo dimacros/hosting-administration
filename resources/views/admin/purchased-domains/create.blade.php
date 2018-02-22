@@ -64,7 +64,7 @@
         <!-- START FORM -->
           <form method="POST">
             {{ csrf_field() }}
-            <input type="hidden" name="user_id" value="{{Auth::id()}}">
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
             <div class="tile-body">
               @if($domainProviders->isNotEmpty())
                 <div class="form-group">
@@ -108,7 +108,7 @@
                 <div class="form-group col-md-6">
                   <label for="datepicker_end">Fecha de vencimiento:</label>
                   <input type="text" class="form-control" id="datepicker_end" name="datepicker_end" value="{{ old('datepicker_end') }}" required>
-                  <input type="hidden" id="due_date" name="due_date" value="{{ old('due_date') }}">
+                  <input type="hidden" id="finish_date" name="finish_date" value="{{ old('finish_date') }}">
                 </div>
               </div>
               <div class="form-group">
@@ -177,9 +177,9 @@
         language: "es",
         todayHighlight: true
       }).on('hide', function(e) {
-        dueDate = $(this).val().split("/");
-        parseDueDate = dueDate[2]+"-"+dueDate[1]+"-"+dueDate[0];
-        $('#due_date').attr("value", parseDueDate);
+        finishDate = $(this).val().split("/");
+        parseFinishDate = finishDate[2]+"-"+finishDate[1]+"-"+finishDate[0];
+        $('#finish_date').attr("value", parseFinishDate);
       });
 
   });

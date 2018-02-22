@@ -16,24 +16,15 @@ class CreateHostingContractsTable extends Migration
       Schema::create('hosting_contracts', function (Blueprint $table) {
         $table->increments('id');
         $table->integer('customer_id')->unsigned();
-        $table->integer('hosting_plan_contracted_id')->unsigned();
         $table->date('start_date');
         $table->date('finish_date');
-        $table->integer('cpanel_account_id')->unsigned()->nullable();
+        $table->decimal('total_price');
         $table->enum('status', ['active', 'pending', 'canceled', 'finished', 'suspended']);
         $table->integer('user_id')->unsigned();
         $table->timestamps();
 
         $table->foreign('customer_id')
               ->references('id')->on('customers')
-              ->onDelete('cascade')->onUpdate('cascade');
-
-        $table->foreign('hosting_plan_contracted_id')
-              ->references('id')->on('hosting_plans_contracted')
-              ->onDelete('cascade')->onUpdate('cascade');
-
-        $table->foreign('cpanel_account_id')
-              ->references('id')->on('cpanel_accounts')
               ->onDelete('cascade')->onUpdate('cascade');
 
         $table->foreign('user_id')

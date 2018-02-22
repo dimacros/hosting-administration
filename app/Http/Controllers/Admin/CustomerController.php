@@ -47,6 +47,7 @@ class CustomerController extends Controller
       $customer = new Customer();
       $customer->first_name = $request->first_name;
       $customer->last_name = $request->last_name;
+      $customer->company_name = $request->company_name;
       $customer->phone = $request->phone??'Sin número';
       $customer->email = $request->email;
 
@@ -71,9 +72,10 @@ class CustomerController extends Controller
         'email' => 'required|email|unique:customers,email,'.$id
       ]);  
 
-      $customer = Customer::find($id);
+      $customer = Customer::findOrFail($id);
       $customer->first_name = $request->first_name;
       $customer->last_name = $request->last_name;
+      $customer->company_name = $request->company_name;
       $customer->phone = $request->phone;
       $customer->email = $request->email;
 

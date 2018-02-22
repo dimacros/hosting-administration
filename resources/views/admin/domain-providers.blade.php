@@ -78,7 +78,7 @@
                       'FormId' => 'formEdit-'. $domainProvider->id,
                     ])
 
-                    <form class="d-none" method="POST" id="formEdit-{{$domainProvider->id}}" action="{{ route('admin.proveedores-de-dominios.actualizar', $domainProvider->id) }}" >
+                    <form method="POST" id="formEdit-{{$domainProvider->id}}" action="{{ route('admin.proveedores-de-dominios.actualizar', $domainProvider->id) }}" >
                       {{ method_field('PUT') }}
                       {{ csrf_field() }}
                       <div class="form-group">

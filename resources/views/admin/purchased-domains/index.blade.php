@@ -84,7 +84,7 @@
                   }
                 ?>
                   <tr>
-                    <td></td>
+                    <td>N° {{ str_pad($purchasedDomain->id, 5, "0", STR_PAD_LEFT) }}</td>
                     <td>{{ $purchasedDomain->domainProvider->company_name }}</td>
                     <td>
                       {{ $purchasedDomain->domain_name }}
@@ -97,9 +97,67 @@
                     </td>
                     <td>$ {{ $purchasedDomain->total_price_in_dollars }}</td>
                     <td>
-                      <button type="button" class="btn btn-success w-100">VER</button>
+                      <button type="button" class="btn btn-success w-100"  data-toggle="modal" data-target="#modal-{{ $purchasedDomain->id }}">RENOVAR</button>
                     </td>
                   </tr>
+                  <!-- Modal -->
+                  <div class="modal fade" id="modal-{{ $purchasedDomain->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-{{ $purchasedDomain->id }}" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="modalLabel-{{ $purchasedDomain->id }}">
+                            Renovar Dominio
+                          </h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body my-3">
+                          <form method="POST" id="domain-{{ $purchasedDomain->id }}" action="{{ route('admin.renovar-dominio') }}">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="purchased_domain_id" value="{{ $purchasedDomain->id }}">
+                            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+
+                            <div class="form-group">
+                              <label>Proveedor de dominio:</label>
+                              <input type="text" class="form-control" value="{{ $purchasedDomain->domainProvider->company_name }}" readonly>
+                            </div>
+                            <div class="form-row">
+                              <div class="form-group col-md-5">
+                                <label>Fecha de inicio:</label>
+                                <input type="date" class="form-control" name="start_date" value="{{ $purchasedDomain->start_date_to_renew_domain }}" readonly>
+                              </div>    
+                              <div class="form-group col-md-7">
+                                <label>Fecha de vencimiento:</label>
+                                <input type="date" class="form-control" name="finish_date" required>
+                              </div>                  
+                            </div>
+                            <div class="form-row">
+                              <div class="form-group col-md-5">
+                                <label>
+                                  Precio total en dólares
+                                </label>
+                                <div class="input-group">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                  </div>
+                                  <input type="text" class="form-control" name="total_price_in_dollars" required pattern="\d*">
+                                  <div class="input-group-append">
+                                    <span class="input-group-text">.00</span>
+                                  </div>
+                                </div>
+                              </div>                      
+                            </div>
+                          </form>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <button form="domain-{{ $purchasedDomain->id }}" type="submit" class="btn btn-primary">Guardar cambios</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  
                 @endforeach
                 </tbody>
               </table>

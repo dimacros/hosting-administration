@@ -43,7 +43,7 @@
               <table class="table table-hover table-bordered" id="sampleTable">
                 <thead>
                   <tr>
-                    <th>Nombre Completo</th>
+                    <th>Empresa o Nombre completo</th>
                     <th>Teléfono</th>
                     <th>Correo electrónico</th>
                     <th></th>
@@ -78,7 +78,7 @@
                       'FormId' => 'formEdit-'. $customer->id,
                     ])
 
-                    <form class="d-none" method="POST" id="formEdit-{{$customer->id}}" action="{{ route('admin.clientes.actualizar', $customer->id) }}" >
+                    <form method="POST" id="formEdit-{{$customer->id}}" action="{{ route('admin.clientes.actualizar', $customer->id) }}" >
                       {{ method_field('PUT') }}
                       {{ csrf_field() }}
                       <div class="form-group">
@@ -92,13 +92,18 @@
                       </div>
 
                       <div class="form-group">
-                        <label>Teléfono:</label>
-                        <input type="text" name="phone" class="form-control" value="{{$customer->phone}}" required>
+                        <label>Nombre de Empresa (opcional):</label>
+                        <input type="text" name="company_name" class="form-control" value="{{$customer->company_name}}" required>
                       </div>
 
                       <div class="form-group">
                         <label>Correo electrónico:</label>
                         <input type="text" name="email" class="form-control" value="{{$customer->email}}" required>
+                      </div>
+
+                      <div class="form-group">
+                        <label>Teléfono:</label>
+                        <input type="text" name="phone" class="form-control" value="{{$customer->phone}}" required>
                       </div>
 
                     </form>

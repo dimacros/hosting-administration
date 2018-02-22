@@ -14,8 +14,11 @@ class HostingContractController extends Controller
      */
     public function index()
     {
-        $hostingContracts = HostingContract::paginate(6);
-        return view('admin.hosting-contracts.all', ['hostingContracts' => $hostingContracts]);
+        $hostingContracts = HostingContract::where('status', 'active')
+        ->with('Customer:id,first_name,last_name,company_name')
+        ->with('HostingPlanContracted:id,title')
+        ->with('CpanelAccount')->take(10)->get();
+        return view('admin.hosting-contracts.index', ['hostingContracts' => $hostingContracts]);
     }
 
     /**
@@ -25,7 +28,7 @@ class HostingContractController extends Controller
      */
     public function create()
     {
-      $customers = Customer::all('id', 'first_name', 'last_name');
+      $customers = Customer::all('id', 'first_name', 'last_name', 'company_name');
       $hosting_plans = HostingPlan::all('id', 'title');
       return view('admin.hosting-contracts.create', ['customers' => $customers, 'hosting_plans' => $hosting_plans]);
     }
@@ -45,45 +48,41 @@ class HostingContractController extends Controller
         'contract_period' => 'required|in:1,2,3',
         'create_account' => 'required|in:yes,no',
         'cpanel.domain_name' => 'required_if:create_account,yes|nullable|url| unique:cpanel_accounts,domain_name',
-        'cpanel.user' => 'required_if:create_account,yes|unique:cpanel_accounts,user',
+        'cpanel.user' => 'required_if:create_account,yes|nullable|unique:cpanel_accounts,user',
         'cpanel.public_ip' => 'nullable|ip',
         'user_id' => 'required|exists:users,id'
       ]);  
+ 
+      $hostingPlan = HostingPlan::findOrFail($request->hosting_plan_id);
       
-      $hostingPlan = HostingPlan::find($request->hosting_plan_id);
+      $cpanelAccount = new CpanelAccount();
+      $cpanelAccount->domain_name = $request->cpanel['domain_name'];
+      $cpanelAccount->user = $request->cpanel['user'];
+      $cpanelAccount->password = $request->cpanel['password'];
+      $cpanelAccount->public_ip = $request->cpanel['public_ip'];
+      $cpanelAccount->save();
+
+      $hostingContract = new HostingContract();
+      $hostingContract->customer_id = $request->customer_id;
+      $hostingContract->start_date = $request->start_date;
+      $hostingContract->finish_date = $hostingContract->calculateFinishDate($request->contract_period);
+      $hostingContract->total_price = (
+        $request->contract_period * $hostingPlan->total_price_per_year
+      );
+      $hostingContract->cpanel_account_id = $cpanelAccount->id;
+      $hostingContract->status = 'active'; 
+      $hostingContract->user_id = $request->user_id;
+      $hostingContract->save();
+
       $hostingPlanContracted = new HostingPlanContracted();
       $hostingPlanContracted->hosting_plan_id = $hostingPlan->id;
+      $hostingPlanContracted->hosting_contract_id = $hostingContract->id;
       $hostingPlanContracted->title = $hostingPlan->title;
       $hostingPlanContracted->description = $hostingPlan->description;
       $hostingPlanContracted->total_price_per_year = $hostingPlan->total_price_per_year;
       $hostingPlanContracted->contract_duration_in_years = $request->contract_period;
 
-      if (! $hostingPlanContracted->save()) {
-        return back()->with('status', 'Ocurrió un error al registrar el Plan Hosting.');
-      }
-       
-      if ($request->create_account === 'yes') {
-        $cpanelAccount = new CpanelAccount();
-        $cpanelAccount->domain_name = $request->cpanel['domain_name'];
-        $cpanelAccount->user = $request->cpanel['user'];
-        $cpanelAccount->password = $request->cpanel['password'];
-        $cpanelAccount->public_ip = $request->cpanel['public_ip'];
-
-        if (! $cpanelAccount->save()) {
-          return back()->with('status', 'Ocurrió un error al registrar la cuenta cPanel.');
-        }
-      }
-
-      $hostingContract = new HostingContract();
-      $hostingContract->customer_id = $request->customer_id;
-      $hostingContract->hosting_plan_contracted_id = $hostingPlanContracted->id;
-      $hostingContract->start_date = $request->start_date;
-      $hostingContract->calculateFinishDate($request->contract_period);
-      $hostingContract->cpanel_account_id = $cpanelAccount->id??null;
-      $hostingContract->status = 'active'; 
-      $hostingContract->user_id = $request->user_id;
-
-      if ($hostingContract->save()) {
+      if ($hostingPlanContracted->save()) {
         return back()->with('status', 'El contrato hosting fue registrado con éxito.');
       }
     }
@@ -119,30 +118,7 @@ class HostingContractController extends Controller
      */
     public function update(Request $request, $id)
     {
-      $request->validate([
-        'company_name' => 'required|string',
-        'description' => 'required|string',
-        'email' => 'required|string|email|unique:domain_providers'
-      ]);  
 
-      if (is_null(HostingContract::find($id))) {
-        return redirect('dashboard/domain-providers');
-      }
-
-      $hostingContract = HostingContract::find($id);
-      //$hostingContract->customer_id = $request->customer_id;
-      $hostingContract->hosting_plan_contracted_id = $request->hosting_plan_contracted_id;
-      //$hostingContract->start_date = $request->start_date;
-      $hostingContract->due_date = $request->due_date;
-      $hostingContract->public_ip = $request->public_ip;
-      $hostingContract->cpanel_user = $request->cpanel_user;
-      $hostingContract->cpanel_password = $request->cpanel_password;
-      $hostingContract->domain_name = $request->domain_name;
-      $hostingContract->user_id = $request->user_id;
-
-      if ($hostingContract->save()) {
-        return back()->with('status', 'Los datos del proveedor de dominio fueron actualizados correctamente.');
-      }
     }
 
     /**
@@ -153,12 +129,6 @@ class HostingContractController extends Controller
      */
     public function destroy($id)
     {
-        if(HostingContract::find($id)->delete())
-        {
-            return back()->with('status', 'El cliente se elimino correctamente.');          
-        }
-        else {
-            return back()->with('status', 'Ocurrió un problema al tratar de eliminar el cliente. Vuelva a intentarlo nuevamente.');     
-        }
+
     }
 }
