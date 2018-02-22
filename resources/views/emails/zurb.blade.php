@@ -65,21 +65,6 @@
 				<table>
 				<tr><td>
 
-					<ul class="sidebar">
-						<li>
-							<a><h5>Header Thing &raquo;</h5><p>Sub-head or something</p></a>
-						</li>
-						<li><a class="">Just a Plain Link &raquo;</a></li>
-						<li><a class="">Just a Plain Link &raquo;</a></li>
-						<li><a class="">Just a Plain Link &raquo;</a></li>
-						<li><a class="">Just a Plain Link &raquo;</a></li>
-						<li><a class="">Just a Plain Link &raquo;</a></li>
-						<li><a class="">Just a Plain Link &raquo;</a></li>
-						<li><a class="">Just a Plain Link &raquo;</a></li>
-						<li><a class="">Just a Plain Link &raquo;</a></li>
-						<li><a class="last">Just a Plain Link &raquo;</a></li>
-					</ul>
-
 					<table bgcolor="" class="social" width="100%">
 					<tr><td>
 

@@ -49,7 +49,7 @@ class SendRenewalEmail extends Command
       foreach ($purchasedDomains as $purchasedDomain)
       { 
         if ( $purchasedDomain->isDayToSendRenewalEmail() ) {
-          $purchasedDomain->sendRenewalEmailTo('programador@dimacros.net');
+          $purchasedDomain->sendRenewalEmailTo('desarrollo@jypsac.com');
           $this->info('¡Correo electrónico enviado exitosamente!');
         }
         elseif ( $purchasedDomain->isExpired() ) {
@@ -62,7 +62,7 @@ class SendRenewalEmail extends Command
       foreach ($hostingContracts as $hostingContract)
       { 
         if ( $hostingContract->isDayToSendRenewalEmail() ) {
-          $hostingContract->sendRenewalEmailTo('programador@dimacros.net');
+          $hostingContract->sendRenewalEmailTo('desarrollo@jypsac.com');
           $this->info('¡Correo electrónico enviado exitosamente!');
         }
         elseif ( $hostingContract->isExpired() ) {
