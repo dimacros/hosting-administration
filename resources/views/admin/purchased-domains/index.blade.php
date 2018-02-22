@@ -113,7 +113,9 @@
                           </button>
                         </div>
                         <div class="modal-body my-3">
-                          <form method="POST" id="purchasedDomain-{{ $purchasedDomain->id }}" action="{{ route('admin.dominios-comprados.renovar') }}">
+                          <form method="POST" id="purchasedDomain-{{ $purchasedDomain->id }}" action="{{ route(
+                            'admin.dominios-comprados.renovar', $purchasedDomain->id
+                            )}}">
                             {{ csrf_field() }}
                             <input type="hidden" name="acquired_domain_id" value="{{ $purchasedDomain->acquired_domain_id }}">
                             <input type="hidden" name="domain_provider_id" value="{{ $purchasedDomain->domain_provider_id }}">

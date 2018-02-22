@@ -112,13 +112,12 @@
                 <h4>Nueva cuenta de <span class="text-cpanel">cPanel</span></h4>
                 <hr>
                 <div class="form-group row">
-                  <label class="col-sm-2" for="cpanel_url">Dominio:</label>
+                  <label class="col-sm-2" for="cpanel_domain_name">Dominio:</label>
                   <div class="col-sm-10 input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">http://</span>
                     </div>
-                    <input type="text" class="form-control" id="cpanel_url" autocomplete="off">
-                    <input type="hidden" id="cpanel_domain_name" name="cpanel[domain_name]">
+                    <input type="text" class="form-control" id="cpanel_domain_name" name="cpanel[domain_name]">
                   </div>  
                 </div>
                 <div class="form-group row">
@@ -172,14 +171,6 @@
           $('#createAccount').hide(1000);   
          }
      });
-
-    /*
-    * CUSTOM URL
-    *****************************
-    */
-      $('#cpanel_url').keyup(function() {
-        $('#cpanel_domain_name').attr("value", "http://"+$(this).val());
-      });
 
   });
   </script>

@@ -141,7 +141,12 @@
                           {{ csrf_field() }}
                           <div class="form-group">
                             <label>Dominio:</label>
-                            <input type="text" class="form-control" name="domain_name" value="{{$hostingContract->cpanelAccount->domain_name}}" required>
+                            <div class="input-group">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">http://</span>
+                              </div>
+                              <input type="text" class="form-control" name="domain_name" value="{{$hostingContract->cpanelAccount->domain_name}}" required>
+                            </div> 
                           </div>
                           <div class="form-group">
                             <label>Usuario:</label>
@@ -179,7 +184,7 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                        <form method="POST" id="renovateHostingForm-{{$hostingContract->id}}" action="{{ route('admin.contratos-hosting.renovar') }}">
+                        <form method="POST" id="renovateHostingForm-{{$hostingContract->id}}" action="{{ route('admin.contratos-hosting.renovar', $hostingContract->id) }}">
                           {{ csrf_field() }}
                           <input type="hidden" name="customer_id" value="{{ $hostingContract->customer->id }}">
                           <input type="hidden" name="cpanel_account_id" value="{{ $hostingContract->cpanelAccount->id }}">
