@@ -78,7 +78,7 @@
                       'FormId' => 'formEdit-'. $domainProvider->id,
                     ])
 
-                    <form method="POST" id="formEdit-{{$domainProvider->id}}" action="{{ route('admin.proveedores-de-dominios.actualizar', $domainProvider->id) }}" >
+                    <form method="POST" id="formEdit-{{$domainProvider->id}}" action="{{ route('admin.proveedores-de-dominios.update', $domainProvider->id) }}" >
                       {{ method_field('PUT') }}
                       {{ csrf_field() }}
                       <div class="form-group">
@@ -110,7 +110,7 @@
                     ])
 
                     <h5>¿Seguro que quiere eliminar a "{{$domainProvider->company_name}}"?</h5>
-                    <form class="d-none" method="POST" id="formDelete-{{$domainProvider->id}}" action="{{ route('admin.proveedores-de-dominios.actualizar', $domainProvider->id) }}">
+                    <form class="d-none" method="POST" id="formDelete-{{$domainProvider->id}}" action="{{ route('admin.proveedores-de-dominios.destroy', $domainProvider->id) }}">
                       {{ method_field('DELETE') }}
                       {{ csrf_field() }}       
                     </form>

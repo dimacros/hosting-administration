@@ -30,13 +30,13 @@ class ContractRenewalHosting extends Mailable
      */
     public function build()
     {
-        $code = 'Recordatorio_'.str_pad($this->hostingContract->id, 5, "0", STR_PAD_LEFT);
-        $days = $this->hostingContract->expiration_date_for_humans.'_días';
+        $pdf_document  = 'Recordatorio_'.$this->hostingContract->id.'_';
+        $pdf_document .= $this->hostingContract->expiration_date_for_humans.'_días.pdf';
         return $this->from('ventas@jypsac.com', 'Grupo JYP S.A.C')
                     ->subject('Recordatorio para la renovación de Hosting')
                     ->view('emails.zurb1')
                     ->with('hostingContract', $this->hostingContract)
-                    ->attachData($this->hostingContract->pdf->output(), $code.'_'.$days.'.pdf',
+                    ->attachData($this->hostingContract->pdf->output(), $pdf_document,
                         ['mime' => 'application/pdf']
                     );
     }

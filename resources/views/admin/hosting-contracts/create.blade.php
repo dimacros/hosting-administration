@@ -31,10 +31,48 @@
             <a href="{{ url('dashboard/contratos-hosting') }}" class="btn btn-primary">
               <i class="fa fa-arrow-left" aria-hidden="true"></i>Regresar
             </a>
+            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalCustomer">
+              Agregar Cliente
+            </button>
           </div>
         </div>
       </div>
     </section>  
+    <!-- MODAL PARA AGREGAR CLIENTE -->
+      @component('components.modal', [ 
+        'modalId' => 'modalCustomer', 
+        'modalTitle' => 'Agregar nuevo Cliente',
+        'btnCloseClass' => 'btn btn-secondary', 
+        'btnCloseTitle' => 'Cerrar', 
+        'btnSaveClass' => 'btn btn-primary', 
+        'btnSaveTitle' => 'Registrar',
+        'FormId' => 'formCustomer',
+      ])
+
+      <form method="POST" id="formCustomer" action="{{ url('dashboard/clientes/crear') }}">
+        {{ csrf_field() }}
+        <div class="form-group">
+          <label for="first_name">Nombre(s):</label>
+          <input class="form-control" type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="last_name">Apellidos:</label>
+          <input class="form-control" type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="company_name">Empresa (opcional):</label>
+          <input class="form-control" type="text" id="company_name" name="company_name" value="{{ old('company_name') }}">
+        </div>
+        <div class="form-group">
+          <label for="email">Correo electrónico:</label>
+          <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}" required>
+        </div>
+        <div class="form-group">
+          <label for="phone">Teléfono o Celular:</label>
+          <input class="form-control" type="phone" id="phone" name="phone" value="{{ old('phone') }}" pattern="[0-9-]{5,15}">
+        </div>
+      </form>
+    @endcomponent
     <!-- SECOND SECTION -->
     <section class="row">
       <div class="col-md-8 offset-md-2">

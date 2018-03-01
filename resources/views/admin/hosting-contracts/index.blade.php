@@ -102,7 +102,7 @@
                   }
                 ?>
                   <tr>
-                    <td>N° {{ str_pad($hostingContract->id, 5, "0", STR_PAD_LEFT) }}</td>
+                    <td>N° {{ $hostingContract->id }}</td>
                     <td>{{ $hostingContract->customer->full_name }}</td>
                     <td>
                       {{ $hostingContract->hostingPlanContracted->title }}

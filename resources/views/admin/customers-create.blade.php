@@ -43,27 +43,27 @@
               </ul>
             </div>
            @endif
-          <form method="POST">
+          <form method="POST" action="{{ route('admin.clientes.store') }}">
             {{ csrf_field() }}
             <div class="tile-body">
               <div class="form-group">
-                <label class="control-label" for="first_name">Nombre(s):</label>
+                <label for="first_name">Nombre(s):</label>
                 <input class="form-control" type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required autofocus>
               </div>
               <div class="form-group">
-                <label class="control-label" for="last_name">Apellidos:</label>
+                <label for="last_name">Apellidos:</label>
                 <input class="form-control" type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required>
               </div>
               <div class="form-group">
-                <label class="control-label" for="company_name">Empresa (opcional):</label>
+                <label for="company_name">Empresa (opcional):</label>
                 <input class="form-control" type="text" id="company_name" name="company_name" value="{{ old('company_name') }}">
               </div>
               <div class="form-group">
-                <label class="control-label" for="email">Correo electrónico:</label>
+                <label for="email">Correo electrónico:</label>
                 <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}" required>
               </div>
               <div class="form-group">
-                <label class="control-label" for="phone">Teléfono o Celular:</label>
+                <label for="phone">Teléfono o Celular:</label>
                 <input class="form-control" type="phone" id="phone" name="phone" value="{{ old('phone') }}" pattern="[0-9-]{5,15}">
               </div>
             </div><!-- /.tile-body -->

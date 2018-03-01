@@ -22,6 +22,10 @@ class HostingContract extends Model
 		return $this->belongsTo('App\CpanelAccount');
 	}
 
+	public function getIdAttribute($id) {
+		return str_pad($id, 5, "0", STR_PAD_LEFT);
+	}
+
   public function getStartDateAttribute($start_date) {
   	return new Carbon($start_date);
   }
@@ -65,7 +69,9 @@ class HostingContract extends Model
 		return \PDF::loadView('pdf.hosting-contract', $this);
 	}
 
-	public function sendRenewalEmailTo(string $email) {
-		Mail::to($email)->send(new ContractRenewalHosting($this));
+	public function sendRenewalEmailTo(array $email) {
+		Mail::to($this->customer->email, $this->customer->full_name)
+		->cc('programador@dimacros.net', 'Marcos')
+		->send( new ContractRenewalHosting($this) );
 	}
 }

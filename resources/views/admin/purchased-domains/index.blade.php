@@ -65,6 +65,7 @@
                     <th scope="col">Días para Caducar</th>
                     <th scope="col">Precio de Compra</th>
                     <th></th>
+                    <th></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -84,7 +85,7 @@
                   }
                 ?>
                   <tr>
-                    <td>N° {{ str_pad($purchasedDomain->id, 5, "0", STR_PAD_LEFT) }}</td>
+                    <td>N° {{ $purchasedDomain->id }}</td>
                     <td>{{ $purchasedDomain->customer->full_name }}</td>
                     <td>
                       {{ $purchasedDomain->acquiredDomain->domain_name }}
@@ -97,7 +98,10 @@
                     </td>
                     <td>$ {{ $purchasedDomain->total_price_in_dollars }}</td>
                     <td>
-                      <button type="button" class="btn btn-success w-100"  data-toggle="modal" data-target="#modal-{{ $purchasedDomain->id }}">RENOVAR</button>
+                      <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modal-{{ $purchasedDomain->id }}">Renovar</button>
+                    </td>
+                    <td>
+                      <a href="{{ route('admin.dominios-comprados.show', $purchasedDomain->id) }}" class="btn btn-success w-100">Ver</a>        
                     </td>
                   </tr>
                   <!-- Modal -->

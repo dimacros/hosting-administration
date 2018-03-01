@@ -12,7 +12,7 @@ class DomainRenewal extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $purchasedDomain;
+    protected $purchasedDomain;
     /**
      * Create a new message instance.
      *
@@ -31,7 +31,8 @@ class DomainRenewal extends Mailable
     public function build()
     {  
         return $this->from('ventas@jypsac.com', 'Grupo JYP S.A.C')
-                    ->subject('Recordatorio para renovar el dominio')
-                    ->view('emails.domain-renewal');
+                    ->subject('Recordatorio para la renovación de dominio')
+                    ->view('emails.domain-renewal')
+                    ->with('purchasedDomain', $this->purchasedDomain);
     }
 }

@@ -43,11 +43,11 @@
               </ul>
             </div>
            @endif
-          <form method="POST">
+          <form method="POST" action="{{ route('admin.planes-hosting.store') }}">
             {{ csrf_field() }}
             <div class="tile-body">
               <div class="form-group">
-                <label class="control-label" for="title">Título para el Plan Hosting:</label>
+                <label for="title">Título para el Plan Hosting:</label>
                 <input class="form-control" type="text" id="title" name="title" value="{{ old('title') }}" required autofocus>
               </div>
               <div class="form-group">

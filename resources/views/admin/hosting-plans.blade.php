@@ -76,7 +76,7 @@
                       'FormId' => 'formEdit-'. $hostingPlan->id,
                     ])
 
-                    <form method="POST" id="formEdit-{{$hostingPlan->id}}" action="{{ route('admin.planes-hosting.actualizar', $hostingPlan->id) }}" >
+                    <form method="POST" id="formEdit-{{$hostingPlan->id}}" action="{{ route('admin.planes-hosting.update', $hostingPlan->id) }}" >
                       {{ method_field('PUT') }}
                       {{ csrf_field() }}
                       <div class="form-group">
@@ -115,7 +115,7 @@
                     ])
 
                     <h5>¿Seguro que quiere eliminar a "{{$hostingPlan->title}}"?</h5>
-                    <form class="d-none" method="POST" id="formDelete-{{$hostingPlan->id}}" action="{{ route('admin.planes-hosting.eliminar', $hostingPlan->id) }}">
+                    <form class="d-none" method="POST" id="formDelete-{{$hostingPlan->id}}" action="{{ route('admin.planes-hosting.destroy', $hostingPlan->id) }}">
                       {{ method_field('DELETE') }}
                       {{ csrf_field() }}       
                     </form>

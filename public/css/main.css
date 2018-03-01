@@ -14508,7 +14508,7 @@ be a descendant of the grid when it is being dragged.
   bottom: 0;
   left: 0;
   right: 0;
-  padding: 30px 40px;
+  padding: 30px 20px;
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   -webkit-transition: all 0.5s ease-in-out;

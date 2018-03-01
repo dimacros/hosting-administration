@@ -24,6 +24,10 @@ class PurchasedDomain extends Model
 		return $this->belongsTo('App\Customer');
 	}
 
+	public function getIdAttribute($id) {
+		return str_pad($id, 5, "0", STR_PAD_LEFT);
+	}
+
   public function getNowAttribute() {
   	return new Carbon();
   }
@@ -55,8 +59,10 @@ class PurchasedDomain extends Model
 		return false;
 	}
 
-	public function sendRenewalEmailTo(string $email) {
-		Mail::to($email)->send(new DomainRenewal($this));
+	public function sendRenewalEmail($email, $name) {
+		Mail::to('programador@dimacros.net', 'Marcos')
+		->cc('desarrollo@jypsac.com', 'Programador')
+		->send( new DomainRenewal($this) );
 	}
 
 }

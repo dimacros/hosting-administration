@@ -78,7 +78,7 @@
                       'FormId' => 'formEdit-'. $customer->id,
                     ])
 
-                    <form method="POST" id="formEdit-{{$customer->id}}" action="{{ route('admin.clientes.actualizar', $customer->id) }}" >
+                    <form method="POST" id="formEdit-{{$customer->id}}" action="{{ route('admin.clientes.update', $customer->id) }}" >
                       {{ method_field('PUT') }}
                       {{ csrf_field() }}
                       <div class="form-group">
@@ -120,7 +120,7 @@
                     ])
 
                     <h5>¿Seguro que quiere eliminar a "{{$customer->full_name}}"?</h5>
-                    <form class="d-none" method="POST" id="formDelete-{{$customer->id}}" action="{{ route('admin.clientes.eliminar', $customer->id) }}">
+                    <form class="d-none" method="POST" id="formDelete-{{$customer->id}}" action="{{ route('admin.clientes.destroy', $customer->id) }}">
                       {{ method_field('DELETE') }}
                       {{ csrf_field() }}       
                     </form>

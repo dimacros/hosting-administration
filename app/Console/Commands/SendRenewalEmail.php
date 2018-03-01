@@ -42,34 +42,39 @@ class SendRenewalEmail extends Command
       PurchasedDomain::with([
         'acquiredDomain:id,domain_name', 'domainProvider:id,company_name',
         'customer:id,first_name,last_name,company_name'
-      ])->get();        
+      ])->get();  
+
       $hostingContracts = 
       HostingContract::with('customer:id,first_name,last_name,company_name')->get();
 
-      foreach ($purchasedDomains as $purchasedDomain)
-      { 
-        if ( $purchasedDomain->isDayToSendRenewalEmail() ) {
-          $purchasedDomain->sendRenewalEmailTo('desarrollo@jypsac.com');
-          $this->info('¡Correo electrónico enviado exitosamente!');
+      if ( $purchasedDomains->isNotEmpty() ):
+        foreach ($purchasedDomains as $purchasedDomain)
+        { 
+          if ( $purchasedDomain->isDayToSendRenewalEmail() ) {
+            $purchasedDomain->sendRenewalEmail();
+            $this->info('¡Correo electrónico enviado exitosamente!');
+          }
+          elseif ( $purchasedDomain->isExpired() ) {
+            $purchasedDomain->acquiredDomain->status = 'expired';
+            $purchasedDomain->acquiredDomain->save();
+            $this->info('Dominio hosting expirado.');
+          }
         }
-        elseif ( $purchasedDomain->isExpired() ) {
-          $this->info('Dominio hosting expirado.');
-          $purchasedDomain->acquiredDomain->status = 'expired';
-          $purchasedDomain->acquiredDomain->save();
+      endif;
+
+      if ( $hostingContracts->isNotEmpty() ):
+        foreach ($hostingContracts as $hostingContract)
+        { 
+          if ( $hostingContract->isDayToSendRenewalEmail() ) {
+            $hostingContract->sendRenewalEmail();
+            $this->info('¡Correo electrónico enviado exitosamente!');
+          }
+          elseif ( $hostingContract->isExpired() ) {
+            $hostingContract->status = 'finished';
+            $hostingContract->save();
+            $this->info('Contrato Hosting vencido.');
+          }
         }
-      }
-      
-      foreach ($hostingContracts as $hostingContract)
-      { 
-        if ( $hostingContract->isDayToSendRenewalEmail() ) {
-          $hostingContract->sendRenewalEmailTo('desarrollo@jypsac.com');
-          $this->info('¡Correo electrónico enviado exitosamente!');
-        }
-        elseif ( $hostingContract->isExpired() ) {
-          $this->info('Contrato Hosting vencido.');
-          $hostingContract->status = 'finished';
-          $hostingContract->save();
-        }
-      }
+      endif;
     }
 }

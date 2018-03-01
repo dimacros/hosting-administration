@@ -43,19 +43,19 @@
               </ul>
             </div>
            @endif
-          <form method="POST">
+          <form method="POST" action="{{ route('admin.proveedores-de-dominios.store') }}">
             {{ csrf_field() }}
             <div class="tile-body">
               <div class="form-group">
-                <label class="control-label" for="company_name">Nombre de la empresa:</label>
+                <label for="company_name">Nombre de la empresa:</label>
                 <input class="form-control" type="text" id="company_name" name="company_name" value="{{ old('company_name') }}" required autofocus>
               </div>
               <div class="form-group">
-                <label class="control-label" for="description">Descripción de la empresa:</label>
+                <label for="description">Descripción de la empresa:</label>
                 <input class="form-control" type="text" id="description" name="description" value="{{ old('description') }}">
               </div>
               <div class="form-group">
-                <label class="control-label" for="email">Correo electrónico:</label>
+                <label for="email">Correo electrónico:</label>
                 <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}">
               </div>
             </div><!-- /.tile-body -->

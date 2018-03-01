@@ -30,11 +30,9 @@ class PurchasedDomainController extends Controller
      */
     public function create()
     {
-      $domainProviders = DomainProvider::all('id', 'company_name');
-      $customers = Customer::all('id', 'first_name', 'last_name', 'company_name');
-      return 
-        view('admin.purchased-domains.create')
-        ->with('domainProviders', $domainProviders)->with('customers', $customers); 
+      return view('admin.purchased-domains.create')
+      ->with('domainProviders', DomainProvider::all('id', 'company_name') )
+      ->with('customers', Customer::all('id', 'first_name', 'last_name', 'company_name') ); 
     }
 
     /**
@@ -76,6 +74,54 @@ class PurchasedDomainController extends Controller
       }
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+       return view('admin.purchased-domains.show')->with('purchasedDomain', PurchasedDomain::findOrFail($id));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+      return view('admin.purchased-domains.edit')
+      ->with('purchasedDomain', PurchasedDomain::findOrFail($id) )
+      ->with('domainProviders', DomainProvider::all('id', 'company_name') )
+      ->with('customers', Customer::all('id', 'first_name', 'last_name', 'company_name') );
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        //
+    }
+
     public function renovate(Request $request, $id) 
     {
       $request->validate([
@@ -105,49 +151,5 @@ class PurchasedDomainController extends Controller
       if ( $newPurchasedDomain->save() ) {
         return back()->with('status', 'La compra de dominio fue renovada con éxito');
       }
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }
