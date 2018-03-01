@@ -69,9 +69,10 @@ class HostingContract extends Model
 		return \PDF::loadView('pdf.hosting-contract', $this);
 	}
 
-	public function sendRenewalEmailTo(array $email) {
+	public function sendRenewalEmail() {
 		Mail::to($this->customer->email, $this->customer->full_name)
 		->cc('programador@dimacros.net', 'Marcos')
+		->cc('desarrollo@jypsac.com', 'Programador')
 		->send( new ContractRenewalHosting($this) );
 	}
 }

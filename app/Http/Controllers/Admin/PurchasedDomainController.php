@@ -57,7 +57,6 @@ class PurchasedDomainController extends Controller
       $acquiredDomain = new AcquiredDomain();
       $acquiredDomain->domain_name = $request->acquiredDomain['domain_name'];
       $acquiredDomain->description = $request->acquiredDomain['description'];
-      $acquiredDomain->status = 'active';
       $acquiredDomain->save();
       $purchasedDomain = new PurchasedDomain();
       $purchasedDomain->acquired_domain_id = $acquiredDomain->id;
@@ -66,6 +65,7 @@ class PurchasedDomainController extends Controller
       $purchasedDomain->start_date = $request->start_date;
       $purchasedDomain->finish_date = $request->finish_date;
       $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
+      $purchasedDomain->status = 'active';
       $purchasedDomain->active = 1;
       $purchasedDomain->user_id = $request->user_id;
       

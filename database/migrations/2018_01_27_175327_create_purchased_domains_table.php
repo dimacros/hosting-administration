@@ -21,6 +21,8 @@ class CreatePurchasedDomainsTable extends Migration
             $table->date('start_date');
             $table->date('finish_date');
             $table->decimal('total_price_in_dollars');
+            $table->enum('status', 
+              ['active', 'pending', 'canceled', 'finished', 'suspended']);
             $table->boolean('active');
             $table->integer('user_id')->unsigned();
             $table->timestamps();

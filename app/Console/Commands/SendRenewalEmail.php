@@ -19,8 +19,7 @@ class SendRenewalEmail extends Command
      *
      * @var string
      */
-    protected $description = 'Enviar correo electrónico de renovación.';
-
+    protected $description = 'Enviar correo electrónico para renovar hosting, dominio o producto comprado.';
     /**
      * Create a new command instance.
      *
@@ -55,9 +54,9 @@ class SendRenewalEmail extends Command
             $this->info('¡Correo electrónico enviado exitosamente!');
           }
           elseif ( $purchasedDomain->isExpired() ) {
-            $purchasedDomain->acquiredDomain->status = 'expired';
-            $purchasedDomain->acquiredDomain->save();
-            $this->info('Dominio hosting expirado.');
+            $purchasedDomain->status = 'finished';
+            $purchasedDomain->save();
+            $this->info('El dominio comprado ha expirado.');
           }
         }
       endif;
@@ -72,7 +71,7 @@ class SendRenewalEmail extends Command
           elseif ( $hostingContract->isExpired() ) {
             $hostingContract->status = 'finished';
             $hostingContract->save();
-            $this->info('Contrato Hosting vencido.');
+            $this->info('El contrato hosting ha vencido.');
           }
         }
       endif;

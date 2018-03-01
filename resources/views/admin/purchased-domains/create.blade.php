@@ -20,7 +20,7 @@
       <div class="col-md-8 offset-md-2">
         <div class="tile">
           <div class="tile-body">
-            <a href="{{ url('dashboard/dominios-comprados') }}" class="btn btn-primary">
+            <a href="{{ route('admin.dominios-comprados.store') }}" class="btn btn-primary">
               <i class="fa fa-arrow-left" aria-hidden="true"></i>Regresar
             </a>
           </div>
@@ -48,7 +48,7 @@
             </div>
           @endif
         <!-- START FORM -->
-          <form method="POST">
+          <form method="POST" action="{{ route('admin.dominios-comprados.store') }}">
             {{ csrf_field() }}
             <input type="hidden" name="user_id" value="{{ Auth::id() }}">
             <div class="tile-body">

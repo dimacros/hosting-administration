@@ -17,7 +17,6 @@ class CreateAcquiredDomainsTable extends Migration
             $table->increments('id');
             $table->string('domain_name')->unique();
             $table->text('description')->nullable();
-            $table->enum('status', ['active', 'expired']);
             $table->timestamps();
         });
     }

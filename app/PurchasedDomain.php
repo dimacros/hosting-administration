@@ -59,7 +59,7 @@ class PurchasedDomain extends Model
 		return false;
 	}
 
-	public function sendRenewalEmail($email, $name) {
+	public function sendRenewalEmail() {
 		Mail::to('programador@dimacros.net', 'Marcos')
 		->cc('desarrollo@jypsac.com', 'Programador')
 		->send( new DomainRenewal($this) );
