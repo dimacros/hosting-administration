@@ -97,7 +97,7 @@
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
     <aside class="app-sidebar">
       <div class="app-sidebar__user">
-        <img class="app-sidebar__user-avatar" src="https://s3.amazonaws.com/uifaces/faces/twitter/jsa/48.jpg" alt="User Image">
+        <img class="app-sidebar__user-avatar" src="https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-128.png" width="56px" alt="User Image">
         <div>
           <p class="app-sidebar__user-name">{{Auth::user()->full_name}}</p>
           <p class="app-sidebar__user-designation">Frontend Developer</p>
@@ -112,47 +112,50 @@
         </li>
         <li>
           <a class="app-menu__item" href="{{ url('dashboard/clientes') }}">
-            <i class="app-menu__icon fa fa-user"></i>
+            <i class="app-menu__icon fa fa-address-book"></i>
             <span class="app-menu__label">Clientes</span>
           </a>
         </li>
         <li>
           <a class="app-menu__item" href="{{ url('dashboard/proveedores-de-dominios') }}">
-            <i class="app-menu__icon fa fa-user"></i>
+            <i class="app-menu__icon fa fa-users"></i>
             <span class="app-menu__label">Proveedores de dominio</span>
           </a>
         </li>
         <li>
+          <a class="app-menu__item" href="{{ url('/dashboard/planes-hosting') }}">
+            <i class="app-menu__icon fa fa-laptop"></i>
+            <span class="app-menu__label">Planes Hosting</span>
+          </a>
+        </li>
+        <li>
           <a class="app-menu__item" href="{{ url('dashboard/dominios-comprados') }}">
-            <i class="app-menu__icon fa fa-user"></i>
+            <i class="app-menu__icon fa fa-credit-card"></i>
             <span class="app-menu__label">Dominios comprados</span>
+          </a>
+        </li>
+        <li>
+          <a class="app-menu__item" href="{{ url('/dashboard/contratos-hosting') }}">
+            <i class="app-menu__icon fa fa-money"></i>
+            <span class="app-menu__label">Clientes Hosting</span>
+          </a>
+        </li>
+        <li>
+          <a class="app-menu__item" href="#">
+            <i class="app-menu__icon fa fa-ticket"></i>
+            <span class="app-menu__label">Tickets</span>
           </a>
         </li>
         <li class="treeview">
           <a class="app-menu__item" href="#" data-toggle="treeview">
-            <i class="app-menu__icon fa fa-laptop"></i>
-            <span class="app-menu__label">Planes Hosting</span>
+            <i class="app-menu__icon fa fa-cogs"></i>
+            <span class="app-menu__label">Configuraciones</span>
             <i class="treeview-indicator fa fa-angle-right"></i>
           </a>
           <ul class="treeview-menu">
             <li>
-              <a class="treeview-item" href="{{ url('dashboard/planes-hosting/crear') }}">
-                <i class="icon fa fa-circle-o"></i> Agregar un Plan Hosting
-              </a>
-            </li>
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/planes-hosting') }}">
-                <i class="icon fa fa-circle-o"></i> Ver todos los Planes Hosting
-              </a>
-            </li>
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/contratos-hosting/crear') }}">
-                <i class="icon fa fa-circle-o"></i> Agregar un Cliente Hosting
-              </a>
-            </li>
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/contratos-hosting') }}">
-                <i class="icon fa fa-circle-o"></i> Ver todos los Clientes Hosting
+              <a class="treeview-item" href="{{ url('dashboard/planes-hosting/user') }}">
+                <i class="icon fa fa-circle-o"></i> Ver Usuarios
               </a>
             </li>
           </ul>
@@ -169,6 +172,18 @@
   <script src="{{ asset('js/main.js') }}"></script>
   <!-- The javascript plugin to display page loading on top-->
   <script src="{{ asset('js/plugins/pace.min.js') }}"></script>
+  <script>
+  var currentPage_Laravel = '{{ url()->current() }}';
+  var currentPage = location.href;
+  console.log(currentPage);
+  var menuItems = document.getElementsByClassName('app-menu__item');
+  for(var i = 0; i < menuItems.length; i++) 
+  {
+    if( menuItems[i].href === currentPage ) {
+      menuItems[i].classList.add('active');
+    }
+  }
+  </script>
   <!-- Page specific javascripts-->
   @stack('script')
 </body>
