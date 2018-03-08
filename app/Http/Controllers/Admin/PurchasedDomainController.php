@@ -16,9 +16,8 @@ class PurchasedDomainController extends Controller
     public function index()
     {
       $purchasedDomains = 
-      PurchasedDomain::where('active', 1)->with([
-      'acquiredDomain:id,domain_name', 'domainProvider:id,company_name',
-      'customer:id,first_name,last_name,company_name'])->get();             
+      PurchasedDomain::with(['acquiredDomain:id,domain_name', 'domainProvider:id,company_name',
+      'customer:id,first_name,last_name,company_name'])->where('active', 1)->paginate(15);             
       return 
         view('admin.purchased-domains.index')->with('purchasedDomains', $purchasedDomains);
     }
@@ -55,9 +54,9 @@ class PurchasedDomainController extends Controller
       ]);  
       
       $acquiredDomain = new AcquiredDomain();
-      $acquiredDomain->domain_name = $request->acquiredDomain['domain_name'];
+      $acquiredDomain->domain_name = 'http://'. $request->acquiredDomain['domain_name'];
       $acquiredDomain->description = $request->acquiredDomain['description'];
-      $acquiredDomain->save();
+      $acquiredDomainIsSaved = $acquiredDomain->save();
       $purchasedDomain = new PurchasedDomain();
       $purchasedDomain->acquired_domain_id = $acquiredDomain->id;
       $purchasedDomain->domain_provider_id = $request->domain_provider_id;
@@ -69,7 +68,7 @@ class PurchasedDomainController extends Controller
       $purchasedDomain->active = 1;
       $purchasedDomain->user_id = $request->user_id;
       
-      if ( $purchasedDomain->save() ) {
+      if ( $acquiredDomainIsSaved && $purchasedDomain->save() ) {
         return back()->with('status', 'La compra de dominio fue registrada con éxito');
       }
     }
@@ -82,7 +81,8 @@ class PurchasedDomainController extends Controller
      */
     public function show($id)
     {
-       return view('admin.purchased-domains.show')->with('purchasedDomain', PurchasedDomain::findOrFail($id));
+      $purchasedDomain = PurchasedDomain::findOrFail($id);
+      return view('admin.purchased-domains.show')->with('purchasedDomain', $purchasedDomain);
     }
 
     /**
@@ -108,7 +108,34 @@ class PurchasedDomainController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+      $request->validate([
+        'domain_provider_id' => 'required|exists:domain_providers,id',
+        'customer_id' => 'required|exists:customers,id',
+        'start_date' => 'required|date',
+        'finish_date' => 'required|date|after:start_date',
+        'total_price_in_dollars' => 'required|numeric',
+        'acquiredDomain.id' => 'required|exists:acquired_domains,id',
+        'acquiredDomain.domain_name' => 'bail|required|url|
+          unique:acquired_domains,domain_name,'.$request->acquiredDomain['id'],
+        'acquiredDomain.description' => 'nullable',
+        'user_id' => 'required|exists:users,id'
+      ]);  
+
+      $acquiredDomain = AcquiredDomain::findOrFail($request->acquiredDomain['id']);
+      $acquiredDomain->domain_name = $request->acquiredDomain['domain_name'];
+      $acquiredDomain->description = $request->acquiredDomain['description'];
+      $purchasedDomain = PurchasedDomain::findOrFail($id);
+      $purchasedDomain->acquired_domain_id = $request->acquiredDomain['id'];
+      $purchasedDomain->domain_provider_id = $request->domain_provider_id;
+      $purchasedDomain->customer_id = $request->customer_id;
+      //$purchasedDomain->start_date = $request->start_date;
+      $purchasedDomain->finish_date = $request->finish_date;
+      $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
+      $purchasedDomain->user_id = $request->user_id;
+      
+      if ( $acquiredDomain->save() && $purchasedDomain->save() ) {
+        return back()->with('status', 'Se actualizó con éxito los nuevos datos de la compra de dominio.');
+      }
     }
 
     /**
@@ -119,7 +146,11 @@ class PurchasedDomainController extends Controller
      */
     public function destroy($id)
     {
-        //
+      $purchasedDomain = PurchasedDomain::findOrFail($id);
+      $purchasedDomain->status = 'suspended';
+      if( $purchasedDomain->save() ) {
+        return back()->with('status', 'El dominio del cliente "'.$purchasedDomain->customer->full_name.'" fue suspendido con éxito');
+      }
     }
 
     public function renovate(Request $request, $id) 

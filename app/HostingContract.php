@@ -10,18 +10,18 @@ use Illuminate\Database\Eloquent\Model;
 class HostingContract extends Model
 {
 
-	public function customer() {
-		return $this->belongsTo('App\Customer');
-	}
-
 	public function hostingPlanContracted() {
-		return $this->hasOne('App\HostingPlanContracted');
+		return $this->belongsTo('App\HostingPlanContracted');
 	}
 
 	public function cpanelAccount() {
 		return $this->belongsTo('App\CpanelAccount');
 	}
-
+	
+	public function customer() {
+		return $this->belongsTo('App\Customer');
+	}
+	
 	public function getIdAttribute($id) {
 		return str_pad($id, 5, "0", STR_PAD_LEFT);
 	}

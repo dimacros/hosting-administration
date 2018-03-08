@@ -88,7 +88,11 @@
                     <td>N° {{ $purchasedDomain->id }}</td>
                     <td>{{ $purchasedDomain->customer->full_name }}</td>
                     <td>
-                      {{ $purchasedDomain->acquiredDomain->domain_name }}
+                      @if( $purchasedDomain->status === 'suspended' )
+                        <del>{{ $purchasedDomain->acquiredDomain->domain_name }}</del>
+                      @else 
+                        {{ $purchasedDomain->acquiredDomain->domain_name }}
+                      @endif
                       <span class="ml-1 badge badge-pill badge-{{$color}}">
                         {{ $badge_text }}
                       </span>
@@ -96,7 +100,13 @@
                     <td>
                       <span class="fw-600 text-{{$color}}">{{ $purchasedDomain->expiration_date_for_humans }} Días</span>
                     </td>
-                    <td>$ {{ $purchasedDomain->total_price_in_dollars }}</td>
+                    <td>
+                      @if( $purchasedDomain->status === 'suspended' )
+                        <del>$ {{ $purchasedDomain->total_price_in_dollars }}</del>
+                      @else 
+                        $ {{ $purchasedDomain->total_price_in_dollars }}
+                      @endif
+                    </td>
                     <td>
                       <button type="button" class="btn btn-primary w-100" data-toggle="modal" data-target="#modal-{{ $purchasedDomain->id }}">Renovar</button>
                     </td>
@@ -164,15 +174,24 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                  
+                  </div><!-- Modal-Renovate -->
                 @endforeach
                 </tbody>
               </table>
             </div><!-- /.table-responsive -->
+            <nav class="py-3" id="pagination">
+              {{ $purchasedDomains->links('vendor.pagination.bootstrap-4') }}
+            </nav>
           </div><!-- /.tile-body -->
         </div><!-- /.tile -->
       </div><!-- /.col-md-12 -->
     </div><!-- /.row -->
   </main>   
 @endsection
+@push('script')
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('#pagination').find('ul').addClass('justify-content-center');
+  });
+  </script>
+@endpush

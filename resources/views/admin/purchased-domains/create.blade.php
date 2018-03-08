@@ -67,7 +67,7 @@
               </div> 
               <div class="form-group">
                 <label for="customer_id">
-                  Nombre del Cliente o la Empresa:
+                  Nombre del Cliente o Empresa:
                 </label>
                 <select class="form-control" id="customer_id" name="customer_id" required>
                   <option value="">Seleccione un cliente o empresa..</option>

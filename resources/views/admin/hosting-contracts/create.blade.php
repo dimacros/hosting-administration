@@ -49,27 +49,31 @@
         'FormId' => 'formCustomer',
       ])
 
-      <form method="POST" id="formCustomer" action="{{ url('dashboard/clientes/crear') }}">
+      <form method="POST" id="formCustomer" action="{{ route('admin.clientes.store') }}">
         {{ csrf_field() }}
-        <div class="form-group">
-          <label for="first_name">Nombre(s):</label>
-          <input class="form-control" type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required>
-        </div>
-        <div class="form-group">
-          <label for="last_name">Apellidos:</label>
-          <input class="form-control" type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label for="first_name">Nombre(s):</label>
+            <input class="form-control" type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+          </div>
+          <div class="form-group col-md-7">
+            <label for="last_name">Apellidos:</label>
+            <input class="form-control" type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+          </div>
         </div>
         <div class="form-group">
           <label for="company_name">Empresa (opcional):</label>
           <input class="form-control" type="text" id="company_name" name="company_name" value="{{ old('company_name') }}">
         </div>
-        <div class="form-group">
-          <label for="email">Correo electrónico:</label>
-          <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}" required>
-        </div>
-        <div class="form-group">
-          <label for="phone">Teléfono o Celular:</label>
-          <input class="form-control" type="phone" id="phone" name="phone" value="{{ old('phone') }}" pattern="[0-9-]{5,15}">
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label for="phone">Teléfono o Celular:</label>
+            <input class="form-control" type="phone" id="phone" name="phone" value="{{ old('phone') }}" pattern="[0-9-]{5,15}">
+          </div>
+          <div class="form-group col-md-7">
+            <label for="email">Correo electrónico:</label>
+            <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}" required>
+          </div>
         </div>
       </form>
     @endcomponent
@@ -94,15 +98,13 @@
             </div>
           @endif
         <!-- START FORM -->
-          <form method="POST">
+          <form method="POST" action="{{ route('admin.contratos-hosting.store') }}">
             {{ csrf_field() }}
             <input type="hidden" name="user_id" value="{{Auth::id()}}">
             <div class="tile-body">
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="customer_id">
-                    Nombre del Cliente:
-                  </label>
+                  <label for="customer_id">Nombre del Cliente o Empresa:</label>
                   <select class="form-control" id="customer_id" name="customer_id" required>
                     <option value="">Seleccione un cliente..</option>
                   @foreach($customers as $customer)
@@ -136,14 +138,27 @@
                 </div>
               </div>
               <div class="form-group">
-                <h6>¿Desea crear una cuenta de cPanel?</h6>
+                <h6>¿El cliente ya tiene una cuenta cPanel?</h6>
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" class="custom-control-input" id="create_account_yes" name="create_account" value="yes" required>
-                  <label class="custom-control-label" for="create_account_yes">SÍ</label>
+                  <input type="radio" class="custom-control-input" id="has_cpanel_account_yes" name="has_cpanel_account" value="yes" required>
+                  <label class="custom-control-label" for="has_cpanel_account_yes">SÍ</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" class="custom-control-input" id="create_account_no" name="create_account" value="no" >
-                  <label class="custom-control-label" for="create_account_no">NO</label>
+                  <input type="radio" class="custom-control-input" id="has_cpanel_account_no" name="has_cpanel_account" value="no" >
+                  <label class="custom-control-label" for="has_cpanel_account_no">NO</label>
+                </div>
+              </div>
+              <div class="bg-light p-4" id="searchAccount" style="display: none;">
+                <div class="form-group">
+                  <label for="cpanel_id">
+                    <h5>| Buscar la cuenta <span class="text-cpanel">cPanel</span> por el nombre de dominio:</h5>
+                  </label>
+                  <select class="form-control" id="cpanel_id" name="cpanel_id">
+                    <option value="">Seleccione una opción..</option>
+                  @foreach($cpanelAccounts as $cpanelAccount)
+                    <option value="{{ $cpanelAccount->id }}">{{ $cpanelAccount->domain_name }}</option>  
+                  @endforeach
+                  </select>           
                 </div>
               </div>
               <div class="bg-light p-4" id="createAccount" style="display: none;">
@@ -159,21 +174,21 @@
                   </div>  
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2" for="">Usuario:</label>
+                  <label class="col-sm-2" for="cpanel_user">Usuario:</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="cpanel[user]">
+                    <input type="text" class="form-control" id="cpanel_user" name="cpanel[user]">
                   </div>  
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2" for="">Contraseña:</label>
+                  <label class="col-sm-2" for="cpanel_password">Contraseña:</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="cpanel[password]">
+                    <input type="text" class="form-control" id="cpanel_password" name="cpanel[password]">
                   </div>  
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2" for="">IP Pública:</label>
+                  <label class="col-sm-2" for="cpanel_public_ip">IP Pública:</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" name="cpanel[public_ip]">
+                    <input type="text" class="form-control" id="cpanel_public_ip" name="cpanel[public_ip]">
                   </div>  
                 </div>
               </div>
@@ -196,17 +211,19 @@
   $(document).ready(function() {
 
     $('#customer_id').selectize();
-
+    $('#cpanel_id').selectize();
     /*
     * CUSTOM cPanel Account
     *****************************
     */
       $('input[type="radio"]').click(function() {
-         if($(this).attr('id') === 'create_account_yes') {
+         if($(this).attr('id') === 'has_cpanel_account_no') {
+          $('#searchAccount').hide();   
           $('#createAccount').show("slow");           
          }
          else {
-          $('#createAccount').hide(1000);   
+          $('#createAccount').hide(); 
+          $('#searchAccount').show("slow");   
          }
      });
 

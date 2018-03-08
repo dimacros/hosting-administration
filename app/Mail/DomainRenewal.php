@@ -32,7 +32,7 @@ class DomainRenewal extends Mailable
     {  
         return $this->from('ventas@jypsac.com', 'Grupo JYP S.A.C')
                     ->subject('Recordatorio para la renovación de dominio')
-                    ->view('emails.domain-renewal')
+                    ->view('emails.alert')
                     ->with('purchasedDomain', $this->purchasedDomain);
     }
 }

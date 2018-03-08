@@ -21,9 +21,8 @@ Route::get('/mailable', function () {
 	return new App\Mail\ContractRenewalHosting($HostingContract);
 });
 
-Route::get('/mailable-2', function () {
-	$PurchasedDomain = App\PurchasedDomain::find(1);
-	return new App\Mail\DomainRenewal($PurchasedDomain);
+Route::get('/mailable-basic', function () {
+  return view('emails.action');
 });
 
 Auth::routes();

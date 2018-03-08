@@ -1,23 +1,6 @@
 @extends('layouts.dashboard')
 @push('head')
 <style>
-  .btn {
-    font-size: 1rem;
-  }
-
-  .btn-cpanel {
-    background-color: #ff7600;
-    color: #fff;
-    border-color: #ff7600;
-    font-style: italic;
-  }
-
-  .text-cpanel {
-    color: #ff7600;
-    font-size: 1.5rem;
-    font-style: italic;
-  }
-
   .fw-600 {
     font-weight: 600;
   }
@@ -117,60 +100,12 @@
                       {{ $hostingContract->total_price }} nuevos soles
                     </td>
                     <td>
-                      <button type="button" class="btn btn-cpanel w-100"  data-toggle="modal" data-target="#cpanel-{{ $hostingContract->id }}">cPanel</button>
+                      <button type="button" class="btn btn-primary w-100"  data-toggle="modal" data-target="#renovateHosting-{{ $hostingContract->id }}">Renovar</button>
                     </td>
                     <td>
-                      <button type="button" class="btn btn-success w-100"  data-toggle="modal" data-target="#renovateHosting-{{ $hostingContract->id }}">RENOVAR</button>
+                      <a href="{{ route('admin.contratos-hosting.show', $hostingContract->id) }}" class="btn btn-success w-100">Ver</a>
                     </td>
                   </tr> 
-                  <!-- Modal cPanel-->
-                  <div class="modal fade" id="cpanel-{{ $hostingContract->id }}" tabindex="-1" role="dialog" aria-labelledby="cpanelLabel-{{ $hostingContract->id }}" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header bg-light">
-                          <h4 class="modal-title" id="cpanellLabel-{{ $hostingContract->id }}">
-                            Cuenta de <span class="text-cpanel">cPanel</span>
-                          </h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body bg-light">
-                        <form method="POST" id="formEdit-{{$hostingContract->cpanelAccount->id}}" action="{{ route('admin.cuentas-cpanel.actualizar', $hostingContract->cpanelAccount->id) }}">
-                          {{ method_field('PUT') }}
-                          {{ csrf_field() }}
-                          <div class="form-group">
-                            <label>Dominio:</label>
-                            <div class="input-group">
-                              <div class="input-group-prepend">
-                                <span class="input-group-text">http://</span>
-                              </div>
-                              <input type="text" class="form-control" name="domain_name" value="{{$hostingContract->cpanelAccount->domain_name}}" required>
-                            </div> 
-                          </div>
-                          <div class="form-group">
-                            <label>Usuario:</label>
-                            <input type="text" class="form-control" name="user" value="{{$hostingContract->cpanelAccount->user}}" required>
-                          </div>
-                          <div class="form-group">
-                            <label>Contraseña:</label>
-                            <input type="text" class="form-control" name="password" value="{{$hostingContract->cpanelAccount->password}}">
-                          </div>
-                          <div class="form-group">
-                            <label>IP Pública:</label>
-                            <input type="text" class="form-control" name="public_ip" value="{{$hostingContract->cpanelAccount->public_ip}}">
-                          </div>
-                        </form>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button form="formEdit-{{$hostingContract->cpanelAccount->id}}" type="submit" class="btn btn-primary" >
-                            Guardar cambios
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div><!-- /.modal -->
                   <!-- Modal renovateHosting -->
                   <div class="modal fade" id="renovateHosting-{{ $hostingContract->id }}" tabindex="-1" role="dialog" aria-labelledby="renovateHostingLabel-{{ $hostingContract->id }}" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -186,8 +121,7 @@
                         <div class="modal-body">
                         <form method="POST" id="renovateHostingForm-{{$hostingContract->id}}" action="{{ route('admin.contratos-hosting.renovar', $hostingContract->id) }}">
                           {{ csrf_field() }}
-                          <input type="hidden" name="customer_id" value="{{ $hostingContract->customer->id }}">
-                          <input type="hidden" name="cpanel_account_id" value="{{ $hostingContract->cpanelAccount->id }}">
+                          
                           <input type="hidden" name="user_id" value="{{ Auth::id() }}">
                           <div class="form-group">
                             <label for="hosting_plan_id">Plan Hosting:</label>
@@ -232,13 +166,19 @@
                 </tbody>
               </table>
             </div><!-- /.table-responsive -->
+            <nav class="py-3" id="pagination">
+              {{ $hostingContracts->links('vendor.pagination.bootstrap-4') }}
+            </nav>
           </div><!-- /.tile-body -->
         </div><!-- /.tile -->
       </div><!-- /.col-md-12 -->
     </div><!-- /.row -->
   </main>
-
 @endsection
 @push('script')
-
+  <script type="text/javascript">
+  $(document).ready(function() {
+    $('#pagination').find('ul').addClass('justify-content-center');
+  });
+  </script>
 @endpush

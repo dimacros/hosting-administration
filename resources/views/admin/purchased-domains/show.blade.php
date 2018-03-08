@@ -21,11 +21,28 @@
               <i class="fa fa-arrow-left" aria-hidden="true"></i>Regresar
             </a>
             <a href="{{ route('admin.dominios-comprados.edit', $purchasedDomain->id) }}" class="btn btn-primary float-right">Editar</a>
-            <button type="button" class="btn btn-warning float-right mr-3" data-toggle="modal" data-target="#modal-{{ $purchasedDomain->id }}">Suspender</button>
+            <button type="button" class="btn btn-warning float-right mr-3" data-toggle="modal" data-target="#modalSuspended">Suspender</button>
           </div>
         </div>
       </div>
     </section>  
+    <!-- Modal Delete -->
+    @component('components.modal', [ 
+      'modalId' => 'modalSuspended', 
+      'modalTitle' => 'Eliminar',
+      'btnCloseClass' => 'btn btn-danger w-25', 
+      'btnCloseTitle' => 'No', 
+      'btnSaveClass' => 'btn btn-success w-25', 
+      'btnSaveTitle' => 'Sí',
+      'FormId' => 'formSuspended',
+    ])
+
+      <h5>¿Seguro que quiere suspender el dominio de "{{$purchasedDomain->customer->full_name}}"?</h5>
+        <form class="d-none" method="POST" id="formSuspended" action="{{ route('admin.dominios-comprados.destroy', $purchasedDomain->id) }}">
+          {{ method_field('DELETE') }}
+          {{ csrf_field() }}       
+        </form>
+    @endcomponent   
     <!-- SECOND SECTION -->
     <section class="row">
       <div class="col-md-8 offset-md-2">
@@ -40,15 +57,11 @@
         <!-- START TILE -->
             <div class="tile-body">
               <div class="form-group">
-                <label>
-                   Nombre del Proveedor de Dominio:
-                </label>
+                <label>Nombre del Proveedor de Dominio:</label>
                 <input type="text" class="form-control" value="{{ $purchasedDomain->domainProvider->company_name }}" readonly>
               </div> 
               <div class="form-group">
-                <label>
-                  Nombre del Cliente o la Empresa:
-                </label>
+                <label>Nombre del Cliente o Empresa:</label>
                 <input type="text" class="form-control" value="{{ $purchasedDomain->customer->full_name }}" readonly>
               </div> 
               <div class="form-row">
@@ -72,12 +85,8 @@
                 </div>
               </div>
               <div class="form-group">
-                <label>
-                  Agregar una descripción sobre el dominio (DNS, soporte, etc):
-                </label>
-                <textarea class="form-control" rows="5" readonly>
-                  {{ $purchasedDomain->acquiredDomain->description }}
-                </textarea>
+                <label>Agregar una descripción sobre el dominio (DNS, soporte, etc):</label>
+                <textarea class="form-control" rows="5" readonly>{{ $purchasedDomain->acquiredDomain->description }}</textarea>
               </div>
             </div><!-- /.tile-body -->
         </div><!-- /.tile -->

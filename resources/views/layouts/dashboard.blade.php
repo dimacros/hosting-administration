@@ -85,7 +85,7 @@
               <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fa fa-sign-out fa-lg"></i> Cerrar sesión
               </a>
-              <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+              <form id="logout-form" action="{{route('logout')}}" method="POST" class="d-none">
                 {{ csrf_field() }}
               </form>
             </li>

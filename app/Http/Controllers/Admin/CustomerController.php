@@ -52,7 +52,7 @@ class CustomerController extends Controller
       $customer->email = $request->email;
 
       if ($customer->save()) {
-        return back()->with('status', 'El cliente "'.$customer->full_name.'" fue registrado exitosamente.');
+        return back()->with('status', 'El cliente "'.$customer->full_name.'" fue registrado con éxito.');
       }
     }
 
