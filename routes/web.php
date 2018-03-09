@@ -63,3 +63,9 @@ Route::group([
   );
 
 });
+
+//Crear un usuario por Defecto
+
+Route::get('default/user', function() {
+  return factory(App\User::class)->create();
+});

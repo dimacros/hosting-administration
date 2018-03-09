@@ -18,8 +18,8 @@
   <main class="app-content">
     <div class="app-title">
         <div class="tile-body">
-          <h1><i class="fa fa-th-list"></i> Contratos Hosting </h1>
-          <p>Lista de todos los contratos hosting</p>
+          <h1><i class="fa fa-th-list"></i> Clientes Hosting </h1>
+          <p>Lista de todos los clientes hosting</p>
         </div>
         <ul class="app-breadcrumb breadcrumb side">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>

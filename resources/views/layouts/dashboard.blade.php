@@ -27,7 +27,7 @@
   </head>
   <body class="app sidebar-mini">
     <!-- Navbar-->
-    <header class="app-header"><a class="app-header__logo" href="index.html">Vali</a>
+    <header class="app-header"><a class="app-header__logo" href="{{ url('/dashboard/user') }}">Vali</a>
       <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar"></a>
       <!-- Navbar Right Menu-->
       <ul class="app-nav">
@@ -79,8 +79,14 @@
         <!-- User Menu-->
         <li class="dropdown"><a class="app-nav__item" href="#" data-toggle="dropdown"><i class="fa fa-user fa-lg"></i></a>
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
-            <li><a class="dropdown-item" href="{{ route('register') }}"><i class="fa fa-cog fa-lg"></i> Agregar usuario</a></li>
-            <li><a class="dropdown-item" href="#"><i class="fa fa-user fa-lg"></i> Perfil </a></li>
+            <li>
+              <a class="dropdown-item" href="#"><i class="fa fa-cog fa-lg"></i> 
+                Cambiar de<br>Contraseña
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#"><i class="fa fa-user fa-lg"></i> Mi Perfil </a>
+            </li>
             <li>
               <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                 <i class="fa fa-sign-out fa-lg"></i> Cerrar sesión
@@ -100,7 +106,7 @@
         <img class="app-sidebar__user-avatar" src="https://cdn1.iconfinder.com/data/icons/avatar-3/512/Manager-128.png" width="56px" alt="User Image">
         <div>
           <p class="app-sidebar__user-name">{{Auth::user()->full_name}}</p>
-          <p class="app-sidebar__user-designation">Frontend Developer</p>
+          <p class="app-sidebar__user-designation">Trabajador JYP S.A.C</p>
         </div>
       </div>
       <ul class="app-menu">
@@ -123,15 +129,15 @@
           </a>
         </li>
         <li>
-          <a class="app-menu__item" href="{{ url('/dashboard/planes-hosting') }}">
-            <i class="app-menu__icon fa fa-laptop"></i>
-            <span class="app-menu__label">Planes Hosting</span>
-          </a>
-        </li>
-        <li>
           <a class="app-menu__item" href="{{ url('dashboard/dominios-comprados') }}">
             <i class="app-menu__icon fa fa-credit-card"></i>
             <span class="app-menu__label">Dominios comprados</span>
+          </a>
+        </li>
+        <li>
+          <a class="app-menu__item" href="{{ url('/dashboard/planes-hosting') }}">
+            <i class="app-menu__icon fa fa-laptop"></i>
+            <span class="app-menu__label">Planes Hosting</span>
           </a>
         </li>
         <li>
@@ -141,10 +147,30 @@
           </a>
         </li>
         <li>
-          <a class="app-menu__item" href="#">
+
+        </li>
+        <li class="treeview">
+          <a class="app-menu__item" href="#" data-toggle="treeview">
             <i class="app-menu__icon fa fa-ticket"></i>
             <span class="app-menu__label">Tickets</span>
+            <i class="treeview-indicator fa fa-angle-right"></i>
           </a>
+          <ul class="treeview-menu">
+            <li>
+              <a class="treeview-item" href="{{ url('dashboard/temas-de-ayuda') }}">
+                <i class="icon fa fa-info-circle"></i> Temas de Ayuda
+              </a>
+              <a class="treeview-item" href="{{ url('dashboard/tickets/open') }}">
+                <i class="icon fa fa-circle-o"></i> Tickets abierto
+              </a>
+            </li>
+            <li>
+              <a class="treeview-item" href="{{ url('dashboard/tickets/closed') }}">
+                <i class="icon fa fa-check-circle"></i> Tickets cerrado
+              </a>
+            </li>
+            
+          </ul>
         </li>
         <li class="treeview">
           <a class="app-menu__item" href="#" data-toggle="treeview">
@@ -154,10 +180,16 @@
           </a>
           <ul class="treeview-menu">
             <li>
-              <a class="treeview-item" href="{{ url('dashboard/planes-hosting/user') }}">
-                <i class="icon fa fa-circle-o"></i> Ver Usuarios
+              <a class="treeview-item" href="{{ route('register') }}">
+                <i class="icon fa fa-circle-o"></i> Agregar usuario
               </a>
             </li>
+            <li>
+              <a class="treeview-item" href="{{ url('dashboard/planes-hosting/user') }}">
+                <i class="icon fa fa-circle-o"></i> Lista de Usuarios
+              </a>
+            </li>
+            
           </ul>
         </li>
       </ul>
