@@ -15,7 +15,7 @@ class CreateHostingPlansContractedTable extends Migration
     {
         Schema::create('hosting_plans_contracted', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('hosting_plan_id')->unsigned();
+            $table->integer('hosting_plan_id')->unsigned()->nullable();
             $table->string('title');
             $table->text('description');
             $table->decimal('total_price_per_year');
@@ -24,7 +24,7 @@ class CreateHostingPlansContractedTable extends Migration
             
             $table->foreign('hosting_plan_id')
                   ->references('id')->on('hosting_plans')
-                  ->onDelete('cascade')->onUpdate('cascade');
+                  ->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

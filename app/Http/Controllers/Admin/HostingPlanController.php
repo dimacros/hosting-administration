@@ -79,7 +79,7 @@ class HostingPlanController extends Controller
      */
     public function destroy($id)
     {      
-        if(HostingPlan::find($id)->delete())
+        if(HostingPlan::findOrFail($id)->delete())
         {
           return back()->with('status', 'El plan hosting fue eliminado exitosamente.');
         }

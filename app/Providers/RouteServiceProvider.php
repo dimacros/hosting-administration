@@ -23,6 +23,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        //All parameters {id} are numeric
+        Route::pattern('id', '[0-9]+');
         //Translate to Spanish 
         Route::resourceVerbs(
           [ 'create' => 'crear', 'edit' => 'editar']

@@ -13,15 +13,23 @@ class CreateRepliesTable extends Migration
      */
     public function up()
     {
-        Schema::create('replies', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('ticket_id')->unsigned();
-            $table->integer('user_id')->unsigned();
-            $table->text('description');
-            $table->string('attached_files');
-            $table->boolean('solved');
-            $table->timestamps();
-        });
+      Schema::create('replies', function (Blueprint $table) {
+          $table->increments('id');
+          $table->integer('ticket_id')->unsigned();
+          $table->integer('user_id')->unsigned()->nullable();
+          $table->text('description');
+          $table->string('attached_files')->nullable();
+          $table->timestamps();
+
+          $table->foreign('ticket_id')
+                ->references('id')->on('tickets')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+          $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+      });
     }
 
     /**

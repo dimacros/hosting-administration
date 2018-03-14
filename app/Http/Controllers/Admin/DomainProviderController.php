@@ -85,7 +85,7 @@ class DomainProviderController extends Controller
      */
     public function destroy($id)
     {        
-      if(DomainProvider::find($id)->delete())
+      if(DomainProvider::findOrFail($id)->delete())
       {
         return back()->with('status', 'El proveedor de dominio fue eliminado exitosamente.');
       }

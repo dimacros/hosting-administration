@@ -92,7 +92,7 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {      
-        if(Customer::find($id)->delete())
+        if(Customer::findOrFail($id)->delete())
         {
           return back()->with('status', 'El cliente fue eliminado exitosamente.');
         }

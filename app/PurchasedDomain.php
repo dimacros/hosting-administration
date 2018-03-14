@@ -10,16 +10,16 @@ use Illuminate\Database\Eloquent\Model;
 class PurchasedDomain extends Model
 {
 
-  public function acquiredDomain()
-  {
-		return $this->belongsTo('App\AcquiredDomain');
-  }	
-
   public function domainProvider()
   {
 		return $this->belongsTo('App\DomainProvider');
   }	
 
+  public function acquiredDomain()
+  {
+		return $this->belongsTo('App\AcquiredDomain');
+  }
+  
 	public function customer() {
 		return $this->belongsTo('App\Customer');
 	}

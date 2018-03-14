@@ -24,24 +24,24 @@ class CreateHostingContractsTable extends Migration
         $table->enum('status', 
           ['active', 'pending', 'canceled', 'finished', 'suspended']);
         $table->boolean('active');
-        $table->integer('user_id')->unsigned();
+        $table->integer('user_id')->unsigned()->nullable();
         $table->timestamps();
 
         $table->foreign('hosting_plan_contracted_id')
               ->references('id')->on('hosting_plans_contracted')
-              ->onDelete('cascade')->onUpdate('cascade');
+              ->onUpdate('cascade')->onDelete('cascade');
 
         $table->foreign('customer_id')
               ->references('id')->on('customers')
-              ->onDelete('cascade')->onUpdate('cascade');
+              ->onUpdate('cascade')->onDelete('cascade');
 
         $table->foreign('cpanel_account_id')
               ->references('id')->on('cpanel_accounts')
-              ->onDelete('cascade')->onUpdate('cascade');
+              ->onUpdate('cascade')->onDelete('cascade');
 
         $table->foreign('user_id')
               ->references('id')->on('users')
-              ->onDelete('cascade')->onUpdate('cascade');
+              ->onUpdate('cascade')->onDelete('cascade');
       });
     }
 

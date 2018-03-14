@@ -29,43 +29,56 @@ Auth::routes();
 
 Route::group([
 		'as' => 'admin.', 'namespace' => 'Admin', 
-		'middleware' => ['auth'], 'prefix' => 'dashboard',
+		'middleware' => ['auth', 'admin'], 'prefix' => 'dashboard',
 	], function () {
 
-  Route::view('user', 'admin.user');
+  Route::view('admin', 'admin.user')->name('user');
 
   Route::resource('clientes', 'CustomerController', 
   	array( 'except' => ['show', 'edit'], 'parameters' => ['clientes' => 'id'] )
+  );
+
+  Route::post('contratos-hosting/renovar/{id}', 'HostingContractController@renovate')
+  ->name('contratos-hosting.renovar');
+  Route::put('cuentas-cpanel/{id}', 'HostingContractController@cpanelAccountUpdate')
+  ->name('cuentas-cpanel.actualizar');  
+
+  Route::resource('contratos-hosting', 'HostingContractController', 
+    array( 'parameters' => ['contratos-hosting' => 'id'] )
+  );
+
+  Route::post('dominios-comprados/renovar/{id}', 'PurchasedDomainController@renovate')
+  ->name('dominios-comprados.renovar');
+
+  Route::resource('dominios-comprados', 'PurchasedDomainController', 
+    array( 'parameters' => ['dominios-comprados' => 'id'] )
+  );
+
+  Route::resource('planes-hosting', 'HostingPlanController', 
+    array( 'except' => ['show', 'edit'], 'parameters' => ['planes-hosting' => 'id'] )
   );
 
   Route::resource('proveedores-de-dominios', 'DomainProviderController', 
   	array( 'except' => ['show', 'edit'], 'parameters' => ['proveedores-de-dominios' => 'id'] )
   );
 
-  Route::resource('planes-hosting', 'HostingPlanController', 
-  	array( 'except' => ['show', 'edit'], 'parameters' => ['planes-hosting' => 'id'] )
+  Route::resource('temas-de-ayuda', 'HelpTopicController',
+    array( 'except' => ['create', 'show', 'edit'], 'parameters' => ['temas-de-ayuda' => 'id'] )
   );
 
-	Route::post('dominios-comprados/renovar/{id}', 'PurchasedDomainController@renovate')
-	->name('dominios-comprados.renovar');
+  Route::get('tickets/{status}', 'TicketController@indexByStatus')
+  ->where('status', 'open|closed');
 
-  Route::resource('dominios-comprados', 'PurchasedDomainController', 
-  	array( 'parameters' => ['dominios-comprados' => 'id'] )
-  );
-
-	Route::post('contratos-hosting/renovar/{id}', 'HostingContractController@renovate')
-	->name('contratos-hosting.renovar');
-	Route::put('cuentas-cpanel/{id}', 'HostingContractController@cpanelAccountUpdate')
-	->name('cuentas-cpanel.actualizar');	
-
-  Route::resource('contratos-hosting', 'HostingContractController', 
-  	array( 'parameters' => ['contratos-hosting' => 'id'] )
+  Route::resource('tickets', 'TicketController',
+    array( 'only' => ['show', 'destroy'], 'parameters' => ['tickets' => 'id'] )
   );
 
 });
 
-//Crear un usuario por Defecto
+Route::group([
+    'as' => 'customer.', 'namespace' => 'Customer', 
+    'middleware' => ['auth', 'customer'], 'prefix' => 'dashboard',
+  ], function () {
 
-Route::get('default/user', function() {
-  return factory(App\User::class)->create();
+  Route::view('user', 'customer.user')->name('user');
 });

@@ -13,14 +13,23 @@ class CreateTicketsTable extends Migration
      */
     public function up()
     {
-        Schema::create('tickets', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('user_id')->unsigned();
-            $table->integer('topic_id')->unsigned();
-            $table->string('subject');
-            $table->enum('status', ['open', 'closed'] );
-            $table->timestamps();
-        });
+      Schema::create('tickets', function (Blueprint $table) {
+          $table->increments('id');
+          $table->integer('help_topic_id')->unsigned()->nullable();
+          $table->integer('user_id')->unsigned();
+          $table->string('subject');
+          $table->enum('status', ['open', 'closed'] );
+          $table->boolean('solved');
+          $table->timestamps();
+
+          $table->foreign('help_topic_id')
+                ->references('id')->on('help_topics')
+                ->onUpdate('cascade')->onDelete('cascade');
+                
+          $table->foreign('user_id')
+                ->references('id')->on('users')
+                ->onUpdate('cascade')->onDelete('cascade');
+      });
     }
 
     /**

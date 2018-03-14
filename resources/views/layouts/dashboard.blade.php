@@ -109,7 +109,8 @@
           <p class="app-sidebar__user-designation">Trabajador JYP S.A.C</p>
         </div>
       </div>
-      <ul class="app-menu">
+      @if(Auth::user()->role === 'admin')
+      <ul id="roleAdmin" class="app-menu">
         <li>
           <a class="app-menu__item" href="{{ url('/dashboard/user') }}">
             <i class="app-menu__icon fa fa-dashboard"></i>
@@ -189,10 +190,30 @@
                 <i class="icon fa fa-circle-o"></i> Lista de Usuarios
               </a>
             </li>
-            
           </ul>
-        </li>
+        </li><!-- /.treeview -->
       </ul>
+      @elseif(Auth::user()->role === 'customer')
+      <ul id="roleCustomer" class="app-menu">
+        <li class="treeview">
+          <a class="app-menu__item" href="#" data-toggle="treeview">
+            <i class="app-menu__icon fa fa-ticket"></i>
+            <span class="app-menu__label">Tickets</span>
+            <i class="treeview-indicator fa fa-angle-right"></i>
+          </a>
+          <ul class="treeview-menu">
+            <li>
+              <a class="treeview-item" href="{{ url('dashboard/ticket-center/nuevo-ticket') }}">
+                <i class="icon fa fa-info-circle"></i> Crear un Ticket
+              </a>
+              <a class="treeview-item" href="{{ url('dashboard/ticket-center/mis-tickets') }}">
+                <i class="icon fa fa-circle-o"></i> Mis Tickets
+              </a>
+            </li>     
+          </ul>
+        </li> 
+      </ul>
+      @endif
     </aside>
 <!-- <main class="app-content">  -->
     @yield('content')
@@ -205,7 +226,7 @@
   <!-- The javascript plugin to display page loading on top-->
   <script src="{{ asset('js/plugins/pace.min.js') }}"></script>
   <script>
-  var currentPage_Laravel = '{{ url()->current() }}';
+  var currentPageWithLaravel = '{{ url()->current() }}';
   var currentPage = location.href;
   console.log(currentPage);
   var menuItems = document.getElementsByClassName('app-menu__item');

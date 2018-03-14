@@ -119,21 +119,18 @@
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title" id="modalLabel-{{ $purchasedDomain->id }}">
+                          <h4 class="modal-title" id="modalLabel-{{ $purchasedDomain->id }}">
                             Renovar Dominio
-                          </h5>
+                          </h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div>
-                        <div class="modal-body my-3">
+                        <div class="modal-body">
                           <form method="POST" id="purchasedDomain-{{ $purchasedDomain->id }}" action="{{ route(
                             'admin.dominios-comprados.renovar', $purchasedDomain->id
                             )}}">
                             {{ csrf_field() }}
-                            <input type="hidden" name="acquired_domain_id" value="{{ $purchasedDomain->acquired_domain_id }}">
-                            <input type="hidden" name="domain_provider_id" value="{{ $purchasedDomain->domain_provider_id }}">
-                            <input type="hidden" name="customer_id" value="{{ $purchasedDomain->customer_id }}">
                             <input type="hidden" name="user_id" value="{{ Auth::id() }}">
 
                             <div class="form-group">

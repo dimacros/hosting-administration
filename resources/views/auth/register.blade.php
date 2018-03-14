@@ -47,8 +47,12 @@
             {{ csrf_field() }}
             <div class="tile-body">
               <div class="form-group">
-                <label for="full_name">Nombre Completo:</label>
-                <input class="form-control" type="text" id="full_name" name="full_name" value="{{ old('full_name') }}" required autofocus>
+                <label for="first_name">Nombre(s):</label>
+                <input class="form-control" type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required autofocus>
+              </div>
+              <div class="form-group">
+                <label for="last_name">Apellidos:</label>
+                <input class="form-control" type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required>
               </div>
               <div class="form-group">
                 <label for="email">Correo electrónico:</label>

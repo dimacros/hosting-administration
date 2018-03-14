@@ -125,10 +125,9 @@ class PurchasedDomainController extends Controller
       $acquiredDomain->domain_name = $request->acquiredDomain['domain_name'];
       $acquiredDomain->description = $request->acquiredDomain['description'];
       $purchasedDomain = PurchasedDomain::findOrFail($id);
-      $purchasedDomain->acquired_domain_id = $request->acquiredDomain['id'];
       $purchasedDomain->domain_provider_id = $request->domain_provider_id;
       $purchasedDomain->customer_id = $request->customer_id;
-      //$purchasedDomain->start_date = $request->start_date;
+      $purchasedDomain->start_date = $request->start_date;
       $purchasedDomain->finish_date = $request->finish_date;
       $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
       $purchasedDomain->user_id = $request->user_id;
@@ -156,30 +155,28 @@ class PurchasedDomainController extends Controller
     public function renovate(Request $request, $id) 
     {
       $request->validate([
-        'acquired_domain_id' => 'required|exists:acquired_domains,id',
-        'domain_provider_id' => 'required|exists:domain_providers,id',
-        'customer_id' => 'required|exists:customers,id',
         'start_date' => 'required|date',
         'finish_date' => 'required|date|after:start_date',
         'total_price_in_dollars' => 'required|numeric',
         'user_id' => 'required|exists:users,id'
       ]);  
       
-      $purchasedDomain = PurchasedDomain::findOrFail($id);
-      $purchasedDomain->active = 0;
-      $purchasedDomain->save();
+      $oldPurchasedDomain = PurchasedDomain::findOrFail($id);
+      $oldPurchasedDomain->active = 0;
+      $oldPurchasedDomainIsSaved = $oldPurchasedDomain->save();
 
-      $newPurchasedDomain = new PurchasedDomain();
-      $newPurchasedDomain->acquired_domain_id = $request->acquired_domain_id;
-      $newPurchasedDomain->domain_provider_id = $request->domain_provider_id;
-      $newPurchasedDomain->customer_id = $request->customer_id;
-      $newPurchasedDomain->start_date = $request->start_date;
-      $newPurchasedDomain->finish_date = $request->finish_date;
-      $newPurchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
-      $newPurchasedDomain->active = 1;
-      $newPurchasedDomain->user_id = $request->user_id;
-      
-      if ( $newPurchasedDomain->save() ) {
+      $purchasedDomain = new PurchasedDomain();
+      $purchasedDomain->domain_provider_id = $oldPurchasedDomain->domainProvider->id;
+      $purchasedDomain->acquired_domain_id = $oldPurchasedDomain->acquiredDomain->id;
+      $purchasedDomain->customer_id = $oldPurchasedDomain->customer->id; 
+      $purchasedDomain->start_date = $request->start_date;
+      $purchasedDomain->finish_date = $request->finish_date;
+      $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
+      $purchasedDomain->active = 1;
+      $purchasedDomain->user_id = $request->user_id;
+      $purchasedDomainIsSaved = $purchasedDomain->save();
+
+      if ( $oldPurchasedDomainIsSaved && $purchasedDomainIsSaved ) {
         return back()->with('status', 'La compra de dominio fue renovada con éxito');
       }
     }

@@ -166,7 +166,7 @@ class HostingContractController extends Controller
       
       $hostingContract = HostingContract::findOrFail($id);
       $hostingContract->customer_id = $request->customer_id;
-      //$hostingContract->start_date = $request->start_date;
+      $hostingContract->start_date = $request->start_date;
       $hostingContract->finish_date = $request->finish_date;
       $hostingContract->total_price = $request->total_price;
       $hostingContract->user_id = $request->user_id;
