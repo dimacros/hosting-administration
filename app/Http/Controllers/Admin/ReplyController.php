@@ -35,7 +35,14 @@ class ReplyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $filenames = '';
+        foreach ($request->file('files') as $file) {
+            $filenames .= $file->getClientOriginalName() .'|';
+        }
+
+        
+        return response()->json(['files' => $filenames]);
     }
 
     /**

@@ -1,10 +1,6 @@
 @extends('layouts.dashboard')
 @push('head')
 <style>
-  .btn {
-    font-size: 0.9rem;
-  }
-
   .btn-cpanel {
     background-color: #ff7600;
     color: #fff;
@@ -37,13 +33,13 @@
     <section class="row">
       <div class="col-md-8 offset-md-2">
         <div class="tile">
-          <div class="tile-body">
-            <a href="{{ url('dashboard/contratos-hosting') }}" class="btn btn-primary">
+          <div class="tile-body text-right">
+            <a href="{{url('dashboard/contratos-hosting')}}" class="btn btn-primary float-left">
               <i class="fa fa-arrow-left" aria-hidden="true"></i>Regresar
             </a>
-            <a href="{{ route('admin.contratos-hosting.edit', $hostingContract->id) }}" class="btn btn-primary float-right">Editar</a>
-            <button type="button" class="btn btn-cpanel float-right mr-3"  data-toggle="modal" data-target="#modalCpanelAccount" style="width: 80px;">cPanel</button>
-            <button type="button" class="btn btn-warning float-right mr-3" data-toggle="modal" data-target="#modalSuspended">Suspender</button>
+            <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#modalSuspended">Suspender</button>
+            <button type="button" class="btn btn-cpanel mr-2"  data-toggle="modal" data-target="#modalCpanelAccount" style="width: 80px;">cPanel</button>
+            <a href="{{ route('admin.contratos-hosting.edit', $hostingContract->id) }}" class="btn btn-primary">Editar</a>
           </div>
         </div>
       </div>

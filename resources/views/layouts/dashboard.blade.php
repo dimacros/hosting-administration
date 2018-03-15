@@ -18,6 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Vali Admin</title>
@@ -110,9 +111,9 @@
         </div>
       </div>
       @if(Auth::user()->role === 'admin')
-      <ul id="roleAdmin" class="app-menu">
+      <ul id="role-admin" class="app-menu">
         <li>
-          <a class="app-menu__item" href="{{ url('/dashboard/user') }}">
+          <a class="app-menu__item" href="{{ url('/dashboard/admin') }}">
             <i class="app-menu__icon fa fa-dashboard"></i>
             <span class="app-menu__label">Dashboard</span>
           </a>
@@ -194,7 +195,7 @@
         </li><!-- /.treeview -->
       </ul>
       @elseif(Auth::user()->role === 'customer')
-      <ul id="roleCustomer" class="app-menu">
+      <ul id="role-customer" class="app-menu">
         <li class="treeview">
           <a class="app-menu__item" href="#" data-toggle="treeview">
             <i class="app-menu__icon fa fa-ticket"></i>
@@ -225,17 +226,21 @@
   <script src="{{ asset('js/main.js') }}"></script>
   <!-- The javascript plugin to display page loading on top-->
   <script src="{{ asset('js/plugins/pace.min.js') }}"></script>
+  <!-- Manipulate the menu with javascript -->
   <script>
-  var currentPageWithLaravel = '{{ url()->current() }}';
-  var currentPage = location.href;
-  console.log(currentPage);
-  var menuItems = document.getElementsByClassName('app-menu__item');
-  for(var i = 0; i < menuItems.length; i++) 
-  {
-    if( menuItems[i].href === currentPage ) {
-      menuItems[i].classList.add('active');
+  var currentPageWithJavascript = window.location.href;
+  var currentPage = '{{ url()->current() }}';
+  var menuId = '#role-' + '{{ Auth::user()->role }}';
+  $(document).ready(function(){
+
+    $(menuId).find('a[href$="'+currentPage+'"]').addClass('active').attr('id','currentPage');
+
+    if ( $('#currentPage').hasClass('treeview-item') ) {
+      $('#currentPage').parents('li.treeview').addClass('is-expanded');
     }
-  }
+
+  });
+  
   </script>
   <!-- Page specific javascripts-->
   @stack('script')

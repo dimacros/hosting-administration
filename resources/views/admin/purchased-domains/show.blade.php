@@ -16,12 +16,12 @@
     <section class="row">
       <div class="col-md-8 offset-md-2">
         <div class="tile">
-          <div class="tile-body">
-            <a href="{{ route('admin.dominios-comprados.index') }}" class="btn btn-primary">
+          <div class="tile-body text-right">
+            <a href="{{ route('admin.dominios-comprados.index') }}" class="btn btn-primary float-left">
               <i class="fa fa-arrow-left" aria-hidden="true"></i>Regresar
             </a>
-            <a href="{{ route('admin.dominios-comprados.edit', $purchasedDomain->id) }}" class="btn btn-primary float-right">Editar</a>
-            <button type="button" class="btn btn-warning float-right mr-3" data-toggle="modal" data-target="#modalSuspended">Suspender</button>
+            <button type="button" class="btn btn-warning mr-2" data-toggle="modal" data-target="#modalSuspended">Suspender</button>
+            <a href="{{ route('admin.dominios-comprados.edit', $purchasedDomain->id) }}" class="btn btn-primary">Editar</a>
           </div>
         </div>
       </div>

@@ -14,10 +14,10 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-          <div class="tile">
-            <div class="tile-body">
+          <div class="tile bg-dark py-2">
+            <div class="tile-body text-right">
               <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createHelpTopic">
-                Crear un Tema de Ayuda
+                <i class="fa fa-plus f-16"></i> Nuevo Tema de Ayuda
               </button>
             </div>
           </div>

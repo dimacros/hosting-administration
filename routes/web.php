@@ -62,6 +62,10 @@ Route::group([
   	array( 'except' => ['show', 'edit'], 'parameters' => ['proveedores-de-dominios' => 'id'] )
   );
 
+  Route::resource('respuesta', 'ReplyController',
+    array( 'only' => ['store'], 'parameters' => ['tickets' => 'id'] )
+  );
+
   Route::resource('temas-de-ayuda', 'HelpTopicController',
     array( 'except' => ['create', 'show', 'edit'], 'parameters' => ['temas-de-ayuda' => 'id'] )
   );

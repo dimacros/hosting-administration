@@ -1,10 +1,6 @@
 @extends('layouts.dashboard')
 @push('head')
 <style>
-  .fw-600 {
-    font-weight: 600;
-  }
-
   .text-success {
     color: #076c1e!important;
   }
@@ -29,9 +25,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-          <div class="tile">
-            <div class="tile-body">
-              <a href="{{ url('dashboard/contratos-hosting/crear') }}" class="btn btn-primary">Nuevo contrato Hosting</a>
+          <div class="tile bg-dark py-2">
+            <div class="tile-body text-right">
+              <a href="{{ url('dashboard/contratos-hosting/crear') }}" class="btn btn-primary">
+                <i class="fa fa-plus f-16"></i> Nuevo Contrato Hosting
+              </a>
             </div>
           </div>
         </div>
