@@ -63,7 +63,7 @@ Route::group([
   );
 
   Route::resource('respuesta', 'ReplyController',
-    array( 'only' => ['store'], 'parameters' => ['tickets' => 'id'] )
+    array( 'only' => ['store', 'update'], 'parameters' => ['tickets' => 'id'] )
   );
 
   Route::resource('temas-de-ayuda', 'HelpTopicController',

@@ -56,14 +56,16 @@
                 @endforeach
               </ul>
             </div>
-           @endif
-          <form method="POST" id="replyContent" action="{{ route('admin.respuesta.store') }}" enctype="multipart/form-data">
-            <div class="tile-body">
+          @endif
+          <div class="tile-body">
+            <form method="POST" id="replyContent" novalidate>
+              {{ csrf_field() }}
               <div class="form-group">
                 <label for="textEditor">Teléfono o Celular:</label>
-                <textarea id="textEditor" name="content_of_the_reply"></textarea>
+                <textarea id="textEditor" name="content_of_the_reply" required></textarea>
               </div>
-              <div class="dropzone" id="myDropzone">
+            </form>
+              <div class="dropzone dz-clickable" id="myDropzone">
                 <div class="fallback">
                   <input name="file" type="file" multiple>
                 </div>
@@ -71,13 +73,12 @@
                   <span class="h4 text-secondary">Suelta los archivos aquí o haz clic para cargarlos.</span>
                 </div>
               </div>
-            </div><!-- /.tile-body -->
-            <div class="tile-footer">
-              <button type="submit" class="btn btn-primary btn-lg" id="submit">
-                <i class="fa fa-fw fa-lg fa-check-circle"></i>Registrar
-              </button>
-            </div>
-          </form>
+          </div><!-- /.tile-body -->
+          <div class="tile-footer">
+            <button type="submit" form="replyContent" class="btn btn-primary btn-lg">
+              <i class="fa fa-fw fa-lg fa-check-circle"></i>Registrar
+            </button>
+          </div>
         </div><!-- /.tile -->
       </div><!-- /.col-md-8 offset-md-2 -->
     </div><!-- /.row -->
@@ -88,15 +89,23 @@
 <script src="{{asset('js/summernote-es-ES.js')}}"></script>
 <script src="{{asset('js/dropzone.min.js')}}"></script>
 <script>
-  var checkBoxBs4 = '';
-  checkBoxBs4 += '<div class="custom-control custom-checkbox">';
-  checkBoxBs4 +=   '<input type="checkbox" class="custom-control-input" id="openInNewWindow">';
-  checkBoxBs4 +=   '<label class="custom-control-label" for="openInNewWindow">';
-  checkBoxBs4 +=     'Abrir en una nueva ventana';
-  checkBoxBs4 +=   '</label>';
-  checkBoxBs4 += '</div>';
-
 Dropzone.autoDiscover = false;
+
+var myDropzone = new Dropzone("#myDropzone", { 
+  url: "{{ route('admin.respuesta.store') }}/",
+  headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
+  acceptedFiles: ".jpeg,.jpg,.png,.gif",
+  addRemoveLinks: true,
+  autoProcessQueue: false,
+  maxFilesize: 2,
+  maxFiles: 8,
+  parallelUploads: 8,
+  paramName: "files",
+  params: { _method:'PUT', reply_id: '', },
+  uploadMultiple: true,
+});
+
+var checkBoxBs4 = '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="openInNewWindow"><label class="custom-control-label" for="openInNewWindow">Abrir en una nueva ventana</label></div>';
 
 $(document).ready(function() {
   $('#textEditor').summernote({
@@ -111,83 +120,53 @@ $(document).ready(function() {
 
   $('#sn-checkbox-open-in-new-window').parent().replaceWith(checkBoxBs4);
 
-});
+  $("#replyContent").on("submit", function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (this.checkValidity() === false) 
+    { 
+      console.log('El campo textEditor está vació'); 
+    }
+    else 
+    {
+      $.ajax({
+        type: "POST",
+        url: "{{ route('admin.respuesta.store') }}",
+        dataType: "json",
+        data: $(this).serialize(),
+          success: function(response) { 
+            if(response.success){
+              //myDropzone.reply_id = response.reply_id;
+              //myDropzone.options.params.reply_id = response.reply_id;
+              myDropzone.options.url += response.reply_id;
+              myDropzone.processQueue();
+              //{{ route('admin.clientes.update', response.reply_id) }}
+            } 
+          },
+          error: function(xhr, status, error) {
+            console.log(xhr); 
+          }
+      });
+    }
+  });
 
-var myDropzone = new Dropzone("#myDropzone", { 
-  url: "{{ route('admin.respuesta.store') }}",
-  headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
-  acceptedFiles: ".jpeg,.jpg,.png,.gif",
-  addRemoveLinks: true,
-  autoProcessQueue: false,
-  maxFilesize: 2,
-  maxFiles: 8,
-  parallelUploads: 8,
-  paramName: "files",
-  uploadMultiple: true,
-});
-
-var submitBtn = document.querySelector("#submit");
-submitBtn.addEventListener("click", function(e){
-  e.preventDefault();
-  e.stopPropagation();
-  myDropzone.processQueue();
 });
 
 myDropzone.on("addedfile", function(file) {
-    alert("file uploaded");
+    //alert("file uploaded");
 });
 
-myDropzone.on("sending", function(file, xhr, formData) {
+myDropzone.on("sendingmultiple", function(file, xhr, formData) {
   // Will send the filesize along with the file as POST data.
-  formData.append("content_of_the_reply", jQuery('#textEditor').val());
+  //formData.append("reply_id", myDropzone.reply_id);
 });
    
-myDropzone.on("successmultiple", function(file, response) {
-  console.log(response);
+myDropzone.on("success", function(file, response) {
+  console.log(response.paths);
 });
 
 myDropzone.on("complete", function(file) {
   myDropzone.removeAllFiles(true);
 });
-
-/*
-Dropzone.options.myDropzone = 
-{
-  url: "{{ route('admin.respuesta.store') }}",
-  acceptedFiles: ".jpeg,.jpg,.png,.gif",
-  autoProcessQueue: false,
-  uploadMultiple: true,
-  maxFilesize: 10,
-  maxFiles: 6,
-            
-  init: function() {
-      var submitBtn = document.querySelector("#submit");
-      myDropzone = this;
-                  
-      submitBtn.addEventListener("click", function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          myDropzone.processQueue();
-          console.log(myDropzone);
-      });
-
-      this.on("addedfile", function(file) {
-          alert("file uploaded");
-      });
-
-      this.on("sending", function(file, xhr, formData) {
-        // Will send the filesize along with the file as POST data.
-        formData.append("_token", file.size);
-        formData.append("content_of_the_reply", file.size);
-      });
-
-      this.on("complete", function(file) {
-          myDropzone.removeFile(file);
-      });
-   
-      this.on("success", myDropzone.processQueue.bind(myDropzone) );
-  }
-};
-*/
 </script>
 @endpush

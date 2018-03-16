@@ -79,8 +79,8 @@
                     ])
 
                     <form method="POST" id="formEdit-{{$customer->id}}" action="{{ route('admin.clientes.update', $customer->id) }}" >
-                      {{ method_field('PUT') }}
                       {{ csrf_field() }}
+                      {{ method_field('PUT') }}
                       <div class="form-group">
                         <label>Nombre(s):</label>
                         <input type="text" name="first_name" class="form-control" value="{{$customer->first_name}}" required>
@@ -120,9 +120,9 @@
                     ])
 
                     <h5>¿Seguro que quiere eliminar a "{{$customer->full_name}}"?</h5>
-                    <form class="d-none" method="POST" id="formDelete-{{$customer->id}}" action="{{ route('admin.clientes.destroy', $customer->id) }}">
-                      {{ method_field('DELETE') }}
-                      {{ csrf_field() }}       
+                    <form class="d-none" method="POST" id="formDelete-{{$customer->id}}" action="{{ route('admin.clientes.destroy', $customer->id) }}">    
+                      {{ csrf_field() }}   
+                      {{ method_field('DELETE') }}    
                     </form>
                     @endcomponent
               @endforeach

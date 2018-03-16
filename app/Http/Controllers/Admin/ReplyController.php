@@ -35,14 +35,17 @@ class ReplyController extends Controller
      */
     public function store(Request $request)
     {
-        
-        $filenames = '';
-        foreach ($request->file('files') as $file) {
-            $filenames .= $file->getClientOriginalName() .'|';
-        }
-
-        
-        return response()->json(['files' => $filenames]);
+      if ( !$request->hasFile('files') ) 
+      {
+        //$reply = new Reply();
+        return json_encode(['success' => true, 'reply_id' => 'Si llega, la variable.']);
+      }
+      $files = $request->file('files');
+      foreach ($files as $file) {
+        //$paths[] = $file->store('tickets/{ticket_id}', 'local');
+      }    
+      route('respuesta', [$reply]);
+      return response()->json(['paths' => $request->reply_id]);
     }
 
     /**
