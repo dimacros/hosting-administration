@@ -62,12 +62,6 @@ Route::group([
   	array( 'except' => ['show', 'edit'], 'parameters' => ['proveedores-de-dominios' => 'id'] )
   );
 
-  Route::post('reply/processFiles', 'ReplyController@processFiles')->name('reply.processFiles');
-
-  Route::resource('reply', 'ReplyController',
-    array( 'only' => ['store', 'update'], 'parameters' => ['reply' => 'id'] )
-  );
-
   Route::resource('temas-de-ayuda', 'HelpTopicController',
     array( 'except' => ['create', 'show', 'edit'], 'parameters' => ['temas-de-ayuda' => 'id'] )
   );
@@ -76,7 +70,7 @@ Route::group([
   ->where('status', 'open|closed');
 
   Route::resource('tickets', 'TicketController',
-    array( 'only' => ['show', 'destroy'], 'parameters' => ['tickets' => 'id'] )
+    array( 'only' => ['destroy'], 'parameters' => ['tickets' => 'id'] )
   );
 
 });
@@ -87,4 +81,19 @@ Route::group([
   ], function () {
 
   Route::view('user', 'customer.user')->name('user');
+  Route::get('tickets/crear', 'TicketController@create')->name('tickets.create');
+  Route::post('tickets/store', 'TicketController@store')->name('tickets.store');
+  Route::get('tickets/mis-tickets', 'TicketController@indexForCustomer')->name('tickets.indexForCustomer');
+  Route::get('contratos-hosting/mis-contratos-hosting', 'HostingContractController@indexForCustomer');
+});
+
+Route::group([
+    'as' => 'auth.', 'namespace' => 'Auth', 
+    'middleware' => ['auth'], 'prefix' => 'dashboard',
+  ], function () {
+
+  Route::get('tickets/{id}', 'TicketController@show')->name('tickets.show');
+  Route::post('reply/store', 'ReplyController@store')->name('reply.store');
+  Route::post('reply/storeFiles', 'ReplyController@storeFiles')->name('reply.storeFiles');
+
 });

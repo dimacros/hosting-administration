@@ -18,7 +18,7 @@ class CreateRepliesTable extends Migration
           $table->integer('ticket_id')->unsigned();
           $table->integer('user_id')->unsigned()->nullable();
           $table->text('content');
-          $table->string('attached_files')->nullable();
+          $table->text('attached_files')->nullable();
           $table->timestamps();
 
           $table->foreign('ticket_id')

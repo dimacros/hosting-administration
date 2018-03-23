@@ -3,8 +3,8 @@
   <main class="app-content">
     <div class="app-title">
         <div class="tile-body">
-          <h1><i class="fa fa-th-list"></i> Tickets {{$title}} </h1>
-          <p>Lista de todos los tickets {{$title}}</p>
+          <h1><i class="fa fa-th-list"></i> Mis Tickets </h1>
+          <p>Lista de todos mis tickets.</p>
         </div>
         <ul class="app-breadcrumb breadcrumb side">
           <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
@@ -14,9 +14,11 @@
     </div>
     <div class="row">
         <div class="col-md-12">
-          <div class="tile">
-            <div class="tile-body">
-              <a class="btn btn-primary" href="#">Nada</a>
+          <div class="tile bg-dark py-2">
+            <div class="tile-body text-right">
+              <a href="{{route('customer.tickets.create')}}" class="btn btn-primary">
+                <i class="fa fa-plus f-16"></i> Crear un Ticket
+              </a>
             </div>
           </div>
         </div>
@@ -46,8 +48,7 @@
                   <tr>
                     <th scope="col">Ticket N°</th>
                     <th scope="col">Asunto del Ticket</th>
-                    <th scope="col"> Iniciado Por </th>
-                    <th></th>
+                    <th scope="col"> Última actualización </th>
                     <th></th>
                   </tr>
                 </thead>
@@ -55,34 +56,17 @@
                 @foreach($tickets as $ticket)
                   <tr>
                     <td><strong>#{{ $ticket->id }}</strong></td>
-                    <td>
-                      <strong>{{ $ticket->helpTopic->title }}|</strong> {{ $ticket->subject }}
+                    <td class="f-16">
+                      <strong>{{ $ticket->helpTopic->title }}|</strong> 
+                      {{ $ticket->subject }} {!! $ticket->badge !!}
                     </td>
-                    <td>{{ $ticket->user->full_name }}</td>
-                    <td><a href="{{ route('auth.tickets.show', $ticket->id) }}" class="btn btn-success w-100">Ver</a></td>
+                    <td>Hace {{ $ticket->updated_at }}</td>
                     <td>
-                      <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#deleteTicket-{{$ticket->id}}">
-                        Eliminar
-                      </button>
+                      <a href="{{ route('auth.tickets.show', $ticket->id) }}" class="btn btn-success w-100">
+                        Ver
+                      </a>
                     </td>
                   </tr> 
-                  <!-- Modal Delete -->
-                    @component('components.modal', [ 
-                      'modalId' => 'deleteTicket-'.$ticket->id, 
-                      'modalTitle' => 'Eliminar',
-                      'btnCloseClass' => 'btn btn-danger w-25', 
-                      'btnCloseTitle' => 'No', 
-                      'btnSaveClass' => 'btn btn-success w-25', 
-                      'btnSaveTitle' => 'Sí',
-                      'FormId' => 'formToDeleteTicket-'.$ticket->id,
-                    ])
-
-                    <h5>¿Seguro que quiere eliminar el Ticket #{{ $ticket->id }}?</h5>
-                    <form id="formToDeleteTicket-{{$ticket->id}}" class="d-none" method="POST" action="{{ route('admin.tickets.destroy', $ticket->id) }}">
-                      {{ method_field('DELETE') }}
-                      {{ csrf_field() }}       
-                    </form>
-                    @endcomponent
                 @endforeach
                 </tbody>
               </table>

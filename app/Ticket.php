@@ -1,7 +1,7 @@
 <?php
 
 namespace App;
-
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 class Ticket extends Model
@@ -21,6 +21,12 @@ class Ticket extends Model
 
 	public function getIdAttribute($id) {
 		return str_pad($id, 6, "0", STR_PAD_LEFT);
+	}
+
+	public function getUpdatedAtAttribute($created_at) {
+		Carbon::setLocale('es');
+		$created_at = new Carbon($created_at); 
+		return $created_at->diffForHumans(Carbon::now(), true);
 	}
 
 	public function getBadgeAttribute() {

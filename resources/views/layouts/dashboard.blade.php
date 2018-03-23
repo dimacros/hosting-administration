@@ -163,12 +163,12 @@
                 <i class="icon fa fa-info-circle"></i> Temas de Ayuda
               </a>
               <a class="treeview-item" href="{{ url('dashboard/tickets/open') }}">
-                <i class="icon fa fa-circle-o"></i> Tickets abierto
+                <i class="icon fa fa-circle-o"></i> Tickets sin Contestar
               </a>
             </li>
             <li>
               <a class="treeview-item" href="{{ url('dashboard/tickets/closed') }}">
-                <i class="icon fa fa-check-circle"></i> Tickets cerrado
+                <i class="icon fa fa-check-circle"></i> Tickets Contestados
               </a>
             </li>
             
@@ -204,14 +204,20 @@
           </a>
           <ul class="treeview-menu">
             <li>
-              <a class="treeview-item" href="{{ url('dashboard/ticket-center/nuevo-ticket') }}">
+              <a class="treeview-item" href="{{ url('dashboard/tickets/crear') }}">
                 <i class="icon fa fa-info-circle"></i> Crear un Ticket
               </a>
-              <a class="treeview-item" href="{{ url('dashboard/ticket-center/mis-tickets') }}">
+              <a class="treeview-item" href="{{ url('dashboard/tickets/mis-tickets') }}">
                 <i class="icon fa fa-circle-o"></i> Mis Tickets
               </a>
-            </li>     
+            </li>    
           </ul>
+        </li> 
+        <li>
+        <a class="app-menu__item" href="{{ url('dashboard/contratos-hosting/mis-contratos-hosting') }}">
+          <i class="app-menu__icon fa fa-credit-card"></i>
+          <span class="app-menu__label">Mis Contratos Hosting</span>
+        </a>
         </li> 
       </ul>
       @endif

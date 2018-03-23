@@ -19,32 +19,22 @@ class TicketController extends Controller
         return view('admin.tickets.index');
     }
 
-		public function indexByStatus($status_name) 
-		{
-			switch ($status_name) {
-				case 'open':
-					$tickets = Ticket::with('helpTopic:id,title', 'user:id,first_name,last_name')->where('solved', 0)->get();
-					$title = 'sin Responder';
-					break;
-				
-				case 'closed':
-					$tickets = Ticket::with('helpTopic:id,title', 'user:id,first_name,last_name')->where('solved', 1)->get();
-					$title = 'Respondidos';
-					break;
-			}
-			
-			return view('admin.tickets.index-by-status', ['tickets' => $tickets, 'title' => $title]);
-		}
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+  	public function indexByStatus($status_name) 
+  	{
+  		switch ($status_name) {
+  				case 'open':
+  					$tickets = Ticket::with('helpTopic:id,title', 'user:id,first_name,last_name')->where('solved', 0)->get();
+  					$title = 'sin Responder';
+  					break;
+  				
+  				case 'closed':
+  					$tickets = Ticket::with('helpTopic:id,title', 'user:id,first_name,last_name')->where('solved', 1)->get();
+  					$title = 'Respondidos';
+  					break;
+  		}
+  			
+  		return view('admin.tickets.index-by-status', ['tickets' => $tickets, 'title' => $title]);
+  	}
 
     /**
      * Store a newly created resource in storage.
@@ -61,19 +51,6 @@ class TicketController extends Controller
         'phone' => 'max:15',
         'email' => 'required|email|unique:customers,email'
       ]); 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-      $ticket = Ticket::findOrFail($id);
-      $replies = $ticket->replies;
-		  return view('admin.tickets.show', ['ticket' => $ticket, 'replies' => $replies] );
     }
 
     /**

@@ -45,23 +45,7 @@
         <h1><i class="fa fa-ticket"></i> Ticket #{{ $ticket->id }}</h1>
         <p>Ver conversación del Ticket</p>
       </div>
-      <ul class="app-breadcrumb breadcrumb">
-        <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-        <li class="breadcrumb-item">Forms</li>
-        <li class="breadcrumb-item"><a href="#">Sample Forms</a></li>
-      </ul>
     </div> 
-    <div class="row">
-      <div class="col-md-10 offset-md-1">
-        <div class="tile">
-          <div class="tile-body">
-            <a href="{{ url('dashboard/tickets/open') }}" class="btn btn-primary">
-              <i class="fa fa-arrow-left" aria-hidden="true"></i>Regresar
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>   
     <div class="row">
       <div class="col-md-10 offset-md-1">
         <div class="bg-dark py-2 px-sm-4">
@@ -121,7 +105,7 @@
             </div>
           @endif
           <div class="tile-body">
-            <form method="POST" action="{{ route('admin.reply.store') }}" id="replyContent" novalidate>
+            <form method="POST" action="{{ route('auth.reply.store') }}" id="replyContent" novalidate>
               {{ csrf_field() }}
               <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
               <input type="hidden" id="has_attachments" name="has_attachments" value="no">
@@ -179,7 +163,7 @@ baguetteBox.run('.attached_files');
 Dropzone.autoDiscover = false;
 
 var myDropzone = new Dropzone("#myDropzone", { 
-  url: "{{ route('admin.reply.storeFiles') }}",
+  url: "{{ route('auth.reply.storeFiles') }}",
   method: "POST",
   headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
   acceptedFiles: ".jpeg,.jpg,.png,.gif",

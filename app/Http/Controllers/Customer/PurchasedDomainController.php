@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Customer;
 
-use App\Reply;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-class ReplyController extends Controller
+class PurchasedDomainController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,10 +14,7 @@ class ReplyController extends Controller
      */
     public function index()
     {
-      $attached_files = json_decode($request->attachments_list);
-      foreach ($attached_files as $attached_file) {
-         var_dump($attached_file->file_name) ;
-      }
+        //
     }
 
     /**
@@ -38,36 +34,8 @@ class ReplyController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    { 
-      $request->validate([
-        'ticket_id' => 'required|exists:tickets,id',
-        'content' => 'required',
-        'has_attachments' => 'required|in:yes,no',
-        'attachments_list' => 'required_if:has_attachments,yes'
-      ]); 
-
-      $reply = new Reply();
-      $reply->ticket_id = $request->ticket_id;
-      $reply->user_id = $request->user()->id;
-      $reply->content = $request->content;
-      $reply->attached_files = $request->attachments_list;
-
-      if ( $reply->save() ) 
-      {
-        return back()->with('status', 'Su respuesta fue registrada con éxito.');
-      }
-    }
-
-    public function processFiles(Request $request) 
     {
-      $attachments_list = null;
-      foreach ($request->file('attached_files') as $file) {
-        if ( $file->isValid() ) {
-          $path = 'tickets/'. $request->ticket_id;
-          $attachments_list[] = '{"file_name": "'. $file->store($path, 'public') .'"}';
-        }
-      } 
-      return ['attachments_list' => $attachments_list];
+        //
     }
 
     /**
@@ -101,7 +69,7 @@ class ReplyController extends Controller
      */
     public function update(Request $request, $id)
     {
-
+        //
     }
 
     /**

@@ -12,12 +12,15 @@ class Reply extends Model
 		return $this->belongsTo('App\User');
 	}
 
+	public function ticket() {
+		return $this->belongsTo('App\Ticket');
+	}
+
 	public function getCreatedAtAttribute($created_at) {
-		//Carbon::setLocale('es');
 		setlocale(LC_TIME, 'Spanish');
 		Carbon::setUtf8(true);
 		$created_at = new Carbon($created_at); 
-		return $created_at->formatLocalized('%A %d de %B, %Y a las %H:%m');
+		return $created_at->formatLocalized('%A %d de %B, %Y a las %H:%M');
 	}
 
 	public function getAttachedFilesAttribute($attached_files) {
