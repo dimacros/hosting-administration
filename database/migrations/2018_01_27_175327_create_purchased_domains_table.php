@@ -23,7 +23,7 @@ class CreatePurchasedDomainsTable extends Migration
             $table->decimal('total_price_in_dollars');
             $table->enum('status', 
               ['active', 'pending', 'canceled', 'finished', 'suspended']);
-            $table->boolean('active');
+            $table->boolean('active')->comment('Last purchase of domain for the client');
             $table->integer('user_id')->unsigned()->nullable();
             $table->timestamps();
 

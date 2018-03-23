@@ -17,7 +17,8 @@ class UsersTableSeeder extends Seeder
 				'last_name' => 'Web',
 				'email' => 'programador@dimacros.net',
 				'password' => bcrypt('123456'),
-				'role' => 'admin'
+				'role' => 'admin',
+				'active' => 1
 			]);
 
 			User::create([
@@ -25,7 +26,8 @@ class UsersTableSeeder extends Seeder
 				'last_name' => 'Web',
 				'email' => 'trabajador@dimacros.net',
 				'password' => bcrypt('123456'),
-				'role' => 'employee'
+				'role' => 'employee',
+				'active' => 1
 			]);
 
 			User::create([
@@ -33,7 +35,8 @@ class UsersTableSeeder extends Seeder
 				'last_name' => 'Hosting',
 				'email' => 'cliente@dimacros.net',
 				'password' => bcrypt('123456'),
-				'role' => 'customer'
+				'role' => 'customer',
+				'active' => 1
 			]);		
     }
 }

@@ -17,7 +17,7 @@ class CreateRepliesTable extends Migration
           $table->increments('id');
           $table->integer('ticket_id')->unsigned();
           $table->integer('user_id')->unsigned()->nullable();
-          $table->text('content_of_the_reply');
+          $table->text('content');
           $table->string('attached_files')->nullable();
           $table->timestamps();
 

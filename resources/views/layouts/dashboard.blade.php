@@ -119,27 +119,27 @@
           </a>
         </li>
         <li>
-          <a class="app-menu__item" href="{{ url('dashboard/clientes') }}">
-            <i class="app-menu__icon fa fa-address-book"></i>
-            <span class="app-menu__label">Clientes</span>
-          </a>
-        </li>
-        <li>
           <a class="app-menu__item" href="{{ url('dashboard/proveedores-de-dominios') }}">
             <i class="app-menu__icon fa fa-users"></i>
             <span class="app-menu__label">Proveedores de dominio</span>
           </a>
         </li>
         <li>
-          <a class="app-menu__item" href="{{ url('dashboard/dominios-comprados') }}">
-            <i class="app-menu__icon fa fa-credit-card"></i>
-            <span class="app-menu__label">Dominios comprados</span>
+          <a class="app-menu__item" href="{{ url('dashboard/clientes') }}">
+            <i class="app-menu__icon fa fa-address-book"></i>
+            <span class="app-menu__label">Clientes</span>
           </a>
         </li>
         <li>
           <a class="app-menu__item" href="{{ url('/dashboard/planes-hosting') }}">
             <i class="app-menu__icon fa fa-laptop"></i>
             <span class="app-menu__label">Planes Hosting</span>
+          </a>
+        </li>
+        <li>
+          <a class="app-menu__item" href="{{ url('dashboard/dominios-comprados') }}">
+            <i class="app-menu__icon fa fa-credit-card"></i>
+            <span class="app-menu__label">Dominios comprados</span>
           </a>
         </li>
         <li>

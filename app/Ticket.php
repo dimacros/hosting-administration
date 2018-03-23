@@ -22,4 +22,13 @@ class Ticket extends Model
 	public function getIdAttribute($id) {
 		return str_pad($id, 6, "0", STR_PAD_LEFT);
 	}
+
+	public function getBadgeAttribute() {
+		if ($this->status === 'open') 
+		{
+			return '<span class="badge badge-success p-sm-2 float-right">Abierto</span>';
+		}
+
+		return '<span class="badge badge-danger p-sm-2 float-right">Cerrado</span>';
+	}
 }

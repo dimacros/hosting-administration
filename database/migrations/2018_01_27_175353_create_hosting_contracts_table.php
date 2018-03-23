@@ -23,7 +23,7 @@ class CreateHostingContractsTable extends Migration
         $table->decimal('total_price');
         $table->enum('status', 
           ['active', 'pending', 'canceled', 'finished', 'suspended']);
-        $table->boolean('active');
+        $table->boolean('active')->comment('Last contract of the client');
         $table->integer('user_id')->unsigned()->nullable();
         $table->timestamps();
 

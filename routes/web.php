@@ -62,8 +62,10 @@ Route::group([
   	array( 'except' => ['show', 'edit'], 'parameters' => ['proveedores-de-dominios' => 'id'] )
   );
 
-  Route::resource('respuesta', 'ReplyController',
-    array( 'only' => ['store', 'update'], 'parameters' => ['tickets' => 'id'] )
+  Route::post('reply/processFiles', 'ReplyController@processFiles')->name('reply.processFiles');
+
+  Route::resource('reply', 'ReplyController',
+    array( 'only' => ['store', 'update'], 'parameters' => ['reply' => 'id'] )
   );
 
   Route::resource('temas-de-ayuda', 'HelpTopicController',

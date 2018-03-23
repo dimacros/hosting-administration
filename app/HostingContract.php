@@ -31,7 +31,7 @@ class HostingContract extends Model
   }
 
   public function getNowAttribute() {
-  	return new Carbon();
+  	return Carbon::today();
   }
 
   public function getFinishDateAttribute($finish_date) {

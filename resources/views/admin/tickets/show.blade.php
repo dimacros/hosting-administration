@@ -1,15 +1,39 @@
 @extends('layouts.dashboard')
 @push('head')
+<link rel="stylesheet" href="{{asset('css/baguetteBox.min.css')}}">
 <link rel="stylesheet" href="{{asset('css/summernote-bs4.css')}}">
 <link rel="stylesheet" href="{{asset('css/dropzone.min.css')}}">
 <style>
+  .bg-ticky {
+    background-color: #52C27D;
+    color: #fff;
+  }
+
+  .comment-meta {
+    margin-bottom: 16px;
+  }
+
+  .content {
+    font-family: "Verdana", Arial, Helvetica;
+    font-size: 16px;    
+  }
+
+  .container-of-attachments {
+    padding: 24px;
+  }
+
   .note-editable {
     font-family: "Verdana", Arial, Helvetica !important;
-    font-size: 16px !important;
+    font-size: 14px !important;
   }
+
   .dropzone {
     border: 2px dashed #0087F7;
     border-radius: 5px;
+  }
+  
+  .dz-error * {
+    cursor: not-allowed !important;
   }
 </style>
 @endpush
@@ -17,17 +41,17 @@
   <main class="app-content">
     <div class="app-title">
       <div class="tile-body">
-        <h1><i class="fa fa-edit"></i> Formulario para Cliente</h1>
-        <p>Registrar Cliente</p>
+        <h1><i class="fa fa-ticket"></i> Ticket #{{ $ticket->id }}</h1>
+        <p>Ver conversación del Ticket</p>
       </div>
       <ul class="app-breadcrumb breadcrumb">
         <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
         <li class="breadcrumb-item">Forms</li>
         <li class="breadcrumb-item"><a href="#">Sample Forms</a></li>
       </ul>
-    </div>   
+    </div> 
     <div class="row">
-      <div class="col-md-8 offset-md-2">
+      <div class="col-md-10 offset-md-1">
         <div class="tile">
           <div class="tile-body">
             <a href="{{ url('dashboard/clientes') }}" class="btn btn-primary">
@@ -36,12 +60,62 @@
           </div>
         </div>
       </div>
-    </div>  
+    </div>   
+    <div class="row">
+      <div class="col-md-10 offset-md-1">
+        <div class="bg-dark py-2 px-sm-4">
+          <h3 class="text-white fw-400">{{ $ticket->subject }} {!! $ticket->badge !!} </h3>
+        </div>
+        <div class="tile">
+          <div class="tile-body">
+            @foreach($replies as $reply)
+              <h4 class="mb-1">
+                {{ $reply->user->full_name }}
+                <span class="text-muted">| Respondiste</span>
+              </h4>
+              <div class="comment-meta">
+                <span class="text-muted">{{ $reply->created_at }}</span>
+              </div>
+              <div class="content">
+                {!! $reply->content !!}
+              </div>
+              @isset($reply->attached_files)
+                <div class="container-of-attachments">
+                  <div class="row bg-dark py-3">
+                    <div class="col-12">
+                      <h4 class="text-white">Archivos Adjuntos:</h4>
+                    </div>
+                    <div class="col-12">
+                      <nav class="nav flex-column gallery">
+                      @foreach($reply->attached_files as $attached_file)
+                        <a href="{{asset('storage/'.$attached_file->file_name)}}" class="nav-link">
+                          asd
+                        </a> 
+                      @endforeach
+                      </nav>         
+                    </div>
+                    @foreach($reply->attached_files as $attached_file)
+                    <div class="col-md-3">
+                      <a href="{{asset('storage/'.$attached_file->file_name)}}">
+                        <img class="img-thumbnail" src="{{asset('storage/'.$attached_file->file_name)}}" alt="Imagen no existente">
+                      </a> 
+                    </div>
+                    @endforeach
+                  </div>
+                </div>
+              @endisset
+              <hr>
+              
+            @endforeach
+          </div>
+        </div>
+      </div>
+    </div>   
     <!-- FORM -->
     <div class="row">
       <div class="col-md-8 offset-md-2">
         <div class="tile">
-          <h3 class="tile-title">Registrar Cliente</h3>
+          <h3 class="tile-title">Escriba su Respuesta</h3>
           <hr>
           @if (session('status'))
             <div class="alert alert-success" role="alert">
@@ -58,56 +132,129 @@
             </div>
           @endif
           <div class="tile-body">
-            <form method="POST" id="replyContent" novalidate>
+            <form method="POST" action="{{ route('admin.reply.store') }}" id="replyContent" novalidate>
               {{ csrf_field() }}
+              <input type="hidden" name="ticket_id" value="{{ $ticket->id }}">
+              <input type="hidden" id="has_attachments" name="has_attachments" value="no">
+              <input type="hidden" id="attachments_list" name="attachments_list">
               <div class="form-group">
-                <label for="textEditor">Teléfono o Celular:</label>
-                <textarea id="textEditor" name="content_of_the_reply" required></textarea>
+                <textarea id="textEditor" class="d-none" name="content" required></textarea>
               </div>
             </form>
-              <div class="dropzone dz-clickable" id="myDropzone">
-                <div class="fallback">
-                  <input name="file" type="file" multiple>
-                </div>
-                <div class="dz-default dz-message">
-                  <span class="h4 text-secondary">Suelta los archivos aquí o haz clic para cargarlos.</span>
-                </div>
+            <div class="dropzone" id="myDropzone">
+              <div class="fallback">
+                <input type="file" name="attached_files" multiple>
               </div>
+              <div class="dz-default dz-message">
+                <span class="h4 text-secondary">Arrastra los archivos aquí o haz clic para subirlos.</span>
+              </div>
+            </div>
           </div><!-- /.tile-body -->
           <div class="tile-footer">
-            <button type="submit" form="replyContent" class="btn btn-primary btn-lg">
-              <i class="fa fa-fw fa-lg fa-check-circle"></i>Registrar
+            <button type="submit" id="btnSubmit" form="replyContent" class="btn btn-primary btn-lg">
+              <i class="fa fa-fw fa-lg fa-check-circle"></i>Enviar Respuesta
             </button>
           </div>
         </div><!-- /.tile -->
       </div><!-- /.col-md-8 offset-md-2 -->
     </div><!-- /.row -->
   </main>
+  <!-- Modal -->
+  <div class="modal fade" id="requiredTextArea" tabindex="-1" role="dialog" aria-labelledby="requiredTextAreaLabel">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-ticky">
+          <h6 class="modal-title" id="requiredTextAreaLabel">¡CAMPOS OBLIGATORIOS!</h6>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body p-4" style="background-color: #f5f5f5;">
+          <ul><li class="f-16">Necesita introducir texto en el campo de comentarios.</li></ul>
+          <button type="button" class="btn btn-sm bg-ticky ml-3" data-dismiss="modal">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 @push('script')
+<script src="{{asset('js/baguetteBox.min.js')}}"></script>
 <script src="{{asset('js/summernote-bs4.js')}}"></script>
 <script src="{{asset('js/summernote-es-ES.js')}}"></script>
 <script src="{{asset('js/dropzone.min.js')}}"></script>
+<script src="{{asset('js/dropzone-es-ES.js')}}"></script>
+
 <script>
+baguetteBox.run('.gallery');
+
 Dropzone.autoDiscover = false;
 
 var myDropzone = new Dropzone("#myDropzone", { 
-  url: "{{ route('admin.respuesta.store') }}/",
+  url: "{{ route('admin.reply.processFiles') }}",
+  method: "POST",
   headers: { "X-CSRF-TOKEN": "{{ csrf_token() }}" },
   acceptedFiles: ".jpeg,.jpg,.png,.gif",
   addRemoveLinks: true,
   autoProcessQueue: false,
-  maxFilesize: 2,
-  maxFiles: 8,
-  parallelUploads: 8,
-  paramName: "files",
-  params: { _method:'PUT', reply_id: '', },
-  uploadMultiple: true,
+  clickable: true,
+  maxFilesize: 1,
+  maxFiles: 6,
+  parallelUploads: 6,
+  paramName: "attached_files",
+  params: {ticket_id: "{{ $ticket->id }}"},
+  uploadMultiple: true
 });
 
-var checkBoxBs4 = '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="openInNewWindow"><label class="custom-control-label" for="openInNewWindow">Abrir en una nueva ventana</label></div>';
+myDropzone.on("addedfile", function(file) {
+  document.getElementById('has_attachments').value = "yes";
+});
+
+myDropzone.on("error", function(file, errorMessage, xhr) {
+  document.getElementById('btnSubmit').disabled = true; 
+  file.previewElement.addEventListener("click", function() {
+    myDropzone.removeFile(file);
+    if (myDropzone.getRejectedFiles().length === 0) {
+      document.getElementById('btnSubmit').disabled = false; 
+    }
+  });
+  console.log(errorMessage);
+});
+
+myDropzone.on("reset", function() {
+  document.getElementById('has_attachments').value = "no";
+});
+
+myDropzone.on("processingmultiple", function(files) {
+  document.getElementById('btnSubmit').disabled = true; 
+});
+
+myDropzone.on("successmultiple", function(files, response) { 
+  document.getElementById('has_attachments').value = "no";
+  document.getElementById("attachments_list").value = "[" + response.attachments_list + "]";
+  document.getElementById("replyContent").submit();
+});
 
 $(document).ready(function() {
+
+  $("#replyContent").on("submit", function(event) {
+
+    if (this.checkValidity() === false) 
+    { 
+      event.preventDefault();
+      event.stopPropagation();
+      $('#requiredTextArea').modal();
+    }
+    else 
+    { 
+      if (document.getElementById('has_attachments').value === "yes") {
+        event.preventDefault();
+        event.stopPropagation();
+        myDropzone.processQueue();
+      }
+    }
+
+  });
+
   $('#textEditor').summernote({
     //height: 300,                 
     fontName: 'Helvetica',
@@ -118,55 +265,11 @@ $(document).ready(function() {
       
   });
 
-  $('#sn-checkbox-open-in-new-window').parent().replaceWith(checkBoxBs4);
-
-  $("#replyContent").on("submit", function(event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (this.checkValidity() === false) 
-    { 
-      console.log('El campo textEditor está vació'); 
-    }
-    else 
-    {
-      $.ajax({
-        type: "POST",
-        url: "{{ route('admin.respuesta.store') }}",
-        dataType: "json",
-        data: $(this).serialize(),
-          success: function(response) { 
-            if(response.success){
-              //myDropzone.reply_id = response.reply_id;
-              //myDropzone.options.params.reply_id = response.reply_id;
-              myDropzone.options.url += response.reply_id;
-              myDropzone.processQueue();
-              //{{ route('admin.clientes.update', response.reply_id) }}
-            } 
-          },
-          error: function(xhr, status, error) {
-            console.log(xhr); 
-          }
-      });
-    }
-  });
+  var checkBox = '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="openInNewWindow"><label class="custom-control-label" for="openInNewWindow">Abrir en una nueva ventana</label></div>';
+  
+  $('#sn-checkbox-open-in-new-window').parent().replaceWith(checkBox);
 
 });
 
-myDropzone.on("addedfile", function(file) {
-    //alert("file uploaded");
-});
-
-myDropzone.on("sendingmultiple", function(file, xhr, formData) {
-  // Will send the filesize along with the file as POST data.
-  //formData.append("reply_id", myDropzone.reply_id);
-});
-   
-myDropzone.on("success", function(file, response) {
-  console.log(response.paths);
-});
-
-myDropzone.on("complete", function(file) {
-  myDropzone.removeAllFiles(true);
-});
 </script>
 @endpush

@@ -54,7 +54,13 @@ class TicketController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $request->validate([
+        'ticket_id' => 'required|exists:domain_providers,id',
+        'content' => 'required',
+        'last_name' => 'required|string',
+        'phone' => 'max:15',
+        'email' => 'required|email|unique:customers,email'
+      ]); 
     }
 
     /**
@@ -65,8 +71,9 @@ class TicketController extends Controller
      */
     public function show($id)
     {
-	   $ticket = Ticket::findOrFail($id);
-		return view('admin.tickets.show', ['ticket' => $ticket] );
+      $ticket = Ticket::findOrFail($id);
+      $replies = $ticket->replies;
+		  return view('admin.tickets.show', ['ticket' => $ticket, 'replies' => $replies] );
     }
 
     /**
