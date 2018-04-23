@@ -68,59 +68,44 @@
                 </thead>
                 <tbody>
                 @foreach($hostingContracts as $hostingContract)
-                <?php  
-                  if ($hostingContract->expiration_date_for_humans > 14) {
-                    $color = 'success';
-                    $badge_text = 'Activo';
-                  }
-                  elseif ($hostingContract->expiration_date_for_humans >= 0 ) {
-                    $color = 'warning';
-                    $badge_text = 'Próximo a vencer';
-                  }
-                  else {
-                    $color = 'danger';
-                    $badge_text = 'Expirado';                    
-                  }
-                ?>
                   <tr>
                     <td>N° {{ $hostingContract->id }}</td>
                     <td>{{ $hostingContract->customer->full_name }}</td>
                     <td>
                       {{ $hostingContract->hostingPlanContracted->title }}
-                      <span class="ml-1 badge badge-pill badge-{{$color}}">
-                        {{ $badge_text }}
-                      </span>
+                      {!! $hostingContract->bootstrapComponents()['status'] !!}
                     </td>
                     <td>
-                      <span class="fw-600 text-{{$color}}">{{ $hostingContract->expiration_date_for_humans }} Días</span>
+                      {!! $hostingContract->bootstrapComponents()['expiration'] !!}
                     </td>
                     <td>
-                      {{ $hostingContract->total_price }} nuevos soles
+                      {{ $hostingContract->total_price }} soles
                     </td>
                     <td>
-                      <button type="button" class="btn btn-primary w-100"  data-toggle="modal" data-target="#renovateHosting-{{ $hostingContract->id }}">Renovar</button>
+                      <button type="button" class="btn btn-primary w-100"  data-toggle="modal" data-target="#hostingContract-{{ $hostingContract->id }}">Renovar</button>
                     </td>
                     <td>
                       <a href="{{ route('admin.contratos-hosting.show', $hostingContract->id) }}" class="btn btn-success w-100">Ver</a>
                     </td>
                   </tr> 
-                  <!-- Modal renovateHosting -->
-                  <div class="modal fade" id="renovateHosting-{{ $hostingContract->id }}" tabindex="-1" role="dialog" aria-labelledby="renovateHostingLabel-{{ $hostingContract->id }}" aria-hidden="true">
+                  <!-- Modal for Renovate hostingContract -->
+                  <div class="modal fade" id="hostingContract-{{ $hostingContract->id }}" tabindex="-1" role="dialog" aria-labelledby="hostingContractLabel-{{ $hostingContract->id }}" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h4 class="modal-title" id="renovateHostinglLabel-{{ $hostingContract->id }}">
-                            Renovar o Cambiar Plan Hosting
+                          <h4 class="modal-title" id="hostingContractlLabel-{{ $hostingContract->id }}">
+                            Renovar Plan Hosting para el cliente
                           </h4>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div>
                         <div class="modal-body">
-                        <form method="POST" id="renovateHostingForm-{{$hostingContract->id}}" action="{{ route('admin.contratos-hosting.renovar', $hostingContract->id) }}">
+                        <form method="POST" id="hostingContractForm-{{$hostingContract->id}}" action="{{ route('admin.contratos-hosting.store') }}">
                           {{ csrf_field() }}
-                          
-                          <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                          <input type="hidden" name="customer_id" value="{{ $hostingContract->customer_id }}">
+                          <input type="hidden" name="has_cpanel_account" value="yes">
+                          <input type="hidden" name="cpanel_id" value="{{ $hostingContract->cpanelAccount->id }}">
                           <div class="form-group">
                             <label for="hosting_plan_id">Plan Hosting:</label>
                             <select class="custom-select" id="hosting_plan_id" name="hosting_plan_id" required>
@@ -153,7 +138,7 @@
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button form="renovateHostingForm-{{$hostingContract->id}}" type="submit" class="btn btn-primary" >
+                          <button form="hostingContractForm-{{$hostingContract->id}}" type="submit" class="btn btn-primary" >
                             Guardar cambios
                           </button>
                         </div>

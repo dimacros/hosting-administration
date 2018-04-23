@@ -15,11 +15,9 @@ class PurchasedDomainController extends Controller
      */
     public function index()
     {
-      $purchasedDomains = 
-      PurchasedDomain::with(['acquiredDomain:id,domain_name', 'domainProvider:id,company_name',
-      'customer:id,first_name,last_name,company_name'])->where('active', 1)->paginate(15);             
-      return 
-        view('admin.purchased-domains.index')->with('purchasedDomains', $purchasedDomains);
+      $purchasedDomains = PurchasedDomain::with(['acquiredDomain:id,domain_name', 'domainProvider:id,company_name','customer:id,first_name,last_name,company_name'])
+      ->where('active', 1)->paginate(15);             
+      return view('admin.purchased-domains.index')->with('purchasedDomains', $purchasedDomains);
     }
 
     /**
@@ -49,10 +47,9 @@ class PurchasedDomainController extends Controller
         'finish_date' => 'required|date|after:start_date',
         'total_price_in_dollars' => 'required|numeric',
         'acquiredDomain.domain_name' => 'required|unique:acquired_domains,domain_name',
-        'acquiredDomain.description' => 'nullable',
-        'user_id' => 'required|exists:users,id'
-      ]);  
-      
+        'acquiredDomain.description' => 'nullable'
+      ]);
+
       $acquiredDomain = new AcquiredDomain();
       $acquiredDomain->domain_name = 'http://'. $request->acquiredDomain['domain_name'];
       $acquiredDomain->description = $request->acquiredDomain['description'];
@@ -66,7 +63,7 @@ class PurchasedDomainController extends Controller
       $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
       $purchasedDomain->status = 'active';
       $purchasedDomain->active = 1;
-      $purchasedDomain->user_id = $request->user_id;
+      $purchasedDomain->user_id = $request->user()->id;
       
       if ( $acquiredDomainIsSaved && $purchasedDomain->save() ) {
         return back()->with('status', 'La compra de dominio fue registrada con éxito');
@@ -117,8 +114,7 @@ class PurchasedDomainController extends Controller
         'acquiredDomain.id' => 'required|exists:acquired_domains,id',
         'acquiredDomain.domain_name' => 'bail|required|url|
           unique:acquired_domains,domain_name,'.$request->acquiredDomain['id'],
-        'acquiredDomain.description' => 'nullable',
-        'user_id' => 'required|exists:users,id'
+        'acquiredDomain.description' => 'nullable'
       ]);  
 
       $acquiredDomain = AcquiredDomain::findOrFail($request->acquiredDomain['id']);
@@ -130,7 +126,7 @@ class PurchasedDomainController extends Controller
       $purchasedDomain->start_date = $request->start_date;
       $purchasedDomain->finish_date = $request->finish_date;
       $purchasedDomain->total_price_in_dollars = $request->total_price_in_dollars;
-      $purchasedDomain->user_id = $request->user_id;
+      $purchasedDomain->user_id = $request->user()->id;
       
       if ( $acquiredDomain->save() && $purchasedDomain->save() ) {
         return back()->with('status', 'Se actualizó con éxito los nuevos datos de la compra de dominio.');

@@ -28,6 +28,10 @@ class PurchasedDomain extends Model
 		return str_pad($id, 5, "0", STR_PAD_LEFT);
 	}
 
+	public static function getLatestCustomerPurchase($customer_id) {
+		return self::where('customer_id', $customer_id)->latest()->first();
+	}
+
   public function getNowAttribute() {
   	return Carbon::today();
   }
@@ -44,6 +48,27 @@ class PurchasedDomain extends Model
 		return $this->finish_date->addDay()->toDateString();
 	}
 
+	public function bootstrapComponents() {
+  	if ($this->expiration_date_for_humans > 14) {
+  		return [
+  			'status' => '<span class="ml-1 badge badge-pill badge-success">Activo</span>',
+  			'expiration' => '<span class="fw-600 text-success">'. $this->expiration_date_for_humans .' Días</span>'
+  		];
+    }
+    elseif ($this->expiration_date_for_humans > 0 ) {
+  		return [
+  			'status' => '<span class="ml-1 badge badge-pill badge-warning">Próximo a vencer</span>',
+  			'expiration' => '<span class="fw-600 text-warning">'. $this->expiration_date_for_humans .' Días</span>'
+  		];
+    }
+    else {  
+  		return [
+  			'status' => '<span class="ml-1 badge badge-pill badge-danger">Expirado</span>',
+  			'expiration' => '<span class="fw-600 text-danger">0 Días</span>'
+  		];                
+    }
+	}
+	
 	public function isDayToSendRenewalEmail() {
 		$numberOfMissingDays = [3, 7, 15, 30];
 		if ( in_array($this->expiration_date_for_humans, $numberOfMissingDays) ) {

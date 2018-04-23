@@ -58,13 +58,20 @@ class HostingContractController extends Controller
         'cpanel.domain_name' => 'required_if:has_cpanel_account,no|nullable| unique:cpanel_accounts,domain_name',
         'cpanel.user' => 'required_if:has_cpanel_account,no|nullable|
           unique:cpanel_accounts,user',
-        'cpanel.public_ip' => 'nullable|ip',
-        'user_id' => 'required|exists:users,id'
+        'cpanel.public_ip' => 'nullable|ip'
       ]);  
 
       DB::beginTransaction();
       try 
       { 
+        $lastCustomerPurchase = HostingContract::getLatestCustomerPurchase($request->customer_id);
+        if ( $lastCustomerPurchase ) 
+        {
+          // Do stuff when lastCustomerPurchase exists.
+          $lastCustomerPurchase->active = 0;
+          $lastCustomerPurchase->save();
+        }
+
         $hostingPlan = HostingPlan::find($request->hosting_plan_id);
         $hostingPlanContracted = new HostingPlanContracted();
         $hostingPlanContracted->hosting_plan_id = $hostingPlan->id;
@@ -99,7 +106,7 @@ class HostingContractController extends Controller
         $hostingContract->total_price = $hostingPlanContracted->real_total_price;
         $hostingContract->status = 'active'; 
         $hostingContract->active = 1;
-        $hostingContract->user_id = $request->user_id;
+        $hostingContract->user_id = $request->user()->id;
         $hostingContractIsSaved = $hostingContract->save();
 
         if ( $cpanelAccountIsSaved && $hostingPlanContracted && $hostingContractIsSaved ) 
@@ -156,8 +163,7 @@ class HostingContractController extends Controller
         'customer_id' => 'required|exists:customers,id',
         'start_date' => 'required|date',
         'finish_date' => 'required|date|after:start_date',
-        'total_price' => 'required|numeric',
-        'user_id' => 'required|exists:users,id'
+        'total_price' => 'required|numeric'
       ]); 
 
       $hostingPlanContracted = HostingPlanContracted::findOrFail($request->hosting_plan_contracted_id);
@@ -169,7 +175,7 @@ class HostingContractController extends Controller
       $hostingContract->start_date = $request->start_date;
       $hostingContract->finish_date = $request->finish_date;
       $hostingContract->total_price = $request->total_price;
-      $hostingContract->user_id = $request->user_id;
+      $hostingContract->user_id = $request->user()->id;
 
       if( $hostingPlanContracted->save() && $hostingContract->save() ) {
         return back()->with('status', 'Se actualizó con éxito los nuevos datos del cliente.');
@@ -190,57 +196,6 @@ class HostingContractController extends Controller
       $hostingContract->status = 'suspended';
       if( $hostingContract->save() ) {
         return back()->with('status', 'El contrato hosting del cliente "'.$hostingContract->customer->full_name.'" fue suspendido con éxito');
-      }
-    }
-
-    public function renovate(Request $request, $id) 
-    {
-      $request->validate([
-        'hosting_plan_id' => 'required|exists:hosting_plans,id',
-        'start_date' => 'required|date',
-        'contract_period' => 'required|in:1,2,3',
-        'user_id' => 'required|exists:users,id'
-      ]);  
- 
-      DB::beginTransaction();
-      try 
-      {       
-        $hostingPlan = HostingPlan::find($request->hosting_plan_id);
-        $hostingPlanContracted = new HostingPlanContracted();
-        $hostingPlanContracted->hosting_plan_id = $hostingPlan->id;
-        $hostingPlanContracted->title = $hostingPlan->title;
-        $hostingPlanContracted->description = $hostingPlan->description;
-        $hostingPlanContracted->total_price_per_year = $hostingPlan->total_price_per_year;
-        $hostingPlanContracted->contract_duration_in_years = $request->contract_period;
-        $hostingPlanContractedIsSaved = $hostingPlanContracted->save();
-
-        $oldHostingContract = HostingContract::find($id);
-        $oldHostingContract->active = 0;
-        $oldHostingContractIsSaved = $oldHostingContract->save();
-
-        $hostingContract = new HostingContract();
-        $hostingContract->hosting_plan_contracted_id = $hostingPlanContracted->id;
-        $hostingContract->customer_id = $oldHostingContract->customer->id;
-        $hostingContract->cpanel_account_id = $oldHostingContract->cpanelAccount->id;
-        $hostingContract->start_date = $request->start_date;
-        $hostingContract->finish_date = 
-        $hostingContract->calculateFinishDate($request->contract_period);
-        $hostingContract->total_price = $hostingPlanContracted->real_total_price;
-        $hostingContract->status = 'active'; 
-        $hostingContract->active = 1;
-        $hostingContract->user_id = $request->user_id;
-        $hostingContractIsSaved = $hostingContract->save();
-
-        if ( $hostingPlanContractedIsSaved && $oldHostingContractIsSaved && $hostingContractIsSaved ) 
-        {
-          DB::commit();
-          return back()->with('status', 'El contrato hosting fue renovado con éxito.');
-        }
-      }
-      catch(\Throwable $e)
-      {
-        DB::rollBack();
-        throw $e;
       }
     }
 

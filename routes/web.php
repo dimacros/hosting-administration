@@ -38,8 +38,6 @@ Route::group([
   	array( 'except' => ['show', 'edit'], 'parameters' => ['clientes' => 'id'] )
   );
 
-  Route::post('contratos-hosting/renovar/{id}', 'HostingContractController@renovate')
-  ->name('contratos-hosting.renovar');
   Route::put('cuentas-cpanel/{id}', 'HostingContractController@cpanelAccountUpdate')
   ->name('cuentas-cpanel.actualizar');  
 

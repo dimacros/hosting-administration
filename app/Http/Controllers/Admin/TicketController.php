@@ -37,23 +37,6 @@ class TicketController extends Controller
   	}
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-      $request->validate([
-        'ticket_id' => 'required|exists:domain_providers,id',
-        'content' => 'required',
-        'last_name' => 'required|string',
-        'phone' => 'max:15',
-        'email' => 'required|email|unique:customers,email'
-      ]); 
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id

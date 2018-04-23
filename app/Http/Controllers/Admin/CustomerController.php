@@ -80,7 +80,7 @@ class CustomerController extends Controller
       $customer->email = $request->email;
 
       if ($customer->save()) {
-        return back()->with('status', 'Se actualizó con éxito los nuevos datos de "'.$customer->full_name.'".');
+        return back()->with('status', 'Los datos del cliente "'.$customer->full_name.'" se actualizaron con éxito.');
       }
     }
 

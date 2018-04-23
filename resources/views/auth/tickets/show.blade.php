@@ -16,7 +16,8 @@
   .content {
     background-color: #f5f5f5;
     font-family: "Verdana", Arial, Helvetica;
-    font-size: 14px;    
+    font-size: 14px; 
+    overflow: auto;   
   }
 
   .container-of-attachments {

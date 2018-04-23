@@ -66,20 +66,6 @@
                 </thead>
                 <tbody>
                 @foreach($purchasedDomains as $purchasedDomain)
-                <?php  
-                  if ($purchasedDomain->expiration_date_for_humans > 14) {
-                    $color = 'success';
-                    $badge_text = 'Activo';
-                  }
-                  elseif ($purchasedDomain->expiration_date_for_humans >= 0 ) {
-                    $color = 'warning';
-                    $badge_text = 'Próximo a vencer';
-                  }
-                  else {
-                    $color = 'danger';
-                    $badge_text = 'Expirado';                    
-                  }
-                ?>
                   <tr>
                     <td>N° {{ $purchasedDomain->id }}</td>
                     <td>{{ $purchasedDomain->customer->full_name }}</td>
@@ -89,12 +75,10 @@
                       @else 
                         {{ $purchasedDomain->acquiredDomain->domain_name }}
                       @endif
-                      <span class="ml-1 badge badge-pill badge-{{$color}}">
-                        {{ $badge_text }}
-                      </span>
+                      {!! $purchasedDomain->bootstrapComponents()['status'] !!}
                     </td>
                     <td>
-                      <span class="fw-600 text-{{$color}}">{{ $purchasedDomain->expiration_date_for_humans }} Días</span>
+                      {!! $purchasedDomain->bootstrapComponents()['expiration'] !!}
                     </td>
                     <td>
                       @if( $purchasedDomain->status === 'suspended' )
