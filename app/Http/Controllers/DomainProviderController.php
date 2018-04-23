@@ -40,8 +40,8 @@ class DomainProviderController extends Controller
         $domainProvider = DomainProvider::create(
           ['company_name' => $request->company_name]
         );
-        if ( !is_null($domainProvider->id) ) {
-          return response()->json(['value' => $domainProvider->id, 'text' => $domainProvider->company_name]);
+        if ( $domainProvider->id ) {
+          return response()->json(['success' => true, 'id' => $domainProvider->id, 'company_name' => $domainProvider->company_name]);
         }
       }
 

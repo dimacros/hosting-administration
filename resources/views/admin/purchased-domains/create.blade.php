@@ -135,7 +135,7 @@
 
       //Activate Plugin selectize
       $("#customer_id").selectize();
-      $("#domain_provider_id").selectize({"create": function(input){
+      $("#domain_provider_id").selectize({"create": function(input, successCallBack){
 
         $.ajax({
           beforSend:function(){
@@ -150,14 +150,15 @@
 
           },
           success: function(response) {
-            console.log(response);
-            return { value: response.value, text: response.text };
+            if(response.success === true) {
+              successCallBack({ value: response.id, text: response.company_name });
+            }
           },
           complete: function() {
-
+            
           }
         });
-        
+
       }});
       
   });
