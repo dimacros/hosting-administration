@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\{AcquiredDomain, Customer, DomainProvider, PurchasedDomain};
 use Illuminate\Http\Request;
@@ -15,8 +15,8 @@ class PurchasedDomainController extends Controller
      */
     public function index()
     {
-      $purchasedDomains = PurchasedDomain::with(['acquiredDomain:id,domain_name', 'domainProvider:id,company_name','customer:id,first_name,last_name,company_name'])
-      ->where('active', 1)->paginate(15);             
+      $purchasedDomains = PurchasedDomain::with(['domainProvider:id,company_name','customer:id,first_name,last_name,company_name'])
+      ->where('is_active', 1)->paginate(15);             
       return view('admin.purchased-domains.index')->with('purchasedDomains', $purchasedDomains);
     }
 
@@ -46,12 +46,12 @@ class PurchasedDomainController extends Controller
         'start_date' => 'required|date',
         'finish_date' => 'required|date|after:start_date',
         'total_price_in_dollars' => 'required|numeric',
-        'acquiredDomain.domain_name' => 'required|unique:acquired_domains,domain_name',
+        'acquiredDomain.domain_name' => 'required|unique:acquired_domains,domain_name|url',
         'acquiredDomain.description' => 'nullable'
       ]);
 
       $acquiredDomain = new AcquiredDomain();
-      $acquiredDomain->domain_name = 'http://'. $request->acquiredDomain['domain_name'];
+      $acquiredDomain->domain_name = $request->acquiredDomain['domain_name'];
       $acquiredDomain->description = $request->acquiredDomain['description'];
       $acquiredDomainIsSaved = $acquiredDomain->save();
       $purchasedDomain = new PurchasedDomain();

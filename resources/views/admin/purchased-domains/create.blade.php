@@ -53,6 +53,17 @@
             <input type="hidden" name="user_id" value="{{ Auth::id() }}">
             <div class="tile-body">
               <div class="form-group">
+                <label for="customer_id">
+                  Nombre del Cliente o Empresa:
+                </label>
+                <select class="form-control" id="customer_id" name="customer_id" required>
+                  <option value="">Seleccione un cliente o empresa..</option>
+                  @foreach($customers as $customer)
+                    <option value="{{ $customer->id }}">{{ $customer->full_name }}</option>  
+                  @endforeach
+                </select>
+              </div> 
+              <div class="form-group">
                 <label for="domain_provider_id">
                    Nombre del Proveedor de Dominio:
                 </label>
@@ -62,17 +73,6 @@
                     <option value="{{ $domainProvider->id }}">
                       {{ $domainProvider->company_name }}
                     </option>  
-                  @endforeach
-                </select>
-              </div> 
-              <div class="form-group">
-                <label for="customer_id">
-                  Nombre del Cliente o Empresa:
-                </label>
-                <select class="form-control" id="customer_id" name="customer_id" required>
-                  <option value="">Seleccione un cliente o empresa..</option>
-                  @foreach($customers as $customer)
-                    <option value="{{ $customer->id }}">{{ $customer->full_name }}</option>  
                   @endforeach
                 </select>
               </div> 
@@ -113,8 +113,7 @@
                 <label for="description">
                   Agregar una descripción sobre el dominio (DNS, soporte, etc):
                 </label>
-                <textarea class="form-control" id="description" name="acquiredDomain[description]" rows="3">{{ old('acquiredDomain.description') }}
-                </textarea>
+                <textarea class="form-control" id="description" name="acquiredDomain[description]" rows="3">{{ old('acquiredDomain.description') }}</textarea>
               </div>
             </div><!-- /.tile-body -->
             <div class="tile-footer">
@@ -133,10 +132,34 @@
   <script src="{{ asset('js/plugins/selectize.min.js') }}"></script>
   <script type="text/javascript">
   $(document).ready(function() {
-    //Activate Plugin selectize
-      $('#domain_provider_id').selectize();
-      $('#customer_id').selectize();
 
+      //Activate Plugin selectize
+      $("#customer_id").selectize();
+      $("#domain_provider_id").selectize({"create": function(input){
+
+        $.ajax({
+          beforSend:function(){
+
+          },
+          headers: {"X-CSRF-TOKEN": "{{ csrf_token() }}"},
+          url: "{{ route('admin.proveedores-de-dominios.store') }}",
+          type: "POST",
+          dataType: "json",
+          data: { company_name: input},
+          error: function() {
+
+          },
+          success: function(response) {
+            console.log(response);
+            return { value: response.value, text: response.text };
+          },
+          complete: function() {
+
+          }
+        });
+        
+      }});
+      
   });
   </script>
 @endpush

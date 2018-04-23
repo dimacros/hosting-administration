@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\{HostingContract, Customer, HostingPlan, HostingPlanContracted, CpanelAccount};

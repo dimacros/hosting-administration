@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers;
 
 use App\DomainProvider;
 use Illuminate\Http\Request;
@@ -36,6 +36,15 @@ class DomainProviderController extends Controller
      */
     public function store(Request $request)
     {
+      if($request->ajax()) {
+        $domainProvider = DomainProvider::create(
+          ['company_name' => $request->company_name]
+        );
+        if ( !is_null($domainProvider->id) ) {
+          return response()->json(['value' => $domainProvider->id, 'text' => $domainProvider->company_name]);
+        }
+      }
+
       $request->validate([
         'company_name' => 'required|string',
         'description' => 'string|nullable',

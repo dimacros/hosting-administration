@@ -14,11 +14,6 @@ class PurchasedDomain extends Model
   {
 		return $this->belongsTo('App\DomainProvider');
   }	
-
-  public function acquiredDomain()
-  {
-		return $this->belongsTo('App\AcquiredDomain');
-  }
   
 	public function customer() {
 		return $this->belongsTo('App\Customer');

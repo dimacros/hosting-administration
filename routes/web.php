@@ -28,8 +28,7 @@ Route::get('/mailable-basic', function () {
 Auth::routes();
 
 Route::group([
-		'as' => 'admin.', 'namespace' => 'Admin', 
-		'middleware' => ['auth', 'admin'], 'prefix' => 'dashboard',
+		'as' => 'admin.', 'middleware' => ['auth', 'admin'], 'prefix' => 'dashboard',
 	], function () {
 
   Route::view('admin', 'admin.user')->name('user');
