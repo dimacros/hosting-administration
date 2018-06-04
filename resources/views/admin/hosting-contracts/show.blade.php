@@ -57,7 +57,8 @@
             </button>
           </div>
           <div class="modal-body bg-light">
-          <form method="POST" id="formCpanelAccount" action="{{ route('admin.cuentas-cpanel.actualizar', $hostingContract->cpanelAccount->id) }}">
+          @isset( $cpanelAccount )
+          <form method="POST" id="formCpanelAccount" action="{{ route('admin.cuentas-cpanel.update', $cpanelAccount->id) }}">
             {{ method_field('PUT') }}
             {{ csrf_field() }}
             <div class="form-group">
@@ -66,29 +67,34 @@
                 <div class="input-group-prepend">
                   <span class="input-group-text">http://</span>
                 </div>
-                <input type="text" class="form-control" name="domain_name" value="{{$hostingContract->cpanelAccount->domain_name}}" required>
+                <input type="text" class="form-control" name="domain_name" value="{{$cpanelAccount->domain_name}}" required>
                 <div class="input-group-prepend">
-                  <a href="http://{{$hostingContract->cpanelAccount->domain_name}}:2083" target="_blank" class="btn btn-outline-primary">Ir al cPanel</a>
+                  <a href="http://{{$cpanelAccount->domain_name}}:2083" target="_blank" class="btn btn-outline-primary">Ir al cPanel</a>
                 </div>
               </div> 
             </div>
             <div class="form-group">
               <label>Usuario:</label>
-              <input type="text" class="form-control" name="user" value="{{$hostingContract->cpanelAccount->user}}" required>
+              <input type="text" class="form-control" name="user" value="{{$cpanelAccount->user}}" required>
             </div>
             <div class="form-group">
               <label>Contraseña:</label>
-              <input type="text" class="form-control" name="password" value="{{$hostingContract->cpanelAccount->password}}">
+              <input type="text" class="form-control" name="password" value="{{$cpanelAccount->password}}">
             </div>
             <div class="form-group">
               <label>IP Pública:</label>
-              <input type="text" class="form-control" name="public_ip" value="{{$hostingContract->cpanelAccount->public_ip}}">
+              <input type="text" class="form-control" name="public_ip" value="{{$cpanelAccount->public_ip}}">
             </div>
           </form>
+          @else 
+           <h5>No existe una cuenta cPanel de este cliente.</h5>
+          @endisset
           </div><!-- /.modal-body -->
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button type="submit" form="formCpanelAccount" class="btn btn-primary" >Guardar cambios</button>
+            @isset( $cpanelAccount )
+              <button type="submit" form="formCpanelAccount" class="btn btn-primary" >Guardar cambios</button>
+            @endisset
           </div>
         </div><!-- /.modal-content -->
       </div>
@@ -121,6 +127,15 @@
               <strong>{{ session('status') }}</strong>
             </div>
           @endif
+          @if ($errors->any())
+            <div class="alert alert-danger">
+              <ul>
+                @foreach ($errors->all() as $error)
+                  <li>{{ $error }}</li>
+                @endforeach
+              </ul>
+            </div>
+          @endif
           <!-- START TILE -->
           <div class="tile-body">
             <div class="form-group">
@@ -146,14 +161,20 @@
               </div>
             </div>
             <div class="form-row">
-                <div class="form-group col-md-6">
-                  <label>Fecha de inicio:</label>
-                  <input type="date" class="form-control" value="{{ $hostingContract->start_date->toDateString() }}" readonly>
-                </div>
-                <div class="form-group col-md-6">
-                  <label>Fecha de vencimiento:</label>
-                  <input type="date" class="form-control" value="{{ $hostingContract->finish_date->toDateString() }}" readonly>
-                </div>
+              <div class="form-group col-md-6">
+                <label>Fecha de inicio:</label>
+                <input type="date" class="form-control" value="{{ $hostingContract->start_date->toDateString() }}" readonly>
+              </div>
+              <div class="form-group col-md-6">
+                <label>Fecha de vencimiento:</label>
+                <input type="date" class="form-control" value="{{ $hostingContract->finish_date->toDateString() }}" readonly>
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="user" class="col-sm-2 col-form-label">Registrado por:</label>
+              <div class="col-sm-10">
+                <input type="text" class="form-control" id="user" value="{{ $hostingContract->user->full_name }}" readonly>
+              </div>
             </div>
           </div><!-- /.tile-body -->
         </div><!-- /.tile -->

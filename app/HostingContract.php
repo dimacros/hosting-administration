@@ -14,22 +14,18 @@ class HostingContract extends Model
 		return $this->belongsTo('App\HostingPlanContracted');
 	}
 
-	public function cpanelAccount() {
-		return $this->belongsTo('App\CpanelAccount');
-	}
-	
 	public function customer() {
 		return $this->belongsTo('App\Customer');
 	}
-	
+
+	public function user() {
+		return $this->belongsTo('App\User');
+	}
+		
 	public function getIdAttribute($id) {
 		return str_pad($id, 5, "0", STR_PAD_LEFT);
 	}
 
-	public static function getLatestCustomerPurchase($customer_id) {
-		return self::where('customer_id', $customer_id)->latest()->first();
-	}
-	
   public function getStartDateAttribute($start_date) {
   	return new Carbon($start_date);
   }

@@ -51,8 +51,6 @@
           <form method="POST" action="{{ route('admin.dominios-comprados.update', $purchasedDomain->id) }}">
             {{ method_field('PUT') }}
             {{ csrf_field() }}
-            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
-            <input type="hidden" name="acquiredDomain[id]" value="{{ $purchasedDomain->acquiredDomain->id }}">
             <div class="tile-body">
               <div class="form-group">
                 <label for="domain_provider_id">
@@ -91,7 +89,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="domain_name">Nombre de dominio:</label>
-                  <input type="text" class="form-control" id="domain_name" name="acquiredDomain[domain_name]" value="{{ $purchasedDomain->acquiredDomain->domain_name }}" required>
+                  <input type="text" class="form-control" id="domain_name" name="domain_name" value="{{ $purchasedDomain->domain_name }}" required>
                 </div>
                 <div class="form-group col-md-6">
                   <label for="total_price_in_dollars">Precio total en dólares</label>
@@ -110,7 +108,7 @@
                 <label for="description">
                   Agregar una descripción sobre el dominio (DNS, soporte, etc):
                 </label>
-                <textarea class="form-control" id="description" name="acquiredDomain[description]" rows="5">{{ $purchasedDomain->acquiredDomain->description }}
+                <textarea class="form-control" id="description" name="domain_description" rows="5">{{ $purchasedDomain->description }}
                 </textarea>   
               </div>
             </div><!-- /.tile-body -->

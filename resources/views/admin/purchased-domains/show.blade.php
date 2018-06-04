@@ -77,7 +77,7 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label>Nombre de dominio:</label>
-                  <input type="text" class="form-control" value="{{ $purchasedDomain->acquiredDomain->domain_name }}" readonly>
+                  <input type="text" class="form-control" value="{{ $purchasedDomain->domain_name }}" readonly>
                 </div>
                 <div class="form-group col-md-6">
                   <label>Precio total:</label>
@@ -86,7 +86,13 @@
               </div>
               <div class="form-group">
                 <label>Agregar una descripción sobre el dominio (DNS, soporte, etc):</label>
-                <textarea class="form-control" rows="5" readonly>{{ $purchasedDomain->acquiredDomain->description }}</textarea>
+                <textarea class="form-control" rows="5" readonly>{{ $purchasedDomain->domain_description }}</textarea>
+              </div>
+              <div class="form-group row">
+                <label for="user" class="col-sm-2 col-form-label">Registrado por:</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="user" value="{{ $purchasedDomain->user->full_name }}" readonly>
+                </div>
               </div>
             </div><!-- /.tile-body -->
         </div><!-- /.tile -->
@@ -94,15 +100,3 @@
     </section><!-- /.row -->
   </main>
 @endsection
-@push('script')
-<!-- Selectize plugin-->
-  <script src="{{ asset('js/plugins/selectize.min.js') }}"></script>
-  <script type="text/javascript">
-  $(document).ready(function() {
-    //Activate Plugin selectize
-      $('#domain_provider_id').selectize();
-      $('#customer_id').selectize();
-
-  });
-  </script>
-@endpush

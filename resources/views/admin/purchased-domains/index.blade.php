@@ -71,9 +71,9 @@
                     <td>{{ $purchasedDomain->customer->full_name }}</td>
                     <td>
                       @if( $purchasedDomain->status === 'suspended' )
-                        <del>{{ $purchasedDomain->acquiredDomain->domain_name }}</del>
+                        <del>{{ $purchasedDomain->domain_name }}</del>
                       @else 
-                        {{ $purchasedDomain->acquiredDomain->domain_name }}
+                        {{ $purchasedDomain->domain_name }}
                       @endif
                       {!! $purchasedDomain->bootstrapComponents()['status'] !!}
                     </td>
@@ -94,64 +94,51 @@
                       <a href="{{ route('admin.dominios-comprados.show', $purchasedDomain->id) }}" class="btn btn-success w-100">Ver</a>        
                     </td>
                   </tr>
-                  <!-- Modal -->
-                  <div class="modal fade" id="modal-{{ $purchasedDomain->id }}" tabindex="-1" role="dialog" aria-labelledby="modalLabel-{{ $purchasedDomain->id }}" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h4 class="modal-title" id="modalLabel-{{ $purchasedDomain->id }}">
-                            Renovar Dominio
-                          </h4>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <form method="POST" id="purchasedDomain-{{ $purchasedDomain->id }}" action="{{ route(
-                            'admin.dominios-comprados.renovar', $purchasedDomain->id
-                            )}}">
-                            {{ csrf_field() }}
-                            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                  <!-- MODAL PARA RENOVAR CONTRATO -->
+                  @component('components.modal', [ 
+                      'modalId' => 'modal-'. $purchasedDomain->id, 
+                      'modalTitle' => 'Renovar Dominio',
+                      'btnCloseClass' => 'btn btn-secondary', 
+                      'btnCloseTitle' => 'Cerrar', 
+                      'btnSaveClass' => 'btn btn-primary', 
+                      'btnSaveTitle' => 'Guardar cambios',
+                      'FormId' => 'form-'. $purchasedDomain->id
+                    ])
 
-                            <div class="form-group">
-                              <label>Proveedor de dominio:</label>
-                              <input type="text" class="form-control" value="{{ $purchasedDomain->domainProvider->company_name }}" readonly>
-                            </div>
-                            <div class="form-row">
-                              <div class="form-group col-md-5">
-                                <label>Fecha de inicio:</label>
-                                <input type="date" class="form-control" name="start_date" value="{{ $purchasedDomain->start_date_to_renovate }}" readonly>
-                              </div>    
-                              <div class="form-group col-md-7">
-                                <label>Fecha de vencimiento:</label>
-                                <input type="date" class="form-control" name="finish_date" required>
-                              </div>                  
-                            </div>
-                            <div class="form-row">
-                              <div class="form-group col-md-5">
-                                <label>
-                                  Precio total en dólares
-                                </label>
-                                <div class="input-group">
-                                  <div class="input-group-prepend">
-                                    <span class="input-group-text">$</span>
-                                  </div>
-                                  <input type="text" class="form-control" name="total_price_in_dollars" required pattern="\d*">
-                                  <div class="input-group-append">
-                                    <span class="input-group-text">.00</span>
-                                  </div>
-                                </div>
-                              </div>                      
-                            </div>
-                          </form>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                          <button form="purchasedDomain-{{ $purchasedDomain->id }}" type="submit" class="btn btn-primary">Guardar cambios</button>
-                        </div>
+                    <form method="POST" id="form-{{ $purchasedDomain->id }}" action="{{ route('admin.dominios-comprados.renovate') }}">
+                      {{ csrf_field() }}
+                      <input type="hidden" name="customer_id" value="{{ $purchasedDomain->customer->id }}">
+                      <input type="hidden" name="domain_provider_id" value="{{ $purchasedDomain->domainProvider->id }}">
+                      <div class="form-group">
+                        <label>Proveedor de dominio:</label>
+                        <input type="text" class="form-control" value="{{ $purchasedDomain->domainProvider->company_name }}" readonly>
                       </div>
-                    </div>
-                  </div><!-- Modal-Renovate -->
+                      <div class="form-row">
+                        <div class="form-group col-md-5">
+                          <label>Fecha de inicio:</label>
+                          <input type="date" class="form-control" name="start_date" value="{{ $purchasedDomain->start_date_to_renovate }}" readonly>
+                        </div>    
+                        <div class="form-group col-md-7">
+                          <label>Fecha de vencimiento:</label>
+                          <input type="date" class="form-control" name="finish_date" required>
+                        </div>                  
+                      </div>
+                      <div class="form-row">
+                        <div class="form-group col-md-5">
+                          <label>Precio total en dólares</label>
+                          <div class="input-group">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">$</span>
+                            </div>
+                            <input type="text" class="form-control" name="total_price_in_dollars" required pattern="\d*">
+                            <div class="input-group-append">
+                              <span class="input-group-text">.00</span>
+                            </div>
+                          </div>
+                        </div>                      
+                      </div>
+                    </form>
+                  @endcomponent
                 @endforeach
                 </tbody>
               </table>

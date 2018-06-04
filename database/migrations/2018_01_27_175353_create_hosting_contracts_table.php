@@ -15,15 +15,15 @@ class CreateHostingContractsTable extends Migration
     {
       Schema::create('hosting_contracts', function (Blueprint $table) {
         $table->increments('id');
-        $table->integer('customer_id')->unsigned();
-        $table->integer('hosting_plan_contracted_id')->unsigned();
+        $table->unsignedInteger('customer_id');
+        $table->unsignedInteger('hosting_plan_contracted_id');
         $table->date('start_date');
         $table->date('finish_date');
         $table->decimal('total_price');
         $table->enum('status', 
           ['active', 'pending', 'canceled', 'finished', 'suspended']);
         $table->boolean('is_active')->comment('Yes, it is the last contract purchased by the client');
-        $table->integer('user_id')->unsigned()->nullable();
+        $table->unsignedInteger('user_id')->nullable();
         $table->timestamps();
 
         $table->foreign('customer_id')

@@ -2,7 +2,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\{HostingContract, Customer, HostingPlan, HostingPlanContracted, CpanelAccount};
+use App\{HostingContract, Customer, HostingPlan, HostingPlanContracted};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -17,7 +17,7 @@ class HostingContractController extends Controller
     {
         $hostingContracts = HostingContract::with([
           'customer:id,first_name,last_name,company_name',
-          'hostingPlanContracted:id,title'])->where('active', 1)->paginate(15);
+          'hostingPlanContracted:id,title'])->where('is_active', 1)->paginate(15);
 
         $hostingPlans = HostingPlan::all('id', 'title');
 
@@ -34,10 +34,8 @@ class HostingContractController extends Controller
     {
       $customers = Customer::all('id', 'first_name', 'last_name', 'company_name');
       $hostingPlans = HostingPlan::all('id', 'title');
-      $cpanelAccounts = CpanelAccount::all('id', 'domain_name');
       return view('admin.hosting-contracts.create')
-        ->with('customers', $customers)->with('hostingPlans', $hostingPlans)
-        ->with('cpanelAccounts', $cpanelAccounts);
+        ->with('customers', $customers)->with('hostingPlans', $hostingPlans);
     }
 
     /**
@@ -49,28 +47,15 @@ class HostingContractController extends Controller
     public function store(Request $request)
     {
       $request->validate([
-        'hosting_plan_id' => 'required|exists:hosting_plans,id',
         'customer_id' => 'required|exists:customers,id',
+        'hosting_plan_id' => 'required|exists:hosting_plans,id',
         'start_date' => 'required|date',
-        'contract_period' => 'required|in:1,2,3',
-        'has_cpanel_account' => 'required|in:yes,no',
-        'cpanel_id' => 'required_if:has_cpanel_account,yes|nullable|exists:cpanel_accounts,id',
-        'cpanel.domain_name' => 'required_if:has_cpanel_account,no|nullable| unique:cpanel_accounts,domain_name',
-        'cpanel.user' => 'required_if:has_cpanel_account,no|nullable|
-          unique:cpanel_accounts,user',
-        'cpanel.public_ip' => 'nullable|ip'
+        'contract_period' => 'required|in:1,2,3'
       ]);  
 
       DB::beginTransaction();
       try 
       { 
-        $lastCustomerPurchase = HostingContract::getLatestCustomerPurchase($request->customer_id);
-        if ( $lastCustomerPurchase ) 
-        {
-          // Do stuff when lastCustomerPurchase exists.
-          $lastCustomerPurchase->active = 0;
-          $lastCustomerPurchase->save();
-        }
 
         $hostingPlan = HostingPlan::find($request->hosting_plan_id);
         $hostingPlanContracted = new HostingPlanContracted();
@@ -81,35 +66,19 @@ class HostingContractController extends Controller
         $hostingPlanContracted->contract_duration_in_years = $request->contract_period;
         $hostingPlanContractedIsSaved = $hostingPlanContracted->save();
 
-        if ($request->has_cpanel_account === 'yes') 
-        {
-          $cpanelAccount = CpanelAccount::findOrFail($request->cpanel_id);
-          $cpanelAccountIsSaved = true;
-        }
-        else 
-        {
-          $cpanelAccount = new CpanelAccount();
-          $cpanelAccount->domain_name = $request->cpanel['domain_name'];
-          $cpanelAccount->user = $request->cpanel['user'];
-          $cpanelAccount->password = $request->cpanel['password'];
-          $cpanelAccount->public_ip = $request->cpanel['public_ip'];
-          $cpanelAccountIsSaved = $cpanelAccount->save();
-        }
-
         $hostingContract = new HostingContract();
         $hostingContract->hosting_plan_contracted_id = $hostingPlanContracted->id;
         $hostingContract->customer_id = $request->customer_id;
-        $hostingContract->cpanel_account_id = $cpanelAccount->id;
         $hostingContract->start_date = $request->start_date;
         $hostingContract->finish_date = 
         $hostingContract->calculateFinishDate($request->contract_period);
         $hostingContract->total_price = $hostingPlanContracted->real_total_price;
         $hostingContract->status = 'active'; 
-        $hostingContract->active = 1;
+        $hostingContract->is_active = 1;
         $hostingContract->user_id = $request->user()->id;
         $hostingContractIsSaved = $hostingContract->save();
 
-        if ( $cpanelAccountIsSaved && $hostingPlanContracted && $hostingContractIsSaved ) 
+        if ( $hostingPlanContracted && $hostingContractIsSaved ) 
         {
           DB::commit();
           return back()->with('status', 'El contrato hosting fue registrado con éxito.');
@@ -131,7 +100,9 @@ class HostingContractController extends Controller
     public function show($id)
     {
       $hostingContract = HostingContract::findOrFail($id);
-      return view('admin.hosting-contracts.show')->with('hostingContract', $hostingContract);
+      $cpanelAccount = $hostingContract->customer->cpanelAccount;
+      return view('admin.hosting-contracts.show')
+      ->with('hostingContract', $hostingContract)->with('cpanelAccount', $cpanelAccount);
     }
 
     /**
@@ -147,6 +118,17 @@ class HostingContractController extends Controller
         ->with('customers', Customer::all('id', 'first_name', 'last_name', 'company_name') );
     }
 
+    public function deactivate(Request $request, $id) {
+
+      $hostingContract = HostingContract::findOrFail($id);
+      $hostingContract->is_active = 0; 
+      if( $hostingContract->save() ) {
+        return $this->store($request);
+      }
+      else {
+        return back()->withErrors(['message' => 'Ocurrió un error con el servidor, vuelva a intentarlo nuevamente.']);
+      }
+    }
     /**
      * Update the specified resource in storage.
      *
@@ -196,28 +178,6 @@ class HostingContractController extends Controller
       $hostingContract->status = 'suspended';
       if( $hostingContract->save() ) {
         return back()->with('status', 'El contrato hosting del cliente "'.$hostingContract->customer->full_name.'" fue suspendido con éxito');
-      }
-    }
-
-    public function cpanelAccountUpdate(Request $request, $id) 
-    {
-      $request->validate([
-        'domain_name' => 'required|unique:cpanel_accounts,domain_name,'.$id,
-        'user' => 'required|unique:cpanel_accounts,user,'.$id,
-        'password' => 'nullable',
-        'public_ip' => 'nullable|ip'
-      ]);  
-
-      $cpanelAccount = CpanelAccount::findOrFail($id);
-      $cpanelAccount->domain_name = $request->domain_name;
-      $cpanelAccount->user = $request->user;
-      $cpanelAccount->password = $request->password;
-      $cpanelAccount->public_ip = $request->public_ip;
-
-      if ( $cpanelAccount->save() ) {
-        return back()->with('status', 
-          'Los datos de la cuenta cPanel fueron actualizados con éxito.'
-        );
       }
     }
 }

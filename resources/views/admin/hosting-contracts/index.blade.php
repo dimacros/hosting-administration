@@ -101,11 +101,10 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                        <form method="POST" id="hostingContractForm-{{$hostingContract->id}}" action="{{ route('admin.contratos-hosting.store') }}">
+                        <form method="POST" id="hostingContractForm-{{$hostingContract->id}}"  action="{{ route('admin.contratos-hosting.deactivate', $hostingContract->id) }}">
+                          {{ method_field('PUT') }}
                           {{ csrf_field() }}
-                          <input type="hidden" name="customer_id" value="{{ $hostingContract->customer_id }}">
-                          <input type="hidden" name="has_cpanel_account" value="yes">
-                          <input type="hidden" name="cpanel_id" value="{{ $hostingContract->cpanelAccount->id }}">
+                          <input type="hidden" name="customer_id" value="{{$hostingContract->customer_id}}">
                           <div class="form-group">
                             <label for="hosting_plan_id">Plan Hosting:</label>
                             <select class="custom-select" id="hosting_plan_id" name="hosting_plan_id" required>

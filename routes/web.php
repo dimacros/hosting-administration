@@ -36,16 +36,27 @@ Route::group([
   Route::resource('clientes', 'CustomerController', 
   	array( 'except' => ['show', 'edit'], 'parameters' => ['clientes' => 'id'] )
   );
+  
+  Route::resource('cuentas-cpanel', 'CpanelAccountController', 
+    array( 'only' => ['store', 'update'], 'parameters' => ['cuentas-cpanel' => 'id'] )
+  );
 
-  Route::put('cuentas-cpanel/{id}', 'HostingContractController@cpanelAccountUpdate')
-  ->name('cuentas-cpanel.actualizar');  
+  Route::put('contratos-hosting/{id}/desactivar', 'HostingContractController@deactivate')
+  ->name('contratos-hosting.deactivate');
 
   Route::resource('contratos-hosting', 'HostingContractController', 
     array( 'parameters' => ['contratos-hosting' => 'id'] )
   );
 
-  Route::post('dominios-comprados/renovar/{id}', 'PurchasedDomainController@renovate')
-  ->name('dominios-comprados.renovar');
+  Route::get('/contratos-hosting-prontos-a-expirar', function () {
+    $start_date = Carbon\Carbon::now()->startOfDay();  
+    $finish_date = $start_date->copy()->addMonth(); 
+    $hostingContracts = App\HostingContract::whereBetween('finish_date', [$start_date->toDateString(), $finish_date->toDateString()])->get();
+    return view('admin.hosting-contracts.ready-to-expire', ['hostingContracts' => $hostingContracts]);
+  });
+
+  Route::post('dominios-comprados/renovar-dominio', 'PurchasedDomainController@renovate')
+  ->name('dominios-comprados.renovate');
 
   Route::resource('dominios-comprados', 'PurchasedDomainController', 
     array( 'parameters' => ['dominios-comprados' => 'id'] )

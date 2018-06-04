@@ -19,12 +19,12 @@ class PurchasedDomain extends Model
 		return $this->belongsTo('App\Customer');
 	}
 
-	public function getIdAttribute($id) {
-		return str_pad($id, 5, "0", STR_PAD_LEFT);
+	public function user() {
+		return $this->belongsTo('App\User');
 	}
 
-	public static function getLatestCustomerPurchase($customer_id) {
-		return self::where('customer_id', $customer_id)->latest()->first();
+	public function getIdAttribute($id) {
+		return str_pad($id, 5, "0", STR_PAD_LEFT);
 	}
 
   public function getNowAttribute() {

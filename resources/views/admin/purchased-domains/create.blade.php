@@ -23,10 +23,52 @@
             <a href="{{ route('admin.dominios-comprados.store') }}" class="btn btn-primary">
               <i class="fa fa-arrow-left" aria-hidden="true"></i>Regresar
             </a>
+            <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#modalCustomer">
+              Agregar Cliente
+            </button>
           </div>
         </div>
       </div>
     </section>  
+    <!-- MODAL PARA AGREGAR CLIENTE -->
+      @component('components.modal', [ 
+        'modalId' => 'modalCustomer', 
+        'modalTitle' => 'Agregar nuevo Cliente',
+        'btnCloseClass' => 'btn btn-secondary', 
+        'btnCloseTitle' => 'Cerrar', 
+        'btnSaveClass' => 'btn btn-primary', 
+        'btnSaveTitle' => 'Registrar',
+        'FormId' => 'formCustomer',
+      ])
+
+      <form method="POST" id="formCustomer" action="{{ route('admin.clientes.store') }}">
+        {{ csrf_field() }}
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label for="first_name">Nombre(s):</label>
+            <input class="form-control" type="text" id="first_name" name="first_name" value="{{ old('first_name') }}" required>
+          </div>
+          <div class="form-group col-md-7">
+            <label for="last_name">Apellidos:</label>
+            <input class="form-control" type="text" id="last_name" name="last_name" value="{{ old('last_name') }}" required>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="company_name">Empresa (opcional):</label>
+          <input class="form-control" type="text" id="company_name" name="company_name" value="{{ old('company_name') }}">
+        </div>
+        <div class="form-row">
+          <div class="form-group col-md-5">
+            <label for="phone">Teléfono o Celular:</label>
+            <input class="form-control" type="phone" id="phone" name="phone" value="{{ old('phone') }}" pattern="[0-9-]{5,15}">
+          </div>
+          <div class="form-group col-md-7">
+            <label for="email">Correo electrónico:</label>
+            <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}" required>
+          </div>
+        </div>
+      </form>
+    @endcomponent
     <!-- SECOND SECTION -->
     <section class="row">
       <div class="col-md-8 offset-md-2">
@@ -48,9 +90,8 @@
             </div>
           @endif
         <!-- START FORM -->
-          <form method="POST" action="{{ route('admin.dominios-comprados.store') }}">
+          <form method="POST" id="formPurchasedDomain" action="{{ route('admin.dominios-comprados.store') }}">
             {{ csrf_field() }}
-            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
             <div class="tile-body">
               <div class="form-group">
                 <label for="customer_id">
@@ -88,12 +129,13 @@
               </div>
               <div class="form-row">
                 <div class="form-group col-md-6">
-                  <label for="domain_name">Nombre de dominio:</label>
+                  <label for="see_domain_name">Nombre de dominio:</label>
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">http://</span>
                     </div>
-                    <input type="text" class="form-control" id="domain_name" name="acquiredDomain[domain_name]" value="{{ old('acquiredDomain.domain_name') }}" required>
+                    <input type="text" class="form-control" id="see_domain_name" name="see_domain_name" value="{{ old('see_domain_name') }}" required>
+                    <input type="hidden" id="domain_name" name="domain_name">
                   </div>
                 </div>
                 <div class="form-group col-md-6">
@@ -110,10 +152,10 @@
                 </div>
               </div>
               <div class="form-group">
-                <label for="description">
+                <label for="domain_description">
                   Agregar una descripción sobre el dominio (DNS, soporte, etc):
                 </label>
-                <textarea class="form-control" id="description" name="acquiredDomain[description]" rows="3">{{ old('acquiredDomain.description') }}</textarea>
+                <textarea class="form-control" id="domain_description" name="domain_description" rows="3">{{ old('domain_description') }}</textarea>
               </div>
             </div><!-- /.tile-body -->
             <div class="tile-footer">
@@ -135,32 +177,43 @@
 
       //Activate Plugin selectize
       $("#customer_id").selectize();
-      $("#domain_provider_id").selectize({"create": function(input, successCallBack){
+      $("#domain_provider_id").selectize({
 
-        $.ajax({
-          beforSend:function(){
-
-          },
-          headers: {"X-CSRF-TOKEN": "{{ csrf_token() }}"},
-          url: "{{ route('admin.proveedores-de-dominios.store') }}",
-          type: "POST",
-          dataType: "json",
-          data: { company_name: input},
-          error: function() {
-
-          },
-          success: function(response) {
-            if(response.success === true) {
-              successCallBack({ value: response.id, text: response.company_name });
-            }
-          },
-          complete: function() {
-            
+        "render": {
+          option_create: function (data, escape) {
+            return '<div class="create">Agregar <strong>'+ escape(data.input) +'</strong>&hellip;</div>';
           }
-        });
+        },
+        "create": function(input, successCallBack) {
+          $.ajax({
+            beforSend:function(){
 
-      }});
-      
+            },
+            headers: {"X-CSRF-TOKEN": "{{ csrf_token() }}"},
+            url: "{{ route('admin.proveedores-de-dominios.store') }}",
+            type: "POST",
+            dataType: "json",
+            data: { company_name: input},
+            error: function() {
+
+            },
+            success: function(response) {
+              if(response.success === true) {
+                successCallBack({ value: response.id, text: response.company_name });
+              }
+            },
+            complete: function() {
+              
+            }
+          });
+        }
+
+      });
+    
+      $("#formPurchasedDomain").submit(function(event) {
+        document.getElementById('domain_name').value = 'http://' + document.getElementById('see_domain_name').value;
+        return;
+      });
   });
   </script>
 @endpush

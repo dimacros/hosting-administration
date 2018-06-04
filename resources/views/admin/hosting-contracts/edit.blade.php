@@ -51,7 +51,6 @@
           <form method="POST" action="{{ route('admin.contratos-hosting.update', $hostingContract->id) }}">
             {{ method_field('PUT') }}
             {{ csrf_field() }}
-            <input type="hidden" name="user_id" value="{{Auth::id()}}">
             <input type="hidden" name="hosting_plan_contracted_id" value="{{ $hostingContract->hostingPlanContracted->id }}">
             <div class="tile-body">
               <div class="form-group">

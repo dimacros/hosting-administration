@@ -2,6 +2,13 @@
 @push('head')
 <link rel="stylesheet" href="{{ asset('css/selectize.bootstrap3.css') }}">
 <style>
+  .btn-cpanel {
+    background-color: #ff7600;
+    color: #fff;
+    border-color: #ff7600;
+    font-style: italic;
+  }
+
   .text-cpanel {
     color: #ff7600;
     font-size: 1.5rem;
@@ -51,6 +58,7 @@
 
       <form method="POST" id="formCustomer" action="{{ route('admin.clientes.store') }}">
         {{ csrf_field() }}
+        <input type="hidden" name="is_renewing" value="yes">
         <div class="form-row">
           <div class="form-group col-md-5">
             <label for="first_name">Nombre(s):</label>
@@ -89,7 +97,7 @@
             </div>
           @endif
           @if ($errors->any())
-            <div class="alert alert-danger">
+            <div class="alert alert-danger" id="listErrors">
               <ul>
                 @foreach ($errors->all() as $error)
                   <li>{{ $error }}</li>
@@ -98,10 +106,9 @@
             </div>
           @endif
         <!-- START FORM -->
-          <form method="POST" action="{{ route('admin.contratos-hosting.store') }}">
-            {{ csrf_field() }}
-            <input type="hidden" name="user_id" value="{{Auth::id()}}">
-            <div class="tile-body">
+          <div class="tile-body">
+            <form method="POST" id="formHostingContract" action="{{ route('admin.contratos-hosting.store') }}">
+              {{ csrf_field() }}
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="customer_id">Nombre del Cliente o Empresa:</label>
@@ -137,68 +144,69 @@
                   </select>
                 </div>
               </div>
-              <div class="form-group">
-                <h6>¿El cliente ya tiene una cuenta cPanel?</h6>
+              <div class="form-group" id="createCpanelAccount">
+                <h6>¿Deseas crear una cuenta cPanel?</h6>
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" class="custom-control-input" id="has_cpanel_account_yes" name="has_cpanel_account" value="yes" required>
-                  <label class="custom-control-label" for="has_cpanel_account_yes">SÍ</label>
+                  <input type="radio" class="custom-control-input" id="cpanel_account_yes" name="cpanel_account" value="yes" required>
+                  <label class="custom-control-label" for="cpanel_account_yes">SÍ</label>
                 </div>
                 <div class="custom-control custom-radio custom-control-inline">
-                  <input type="radio" class="custom-control-input" id="has_cpanel_account_no" name="has_cpanel_account" value="no" >
-                  <label class="custom-control-label" for="has_cpanel_account_no">NO</label>
+                  <input type="radio" class="custom-control-input" id="cpanel_account_no" name="cpanel_account" value="no">
+                  <label class="custom-control-label" for="cpanel_account_no">NO</label>
                 </div>
               </div>
-              <div class="bg-light p-4" id="searchAccount" style="display: none;">
+            </form>
+            <div id="createAccount" class="bg-light py-3 px-4" style="display: none;">
+              <h4>Nueva cuenta de <span class="text-cpanel">cPanel</span></h4>
+              <hr>
+              <div id="successResponse" class="alert alert-success" role="alert" style="display: none;"></div>
+              <div id="listErrors" class="alert alert-danger" role="alert" style="display: none;"></div> 
+              <form id="formCpanelAccount">
+                <input type="hidden" id="cpanel_customer_id"  name="cpanel_customer_id">
                 <div class="form-group">
-                  <label for="cpanel_id">
-                    <h5>| Buscar la cuenta <span class="text-cpanel">cPanel</span> por el nombre de dominio:</h5>
+                  <label for="cpanel_customer_name">
+                    Nombre del Cliente o Empresa:
                   </label>
-                  <select class="form-control" id="cpanel_id" name="cpanel_id">
-                    <option value="">Seleccione una opción..</option>
-                  @foreach($cpanelAccounts as $cpanelAccount)
-                    <option value="{{ $cpanelAccount->id }}">{{ $cpanelAccount->domain_name }}</option>  
-                  @endforeach
-                  </select>           
-                </div>
-              </div>
-              <div class="bg-light p-4" id="createAccount" style="display: none;">
-                <h4>Nueva cuenta de <span class="text-cpanel">cPanel</span></h4>
-                <hr>
+                  <input type="text" class="form-control" id="cpanel_customer_name" readonly>
+                </div>   
                 <div class="form-group row">
-                  <label class="col-sm-2" for="cpanel_domain_name">Dominio:</label>
-                  <div class="col-sm-10 input-group">
-                    <div class="input-group-prepend">
-                      <span class="input-group-text">http://</span>
-                    </div>
-                    <input type="text" class="form-control" id="cpanel_domain_name" name="cpanel[domain_name]">
-                  </div>  
+                    <label class="col-sm-2" for="cpanel_domain_name">Dominio:</label>
+                    <div class="col-sm-10 input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text">http://</span>
+                      </div>
+                      <input type="text" class="form-control" id="cpanel_domain_name" name="cpanel_domain_name" required>
+                    </div>  
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2" for="cpanel_user">Usuario:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="cpanel_user" name="cpanel[user]">
-                  </div>  
+                    <label class="col-sm-2" for="cpanel_user">Usuario:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="cpanel_user" name="cpanel_user" required>
+                    </div>  
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2" for="cpanel_password">Contraseña:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="cpanel_password" name="cpanel[password]">
-                  </div>  
+                    <label class="col-sm-2" for="cpanel_password">Contraseña:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="cpanel_password" name="cpanel_password">
+                    </div>  
                 </div>
                 <div class="form-group row">
-                  <label class="col-sm-2" for="cpanel_public_ip">IP Pública:</label>
-                  <div class="col-sm-10">
-                    <input type="text" class="form-control" id="cpanel_public_ip" name="cpanel[public_ip]">
-                  </div>  
+                    <label class="col-sm-2" for="cpanel_public_ip">IP Pública:</label>
+                    <div class="col-sm-10">
+                      <input type="text" class="form-control" id="cpanel_public_ip" name="cpanel_public_ip">
+                    </div>  
                 </div>
-              </div>
-            </div><!-- /.tile-body -->
-            <div class="tile-footer">
-              <button class="btn btn-primary btn-lg" type="submit">
-                <i class="fa fa-fw fa-lg fa-check-circle"></i>Registrar
-              </button>
-            </div>
-          </form>
+                <div class="form-group text-right">
+                    <button type="submit" class="btn btn-lg btn-cpanel">Crear cuenta</button>
+                </div> 
+              </form>       
+            </div><!-- /#createAccount -->
+          </div><!-- /.tile-body -->
+          <div class="tile-footer">
+            <button class="btn btn-primary btn-lg" type="submit" form="formHostingContract">
+              <i class="fa fa-fw fa-lg fa-check-circle"></i>Registrar
+            </button>
+           </div>
         </div><!-- /.tile -->
       </div><!-- /.col-md-8 offset-md-2 -->
     </section><!-- /.row -->
@@ -210,22 +218,69 @@
   <script type="text/javascript">
   $(document).ready(function() {
 
-    $('#customer_id').selectize();
-    $('#cpanel_id').selectize();
+    $('#customer_id').selectize({"onChange": function(value){
+      var customer_select = document.getElementById('customer_id');
+      var customer_name = customer_select.options[customer_select.selectedIndex].innerHTML;
+      document.getElementById('cpanel_customer_id').value = value;
+      document.getElementById('cpanel_customer_name').value = customer_name;
+    }});
+
     /*
     * CUSTOM cPanel Account
     *****************************
     */
       $('input[type="radio"]').click(function() {
-         if($(this).attr('id') === 'has_cpanel_account_no') {
-          $('#searchAccount').hide();   
+         if($(this).attr('id') === 'cpanel_account_yes') {
           $('#createAccount').show("slow");           
          }
          else {
           $('#createAccount').hide(); 
-          $('#searchAccount').show("slow");   
          }
      });
+
+    $("#formCpanelAccount").submit(function(event) {
+        $("#listErrors").find("ul").slideUp("normal", function() {
+            $(this).remove();
+        });
+        event.preventDefault();
+        $.ajax({
+          beforSend:function(){
+
+          },
+          headers: {"X-CSRF-TOKEN": "{{ csrf_token() }}"},
+          url: "{{ route('admin.cuentas-cpanel.store') }}",
+          type: "POST",
+          dataType: "json",
+          data: $(this).serialize(),
+          error: function(jqXHR, textStatus, errorThrown) {
+            var errors = jqXHR.responseJSON.errors;
+            var listItems = '';
+            for (var key in errors) {
+              listItems += ('<li>' + errors[key][0] + '</li>');
+            }
+            $("#listErrors").append('<ul>' + listItems + '</ul>');
+            $("#listErrors").show("slow");
+          },
+          success: function(data) {
+            $("#createCpanelAccount").fadeOut("fast", function() {
+                $(this).remove();
+            });    
+            $("#listErrors").fadeOut("fast", function() {
+                $(this).remove();
+            });    
+            $("#formCpanelAccount").fadeOut("fast", function() {
+                $(this).remove();
+            });      
+            if(data.success) {
+              $("#successResponse").append('<strong>' + data.message + '</strong>');
+              $("#successResponse").show("slow");
+            }      
+          },
+          complete: function() {
+            
+          }
+        });      
+    });
 
   });
   </script>

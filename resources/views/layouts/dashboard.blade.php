@@ -162,34 +162,38 @@
               <a class="treeview-item" href="{{ url('dashboard/temas-de-ayuda') }}">
                 <i class="icon fa fa-info-circle"></i> Temas de Ayuda
               </a>
-              <a class="treeview-item" href="{{ url('dashboard/tickets/open') }}">
-                <i class="icon fa fa-circle-o"></i> Tickets sin Contestar
-              </a>
             </li>
             <li>
               <a class="treeview-item" href="{{ url('dashboard/tickets/closed') }}">
                 <i class="icon fa fa-check-circle"></i> Tickets Contestados
               </a>
             </li>
-            
           </ul>
         </li>
         <li class="treeview">
           <a class="app-menu__item" href="#" data-toggle="treeview">
             <i class="app-menu__icon fa fa-cogs"></i>
-            <span class="app-menu__label">Configuraciones</span>
+            <span class="app-menu__label">Tareas pendientes</span>
             <i class="treeview-indicator fa fa-angle-right"></i>
           </a>
           <ul class="treeview-menu">
             <li>
-              <a class="treeview-item" href="{{ route('register') }}">
-                <i class="icon fa fa-circle-o"></i> Agregar usuario
-              </a>
+              <a class="treeview-item" href="{{ url('dashboard/planes-hosting/user') }}">
+                <i class="icon fa fa-circle-o"></i> Contratos por Vencer
+                <span class="ml-1 badge badge-primary badge-pill">14</span>
+              </a>              
+            </li>
+            <li>
+              <a class="treeview-item" href="{{ url('dashboard/tickets/open') }}">
+                <i class="icon fa fa-circle-o"></i> Tickets sin Contestar
+                <span class="ml-1 badge badge-primary badge-pill">14</span>
+              </a>  
             </li>
             <li>
               <a class="treeview-item" href="{{ url('dashboard/planes-hosting/user') }}">
-                <i class="icon fa fa-circle-o"></i> Lista de Usuarios
-              </a>
+                <i class="icon fa fa-circle-o"></i> Usuarios sin confirmar
+                <span class="ml-1 badge badge-primary badge-pill">14</span>
+              </a>              
             </li>
           </ul>
         </li><!-- /.treeview -->
