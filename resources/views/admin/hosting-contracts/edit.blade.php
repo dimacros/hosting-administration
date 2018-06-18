@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @push('head')
-<link rel="stylesheet" href="{{ asset('css/selectize.bootstrap3.css') }}">
+<link rel="stylesheet" href="{{ asset('css/plugins/selectize.bootstrap3.css') }}">
 @endpush
 @section('content')  
   <main class="app-content">
@@ -89,11 +89,11 @@
               <div class="form-row">
                 <div class="form-group col-md-6">
                   <label for="start_date">Fecha de inicio:</label>
-                  <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $hostingContract->start_date->toDateString() }}" readonly>
+                  <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $hostingContract->start_date }}" readonly>
                 </div>
                 <div class="form-group col-md-6">
                   <label for="finish_date">Fecha de vencimiento:</label>
-                  <input type="date" class="form-control" id="finish_date" name="finish_date" value="{{ $hostingContract->finish_date->toDateString() }}" required>
+                  <input type="date" class="form-control" id="finish_date" name="finish_date" value="{{ $hostingContract->finish_date }}" required>
                 </div>
               </div>
             </div><!-- /.tile-body -->

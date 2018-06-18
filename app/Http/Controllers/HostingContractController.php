@@ -2,7 +2,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 use App\{HostingContract, Customer, HostingPlan, HostingPlanContracted};
+use App\Notifications\ContractRenewal;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -23,6 +25,14 @@ class HostingContractController extends Controller
 
         return view('admin.hosting-contracts.index')
           ->with('hostingContracts', $hostingContracts)->with('hostingPlans', $hostingPlans);
+    }
+
+    public function toExpire() 
+    {
+        $hostingContracts = HostingContract::with([
+          'customer:id,first_name,last_name,company_name',
+          'hostingPlanContracted:id,title'])->whereBetween('finish_date', [Carbon::today()->toDateString(), Carbon::today()->addMonths(2)->toDateString()])->get();
+        return view('admin.hosting-contracts.to-expire', ['hostingContracts' => $hostingContracts]);
     }
 
     /**
@@ -122,13 +132,19 @@ class HostingContractController extends Controller
 
       $hostingContract = HostingContract::findOrFail($id);
       $hostingContract->is_active = 0; 
-      if( $hostingContract->save() ) {
-        return $this->store($request);
-      }
-      else {
-        return back()->withErrors(['message' => 'Ocurrió un error con el servidor, vuelva a intentarlo nuevamente.']);
-      }
+      $hostingContract->save();
+      return $this->store($request);
     }
+
+    public function notify(Request $request, $id) {
+
+      $hostingContract = HostingContract::findOrFail($id);
+      $hostingContract->sendRenewalNotification();
+      $hostingContract->notifications_sent += 1;
+      $hostingContract->save();
+      return response()->json(['notifications_sent' => $hostingContract->notifications_sent], 200);
+    }
+       
     /**
      * Update the specified resource in storage.
      *

@@ -15,8 +15,7 @@ class PurchasedDomainController extends Controller
      */
     public function index()
     {
-      $purchasedDomains = PurchasedDomain::with(['domainProvider:id,company_name','customer:id,first_name,last_name,company_name'])
-      ->where('is_active', 1)->paginate(15);             
+      $purchasedDomains = PurchasedDomain::with(['domainProvider:id,company_name','customer:id,first_name,last_name,company_name'])->where('is_active', 1)->paginate(15);             
       return view('admin.purchased-domains.index')->with('purchasedDomains', $purchasedDomains);
     }
 

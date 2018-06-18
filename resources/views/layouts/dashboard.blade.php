@@ -18,6 +18,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/datatables.min.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('css/custom.css') }}">
     <!-- Font-icon css-->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -149,7 +150,10 @@
           </a>
         </li>
         <li>
-
+          <a class="app-menu__item" href="{{ url('/dashboard/usuarios') }}">
+            <i class="app-menu__icon fa fa-user"></i>
+            <span class="app-menu__label">Usuarios</span>
+          </a>
         </li>
         <li class="treeview">
           <a class="app-menu__item" href="#" data-toggle="treeview">
@@ -168,35 +172,13 @@
                 <i class="icon fa fa-check-circle"></i> Tickets Contestados
               </a>
             </li>
-          </ul>
-        </li>
-        <li class="treeview">
-          <a class="app-menu__item" href="#" data-toggle="treeview">
-            <i class="app-menu__icon fa fa-cogs"></i>
-            <span class="app-menu__label">Tareas pendientes</span>
-            <i class="treeview-indicator fa fa-angle-right"></i>
-          </a>
-          <ul class="treeview-menu">
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/planes-hosting/user') }}">
-                <i class="icon fa fa-circle-o"></i> Contratos por Vencer
-                <span class="ml-1 badge badge-primary badge-pill">14</span>
-              </a>              
-            </li>
             <li>
               <a class="treeview-item" href="{{ url('dashboard/tickets/open') }}">
                 <i class="icon fa fa-circle-o"></i> Tickets sin Contestar
-                <span class="ml-1 badge badge-primary badge-pill">14</span>
               </a>  
             </li>
-            <li>
-              <a class="treeview-item" href="{{ url('dashboard/planes-hosting/user') }}">
-                <i class="icon fa fa-circle-o"></i> Usuarios sin confirmar
-                <span class="ml-1 badge badge-primary badge-pill">14</span>
-              </a>              
-            </li>
           </ul>
-        </li><!-- /.treeview -->
+        </li>
       </ul>
       @elseif(Auth::user()->role === 'customer')
       <ul id="role-customer" class="app-menu">
@@ -229,19 +211,46 @@
 <!-- <main class="app-content">  -->
     @yield('content')
 <!-- </main> -->
-  <!-- Essential javascripts for application to work-->
-  <script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
-  <script src="{{ asset('js/popper.min.js') }}"></script>
-  <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-  <script src="{{ asset('js/main.js') }}"></script>
-  <!-- The javascript plugin to display page loading on top-->
-  <script src="{{ asset('js/plugins/pace.min.js') }}"></script>
-  <!-- Manipulate the menu with javascript -->
-  <script>
-  var currentPageWithJavascript = window.location.href;
-  var currentPage = '{{ url()->current() }}';
-  var menuId = '#role-' + '{{ Auth::user()->role }}';
-  $(document).ready(function(){
+<!-- Essential javascripts for application to work-->
+<script src="{{ asset('js/jquery-3.2.1.min.js') }}"></script>
+<script src="{{ asset('js/popper.min.js') }}"></script>
+<script src="{{ asset('js/bootstrap.min.js') }}"></script>
+<script src="{{ asset('js/datatables.min.js') }}"></script>
+<script src="{{ asset('js/main.js') }}"></script>
+<!-- The javascript plugin to display page loading on top-->
+<script src="{{ asset('js/plugins/pace.min.js') }}"></script>
+<!-- Manipulate the menu with javascript -->
+<script>
+  const currentPageWithJavascript = window.location.href;
+  const currentPage = '{{ url()->current() }}';
+  const menuId = '#role-' + '{{ Auth::user()->role }}';
+  const dataTableLanguage = {
+    "sProcessing":     "Procesando...",
+    "sLengthMenu":     "Mostrar _MENU_ registros",
+    "sZeroRecords":    "No se encontraron resultados",
+    "sEmptyTable":     "Ningún dato disponible en esta tabla",
+    "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+    "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
+    "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
+    "sInfoPostFix":    "",
+    "sSearch":         "Buscar:",
+    "sUrl":            "",
+    "sInfoThousands":  ",",
+    "sLoadingRecords": "Cargando...",
+    "oPaginate": {
+        "sFirst":    "Primero",
+        "sLast":     "Último",
+        "sNext":     "Siguiente",
+        "sPrevious": "Anterior"
+    },
+    "oAria": {
+        "sSortAscending":  ": Activar para ordenar la columna de manera ascendente",
+        "sSortDescending": ": Activar para ordenar la columna de manera descendente"
+    }
+  }
+</script>
+<script>
+$(document).ready(function(){
 
     $(menuId).find('a[href$="'+currentPage+'"]').addClass('active').attr('id','currentPage');
 
@@ -249,9 +258,14 @@
       $('#currentPage').parents('li.treeview').addClass('is-expanded');
     }
 
-  });
-  
-  </script>
+  @if(isset($defaultModelTable) && $defaultModelTable === true)
+    $('#defaultModelTable').DataTable({
+      "language": dataTableLanguage
+    });
+  @endif
+
+});
+</script>
   <!-- Page specific javascripts-->
   @stack('script')
 </body>

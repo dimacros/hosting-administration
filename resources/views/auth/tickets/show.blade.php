@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 @push('head')
-<link rel="stylesheet" href="{{asset('css/baguetteBox.min.css')}}">
-<link rel="stylesheet" href="{{asset('css/summernote-bs4.css')}}">
-<link rel="stylesheet" href="{{asset('css/dropzone.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/plugins/baguetteBox.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/plugins/summernote-bs4.css')}}">
+<link rel="stylesheet" href="{{asset('css/plugins/dropzone.min.css')}}">
 <style>
   .bg-ticky {
     background-color: #52C27D;
@@ -152,11 +152,11 @@
   </div>
 @endsection
 @push('script')
-<script src="{{asset('js/baguetteBox.min.js')}}"></script>
-<script src="{{asset('js/summernote-bs4.js')}}"></script>
-<script src="{{asset('js/summernote-es-ES.js')}}"></script>
-<script src="{{asset('js/dropzone.min.js')}}"></script>
-<script src="{{asset('js/dropzone-es-ES.js')}}"></script>
+<script src="{{asset('js/plugins/baguetteBox.min.js')}}"></script>
+<script src="{{asset('js/plugins/summernote-bs4.js')}}"></script>
+<script src="{{asset('js/plugins/summernote-es-ES.js')}}"></script>
+<script src="{{asset('js/plugins/dropzone.min.js')}}"></script>
+<script src="{{asset('js/plugins/dropzone-es-ES.js')}}"></script>
 
 <script>
 baguetteBox.run('.attached_files');

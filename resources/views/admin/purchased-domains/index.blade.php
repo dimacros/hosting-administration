@@ -8,6 +8,10 @@
   .text-warning {
     color: #c09001!important;
   }
+
+  .badge-pill {
+    margin-left: 0.25rem;
+  }
 </style>
 @endpush
 @section('content')  
@@ -66,8 +70,30 @@
                 </thead>
                 <tbody>
                 @foreach($purchasedDomains as $purchasedDomain)
+                <?php  
+                  if ($purchasedDomain->days_to_expire > 14) {
+                    $class = 'success';
+                    $status = 'activo';
+                    $expiration = $purchasedDomain->days_to_expire.' Días';
+                  }
+                  elseif ($purchasedDomain->days_to_expire > 1) {
+                    $class = 'warning';
+                    $status = 'Próximo a vencer';
+                    $expiration = $purchasedDomain->days_to_expire.' Días';
+                  }
+                  elseif($purchasedDomain->days_to_expire === 1) {
+                    $class = 'warning';
+                    $status = 'Próximo a vencer';
+                    $expiration = $purchasedDomain->days_to_expire.' Día';      
+                  }
+                  else {
+                    $class = 'danger';
+                    $status = 'expirado';
+                    $expiration = 'Expirado';       
+                  }
+                ?>
                   <tr>
-                    <td>N° {{ $purchasedDomain->id }}</td>
+                    <td>N° {{ str_pad($purchasedDomain->id, 5, "0", STR_PAD_LEFT) }}</td>
                     <td>{{ $purchasedDomain->customer->full_name }}</td>
                     <td>
                       @if( $purchasedDomain->status === 'suspended' )
@@ -75,10 +101,10 @@
                       @else 
                         {{ $purchasedDomain->domain_name }}
                       @endif
-                      {!! $purchasedDomain->bootstrapComponents()['status'] !!}
+                      <span class="badge badge-pill badge-{{$class}}">{{ $status }}</span>
                     </td>
                     <td>
-                      {!! $purchasedDomain->bootstrapComponents()['expiration'] !!}
+                      <span class="fw-600 text-{{$class}}">{{ $expiration }}</span>
                     </td>
                     <td>
                       @if( $purchasedDomain->status === 'suspended' )
@@ -116,7 +142,7 @@
                       <div class="form-row">
                         <div class="form-group col-md-5">
                           <label>Fecha de inicio:</label>
-                          <input type="date" class="form-control" name="start_date" value="{{ $purchasedDomain->start_date_to_renovate }}" readonly>
+                          <input type="date" class="form-control" name="start_date" value="{{ $purchasedDomain->newStartDate() }}" readonly>
                         </div>    
                         <div class="form-group col-md-7">
                           <label>Fecha de vencimiento:</label>

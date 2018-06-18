@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Customer;
+use App\{Customer, User};
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -15,7 +15,7 @@ class CustomerController extends Controller
      */
     public function index()
     {
-      return view('admin.customers', ['customers' => Customer::all()]);
+      return view('admin.customers', ['customers' => Customer::all(), 'users' => User::where('active', 1)->where('role', 'customer')->get() ]);
     }
 
     /**
@@ -66,6 +66,7 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
       $request->validate([
+        'user_id' => 'nullable|exists:users,id',
         'first_name' => 'required|string',
         'last_name' => 'required|string',
         'phone' => 'required|max:15',
@@ -73,15 +74,15 @@ class CustomerController extends Controller
       ]);  
 
       $customer = Customer::findOrFail($id);
+      $customer->user_id = $request->user_id;
       $customer->first_name = $request->first_name;
       $customer->last_name = $request->last_name;
       $customer->company_name = $request->company_name;
       $customer->phone = $request->phone;
       $customer->email = $request->email;
+      $customer->save();
 
-      if ($customer->save()) {
-        return back()->with('status', 'Los datos del cliente "'.$customer->full_name.'" se actualizaron con éxito.');
-      }
+      return back()->with('status', 'Los datos del cliente "'.$customer->full_name.'" se actualizaron con éxito.');
     }
 
     /**
@@ -92,9 +93,8 @@ class CustomerController extends Controller
      */
     public function destroy($id)
     {      
-        if(Customer::findOrFail($id)->delete())
-        {
-          return back()->with('status', 'El cliente fue eliminado exitosamente.');
-        }
+      $customer = Customer::findOrFail($id);
+      $customer->delete();
+      return back()->with('status', 'El cliente fue eliminado exitosamente.');
     }
 }

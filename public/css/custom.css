@@ -9,3 +9,11 @@
 .fw-600 {
 	font-weight: 600;
 }
+
+.dataTable {
+	border-spacing: 0;
+}
+
+.custom-control-label {
+	vertical-align: text-top;
+}

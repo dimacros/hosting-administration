@@ -1,8 +1,8 @@
 @extends('layouts.dashboard')
 @push('head')
-<link rel="stylesheet" href="{{asset('css/baguetteBox.min.css')}}">
-<link rel="stylesheet" href="{{asset('css/summernote-bs4.css')}}">
-<link rel="stylesheet" href="{{asset('css/dropzone.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/plugins/baguetteBox.min.css')}}">
+<link rel="stylesheet" href="{{asset('css/plugins/summernote-bs4.css')}}">
+<link rel="stylesheet" href="{{asset('css/plugins/dropzone.min.css')}}">
 <style>
   #formHeader {
     position: relative;
@@ -19,6 +19,7 @@
     font-size: 13px;
     line-height: 1;
   }
+
   .bg-ticky {
     background-color: #52C27D;
     color: #fff;
@@ -29,8 +30,17 @@
   }
 
   .note-editable {
-    font-family: "Verdana", Arial, Helvetica !important;
-    font-size: 14px !important;
+    font-family: 'Verdana', 'Arial', 'Helvetica'!important;
+    font-size: 14px!important;
+  }
+  
+  .note-btn {
+    background-color: #fff;
+    border: 1px solid #ccc;
+  }
+  
+  .note-btn:hover {
+    box-shadow: none!important;
   }
 
   .dropzone {
@@ -39,7 +49,7 @@
   }
   
   .dz-error * {
-    cursor: not-allowed !important;
+    cursor: not-allowed!important;
   }
 </style>
 @endpush
@@ -107,9 +117,6 @@
               <div class="form-group">
                 <h5 class="text-primary">Deja tu Mensaje</h5>
                 <textarea id="content" name="content"  class="d-none" required></textarea>
-                <small class="form-text text-muted">
-                  Por favor se descriptivo y no descartes ningun detalle...
-                </small>
               </div>
             </form>
             <h5 class="text-primary">Adjuntar archivos</h5>
@@ -152,10 +159,10 @@
   </div>
 @endsection
 @push('script')
-<script src="{{asset('js/summernote-bs4.js')}}"></script>
-<script src="{{asset('js/summernote-es-ES.js')}}"></script>
-<script src="{{asset('js/dropzone.min.js')}}"></script>
-<script src="{{asset('js/dropzone-es-ES.js')}}"></script>
+<script src="{{asset('js/plugins/summernote-bs4.js')}}"></script>
+<script src="{{asset('js/plugins/summernote-es-ES.js')}}"></script>
+<script src="{{asset('js/plugins/dropzone.min.js')}}"></script>
+<script src="{{asset('js/plugins/dropzone-es-ES.js')}}"></script>
 
 <script>
 
@@ -207,6 +214,25 @@ myDropzone.on("successmultiple", function(files, response) {
 
 $(document).ready(function() {
 
+  $('#content').summernote({    
+    fontNames: ['Verdana', 'Arial', 'Lato', 'Arial Black', 'Helvetica', 'Tahoma'],            
+    lang: 'es-ES',
+    minHeight: 200,             
+    maxHeight: 350,               
+    placeholder: 'Por favor se descriptivo y no descartes ningun detalle...',
+    toolbar: [
+      ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline', 'strikethrough', 'clear']],
+      ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['insert', ['hr', 'link', 'table']],
+      ['view', [ 'undo', 'redo', 'codeview', 'help' ] ],
+      ['fontname', ['fontname']],
+      ['fontsize', ['fontsize']]
+    ]      
+  });
+
+  $('.custom-control-description').removeClass().addClass('custom-control-label');
   $('#modalWarning').on('hidden.bs.modal', function (e) {
     $('#listErrors').empty();
   });
@@ -238,20 +264,6 @@ $(document).ready(function() {
     }
 
   });
-
-  $('#content').summernote({
-    //height: 300,                 
-    fontName: 'Helvetica',
-    lang: 'es-ES',
-    minHeight: 200,             
-    maxHeight: 300,             
-    focus: true,   
-      
-  });
-
-  var checkBox = '<div class="custom-control custom-checkbox"><input type="checkbox" class="custom-control-input" id="openInNewWindow"><label class="custom-control-label" for="openInNewWindow">Abrir en una nueva ventana</label></div>';
-  
-  $('#sn-checkbox-open-in-new-window').parent().replaceWith(checkBox);
 
 });
 

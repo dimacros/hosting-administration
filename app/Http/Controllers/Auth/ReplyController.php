@@ -36,6 +36,7 @@ class ReplyController extends Controller
         $reply->ticket->save();
       }
       else {
+        $reply->ticket->status = 'closed';
         $reply->ticket->solved = 1;
         $reply->ticket->save();       
       }

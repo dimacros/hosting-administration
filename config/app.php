@@ -169,7 +169,6 @@ return [
          */
         Barryvdh\DomPDF\ServiceProvider::class,
         Fedeisas\LaravelMailCssInliner\LaravelMailCssInlinerServiceProvider::class,
-
         /*
          * Application Service Providers...
          */

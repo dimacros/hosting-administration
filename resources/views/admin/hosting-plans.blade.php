@@ -1,4 +1,4 @@
-@extends('layouts.dashboard')
+@extends('layouts.dashboard', ['defaultModelTable' => true])
 @section('content')  
     <main class="app-content">
       <div class="app-title">
@@ -14,9 +14,11 @@
       </div>
       <div class="row">
         <div class="col-md-12">
-          <div class="tile">
-            <div class="tile-body">
-              <a href="{{ url('dashboard/planes-hosting/crear') }}" class="btn btn-primary">Agregar Plan Hosting</a>
+          <div class="tile bg-dark py-2">
+            <div class="tile-body text-right">
+            <a href="{{ url('dashboard/planes-hosting/crear') }}" class="btn btn-primary">
+              <i class="fa fa-plus f-16"></i> Agregar Plan Hosting
+            </a>
             </div>
           </div>
         </div>
@@ -40,8 +42,8 @@
                   </ul>
                 </div>
               @endif
-              <table class="table table-hover table-bordered" id="sampleTable">
-                <thead>
+              <table class="table table-hover table-bordered" id="defaultModelTable">
+                <thead class="thead-dark">
                   <tr>
                     <th>Nombre Completo</th>
                     <th>Precio Anual </th>
@@ -129,13 +131,3 @@
       </div>
     </main>
 @endsection
-@push('script')
-  <!-- Data table plugin-->
-  <script type="text/javascript" src="{{ asset('js/plugins/jquery.dataTables.min.js') }}"></script>
-  <script type="text/javascript" src="{{ asset('js/plugins/dataTables.bootstrap.min.js') }}"></script>
-  <script type="text/javascript">
-  $(document).ready(function() {
-    $('#sampleTable').DataTable();
-  });
-  </script>
-@endpush

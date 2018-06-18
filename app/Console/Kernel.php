@@ -13,7 +13,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-      Commands\SendRenewalEmail::class,
+        //
     ];
 
     /**
@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-      $schedule->command('email:renewal --force')->everyFifteenMinutes();
+      $schedule->job(new \App\Jobs\SendingEmails)->everyFiveMinutes();
     }
 
     /**

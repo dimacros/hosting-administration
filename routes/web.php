@@ -15,14 +15,19 @@ use Illuminate\Http\Request;
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/mailable', function () {
-	$HostingContract = App\HostingContract::find(1);
-	return new App\Mail\ContractRenewalHosting($HostingContract);
+Route::get('/test', function () {
+  $SendingEmails = new App\Jobs\SendingEmails();
+  $SendingEmails->handle();
+   print 'Enviado';
 });
 
-Route::get('/mailable-basic', function () {
-  return view('emails.action');
+Route::get('/mail', function () {
+  $hostingContract = App\HostingContract::find(1);
+  $purchasedDomain = App\PurchasedDomain::find(2);
+
+  //return view('emails.billing');
+  return view('emails.renew-contract', ['hostingContract' => $hostingContract]);
+  return view('emails.renew-domain', ['purchasedDomain' => $purchasedDomain]);
 });
 
 Auth::routes();
@@ -31,7 +36,22 @@ Route::group([
 		'as' => 'admin.', 'middleware' => ['auth', 'admin'], 'prefix' => 'dashboard',
 	], function () {
 
-  Route::view('admin', 'admin.user')->name('user');
+  Route::get('admin', function(){
+
+    $between_dates = [
+      Carbon\Carbon::today()->toDateString(), 
+      Carbon\Carbon::today()->addMonths(2)->toDateString()
+    ];
+
+    $data = [
+      'hostingContracts' => App\HostingContract::whereBetween('finish_date', $between_dates)->get(),
+      'tickets' => App\Ticket::where('solved', 0)->get(),
+      'users' =>  App\User::where('active', 0)->get()
+    ];     
+           
+    return view('admin.user', $data);
+
+  })->name('user');
 
   Route::resource('clientes', 'CustomerController', 
   	array( 'except' => ['show', 'edit'], 'parameters' => ['clientes' => 'id'] )
@@ -41,19 +61,17 @@ Route::group([
     array( 'only' => ['store', 'update'], 'parameters' => ['cuentas-cpanel' => 'id'] )
   );
 
+  Route::get('contratos-hosting/por-expirar', 'HostingContractController@toExpire')->name('contratos-hosting.to-expire');
+
+  Route::put('contratos-hosting/{id}/notificar', 'HostingContractController@notify')
+  ->name('contratos-hosting.notify');
+
   Route::put('contratos-hosting/{id}/desactivar', 'HostingContractController@deactivate')
   ->name('contratos-hosting.deactivate');
 
   Route::resource('contratos-hosting', 'HostingContractController', 
     array( 'parameters' => ['contratos-hosting' => 'id'] )
   );
-
-  Route::get('/contratos-hosting-prontos-a-expirar', function () {
-    $start_date = Carbon\Carbon::now()->startOfDay();  
-    $finish_date = $start_date->copy()->addMonth(); 
-    $hostingContracts = App\HostingContract::whereBetween('finish_date', [$start_date->toDateString(), $finish_date->toDateString()])->get();
-    return view('admin.hosting-contracts.ready-to-expire', ['hostingContracts' => $hostingContracts]);
-  });
 
   Route::post('dominios-comprados/renovar-dominio', 'PurchasedDomainController@renovate')
   ->name('dominios-comprados.renovate');
@@ -79,6 +97,11 @@ Route::group([
 
   Route::resource('tickets', 'TicketController',
     array( 'only' => ['destroy'], 'parameters' => ['tickets' => 'id'] )
+  );
+
+  Route::put('usuarios/{id}/activate', 'UserController@activate')->name('usuarios.activate');
+  Route::resource('usuarios', 'UserController', 
+    array( 'except' => ['create', 'edit'], 'parameters' => ['usuarios' => 'id'] )
   );
 
 });

@@ -16,15 +16,6 @@
         <div class="col-md-12">
           <div class="tile">
             <div class="tile-body">
-              <a class="btn btn-primary" href="#">Nada</a>
-            </div>
-          </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-          <div class="tile">
-            <div class="tile-body">
               @if (session('status'))
               <div class="alert alert-success" role="alert">
                 <strong>{{ session('status') }}</strong>
@@ -59,7 +50,7 @@
                       <strong>{{ $ticket->helpTopic->title }}|</strong> {{ $ticket->subject }}
                     </td>
                     <td>{{ $ticket->user->full_name }}</td>
-                    <td><a href="{{ route('auth.tickets.show', $ticket->id) }}" class="btn btn-success w-100">Ver</a></td>
+                    <td><a href="{{ route('auth.tickets.show', $ticket->id) }}" class="btn btn-success w-100">{{ $buttonTitle }}</a></td>
                     <td>
                       <button type="button" class="btn btn-danger w-100" data-toggle="modal" data-target="#deleteTicket-{{$ticket->id}}">
                         Eliminar

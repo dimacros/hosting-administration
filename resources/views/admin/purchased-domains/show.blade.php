@@ -71,7 +71,7 @@
                 </div>
                 <div class="form-group col-md-6">
                   <label>Fecha de vencimiento:</label>
-                  <input type="date" class="form-control" value="{{ $purchasedDomain->finish_date->toDateString() }}" readonly>
+                  <input type="date" class="form-control" value="{{ $purchasedDomain->finish_date }}" readonly>
                 </div>
               </div>
               <div class="form-row">

@@ -8,6 +8,10 @@
   .text-warning {
     color: #c09001!important;
   }
+
+  .badge-pill {
+    margin-left: 0.25rem;
+  }
 </style>
 @endpush
 @section('content')  
@@ -68,15 +72,37 @@
                 </thead>
                 <tbody>
                 @foreach($hostingContracts as $hostingContract)
+                <?php
+                  if ($hostingContract->days_to_expire > 14) {
+                    $class = 'success';
+                    $status = 'activo';
+                    $expiration = $hostingContract->days_to_expire.' Días';
+                  }
+                  elseif ($hostingContract->days_to_expire > 1) {
+                    $class = 'warning';
+                    $status = 'Próximo a vencer';
+                    $expiration = $hostingContract->days_to_expire.' Días';
+                  }
+                  elseif($hostingContract->days_to_expire === 1) {
+                    $class = 'warning';
+                    $status = 'Próximo a vencer';
+                    $expiration = $hostingContract->days_to_expire.' Día';      
+                  }
+                  else {
+                    $class = 'danger';
+                    $status = 'expirado';
+                    $expiration = 'Expirado';       
+                  }
+                ?>
                   <tr>
-                    <td>N° {{ $hostingContract->id }}</td>
+                    <td>N° {{ str_pad($hostingContract->id, 5, "0", STR_PAD_LEFT) }}</td>
                     <td>{{ $hostingContract->customer->full_name }}</td>
                     <td>
                       {{ $hostingContract->hostingPlanContracted->title }}
-                      {!! $hostingContract->bootstrapComponents()['status'] !!}
+                      <span class="badge badge-pill badge-{{$class}}">{{ $status }}</span>
                     </td>
                     <td>
-                      {!! $hostingContract->bootstrapComponents()['expiration'] !!}
+                      <span class="fw-600 text-{{$class}}">{{ $expiration }}</span>
                     </td>
                     <td>
                       {{ $hostingContract->total_price }} soles
@@ -121,7 +147,7 @@
                           <div class="form-row">
                             <div class="form-group col-md-5">
                               <label>Fecha de inicio:</label>
-                              <input type="date" class="form-control" name="start_date" value="{{ $hostingContract->start_date_to_renovate }}" readonly>
+                              <input type="date" class="form-control" name="start_date" value="{{ $hostingContract->newStartDate() }}" readonly>
                             </div>    
                             <div class="form-group col-md-7">
                               <label for="contract_period">Duración del contrato:</label>

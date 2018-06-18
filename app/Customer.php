@@ -1,11 +1,14 @@
 <?php
 
 namespace App;
-
+use App\Notifications\ContractRenewal;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
 class Customer extends Model
 {
+
+	use Notifiable; //$user->notify(new InvoicePaid($invoice));
 
   public function user()
   {
@@ -53,4 +56,5 @@ class Customer extends Model
 		}
 		return false;
 	}
+
 }

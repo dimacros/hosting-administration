@@ -23,17 +23,22 @@ class TicketController extends Controller
   	{
   		switch ($status_name) {
   				case 'open':
-  					$tickets = Ticket::with('helpTopic:id,title', 'user:id,first_name,last_name')->where('solved', 0)->get();
-  					$title = 'sin Responder';
-  					break;
-  				
+            $data = [
+              'tickets' => Ticket::with('helpTopic:id,title', 'user:id,first_name,last_name')->where('solved', 0)->get(),
+              'title' => 'sin Responder',
+              'buttonTitle' => 'Responder'
+            ];
+  				break;
   				case 'closed':
-  					$tickets = Ticket::with('helpTopic:id,title', 'user:id,first_name,last_name')->where('solved', 1)->get();
-  					$title = 'Respondidos';
-  					break;
+            $data = [
+              'tickets' => Ticket::with('helpTopic:id,title', 'user:id,first_name,last_name')->where('solved', 1)->get(),
+              'title' => 'Respondidos',
+              'buttonTitle' => 'Ver'
+            ];
+  				break;
   		}
   			
-  		return view('admin.tickets.index-by-status', ['tickets' => $tickets, 'title' => $title]);
+  		return view('admin.tickets.index-by-status', $data);
   	}
 
     /**

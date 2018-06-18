@@ -163,11 +163,11 @@
             <div class="form-row">
               <div class="form-group col-md-6">
                 <label>Fecha de inicio:</label>
-                <input type="date" class="form-control" value="{{ $hostingContract->start_date->toDateString() }}" readonly>
+                <input type="date" class="form-control" value="{{ $hostingContract->start_date }}" readonly>
               </div>
               <div class="form-group col-md-6">
                 <label>Fecha de vencimiento:</label>
-                <input type="date" class="form-control" value="{{ $hostingContract->finish_date->toDateString() }}" readonly>
+                <input type="date" class="form-control" value="{{ $hostingContract->finish_date }}" readonly>
               </div>
             </div>
             <div class="form-group row">

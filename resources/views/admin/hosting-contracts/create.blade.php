@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @push('head')
-<link rel="stylesheet" href="{{ asset('css/selectize.bootstrap3.css') }}">
+<link rel="stylesheet" href="{{ asset('css/plugins/selectize.bootstrap3.css') }}">
 <style>
   .btn-cpanel {
     background-color: #ff7600;
@@ -214,9 +214,9 @@
 @endsection
 @push('script')
 <!-- Select plugin-->
-  <script src="{{ asset('js/plugins/selectize.min.js') }}"></script>
-  <script type="text/javascript">
-  $(document).ready(function() {
+<script src="{{ asset('js/plugins/selectize.min.js') }}"></script>
+<script type="text/javascript">
+$(document).ready(function() {
 
     $('#customer_id').selectize({"onChange": function(value){
       var customer_select = document.getElementById('customer_id');
@@ -282,6 +282,6 @@
         });      
     });
 
-  });
-  </script>
+});
+</script>
 @endpush

@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 @push('head')
-<link rel="stylesheet" href="{{ asset('css/selectize.bootstrap3.css') }}">
+<link rel="stylesheet" href="{{ asset('css/plugins/selectize.bootstrap3.css') }}">
 @endpush
 @section('content')  
   <main class="app-content">
